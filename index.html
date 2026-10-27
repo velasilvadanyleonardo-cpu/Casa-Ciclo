@@ -3,19 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casa Ciclo - Hogar Sostenible</title>
+    <title>Casa Ciclo - Sistema de Gestión Sostenible</title>
     <style>
         :root {
             --primary-color: #2e7d32;
             --secondary-color: #81c784;
-            --background-color: #f4f6f4;
+            --bg-color: #f4f6f4;
             --card-bg: #ffffff;
             --text-color: #333333;
+            --danger-color: #e53935;
+            --warning-color: #fdd835;
+            --success-color: #43a047;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--background-color);
+            background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
             padding: 0;
@@ -24,67 +27,56 @@
         header {
             background-color: var(--primary-color);
             color: white;
-            text-align: center;
             padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header-title h1 { margin: 0; font-size: 1.8rem; }
+        .header-title p { margin: 5px 0 0 0; font-size: 0.9rem; opacity: 0.9; }
+
+        .mode-selector {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 20px auto;
-            padding: 0 20px;
+            padding: 0 15px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
         }
 
         .card {
             background-color: var(--card-bg);
             border-radius: 8px;
             padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
         h2 {
             color: var(--primary-color);
             border-bottom: 2px solid var(--secondary-color);
-            padding-bottom: 5px;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        label {
-            font-weight: bold;
-        }
-
-        input, select {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        button:hover {
-            background-color: #1b5e20;
+            padding-bottom: 8px;
+            margin-top: 0;
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 15px;
-            margin-top: 15px;
+            margin-bottom: 15px;
         }
 
         .stat-box {
@@ -95,94 +87,290 @@
             border-left: 5px solid var(--primary-color);
         }
 
-        .stat-box h3 {
-            margin: 0 0 10px 0;
-            color: #2e7d32;
+        .stat-box h3 { margin: 0; font-size: 0.9rem; color: #1b5e20; }
+        .stat-box p { font-size: 1.4rem; font-weight: bold; margin: 5px 0 0 0; }
+
+        form { display: flex; flex-direction: column; gap: 10px; }
+        input, select, button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 0.95rem;
         }
 
-        .stat-box p {
-            font-size: 1.5rem;
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
             font-weight: bold;
-            margin: 0;
+            transition: background 0.2s;
         }
+
+        button:hover { background-color: #1b5e20; }
+        .btn-secondary { background-color: #555; }
+        .btn-secondary:hover { background-color: #333; }
+
+        .traffic-light-item {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #333;
+        }
+
+        .status-red { background-color: #ffebee; border-left: 5px solid var(--danger-color); }
+        .status-yellow { background-color: #fffde7; border-left: 5px solid var(--warning-color); }
+        .status-green { background-color: #e8f5e9; border-left: 5px solid var(--success-color); }
+
+        .tag {
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+        .tag-red { background: var(--danger-color); color: white; }
+        .tag-yellow { background: var(--warning-color); color: #333; }
+        .tag-green { background: var(--success-color); color: white; }
+
+        .action-btn {
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            margin-left: 5px;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Casa Ciclo</h1>
-        <p>App web para un hogar sostenible</p>
+        <div class="header-title">
+            <h1>Casa Ciclo</h1>
+            <p>Plataforma de Consumo Responsable y Eficiencia Energética (ODS 12, 7, 13)</p>
+        </div>
+        <div class="mode-selector">
+            <label for="appMode"><strong>Modo:</strong></label>
+            <select id="appMode" onchange="toggleMode()">
+                <option value="hogar">🏠 Hogar</option>
+                <option value="colegio">🏫 Colegio / Comedor</option>
+            </select>
+        </div>
     </header>
 
     <div class="container">
         
-        <!-- Sección de Registro -->
-        <div class="card">
-            <h2>Registro de Actividades Sostenibles</h2>
-            <form id="sustainability-form">
-                <label for="category">Categoría:</label>
-                <select id="category" required>
-                    <option value="energia">Consumo de Energía (kWh)</option>
-                    <option value="alimentos">Alimentos Sostenibles / Locales (kg)</option>
-                    <option value="reciclaje">Reciclaje / Residuos (kg)</option>
-                </select>
-
-                <label for="value">Cantidad:</label>
-                <input type="number" id="value" step="0.1" placeholder="Ej. 5" required>
-
-                <button type="submit">Registrar y Calcular</button>
-            </form>
-        </div>
-
-        <!-- Sección de Estadísticas y Resultados -->
-        <div class="card">
-            <h2>Impacto y Ahorro en tu Hogar</h2>
+        <!-- Dashboard General -->
+        <div class="card" style="margin-bottom: 20px;">
+            <h2>Panel de Impacto Unificado (<span id="modeLabel">Hogar</span>)</h2>
             <div class="stats-grid">
                 <div class="stat-box">
-                    <h3>CO2 Evitado</h3>
-                    <p id="co2-result">0.0 kg</p>
+                    <h3>CO₂ Evitado Acumulado</h3>
+                    <p id="totalCO2">0.0 kg</p>
                 </div>
                 <div class="stat-box">
-                    <h3>Soles Ahorrados</h3>
-                    <p id="money-result">S/ 0.00</p>
+                    <h3>Ahorro Económico</h3>
+                    <p id="totalSoles">S/ 0.00</p>
                 </div>
             </div>
+            <button class="btn-secondary" onclick="exportToCSV()">📥 Exportar Reporte CSV para Jurado</button>
         </div>
 
+        <div class="grid">
+
+            <!-- Módulo de Alimentos -->
+            <div class="card">
+                <h2>🍎 Inventario & Semáforo de Alimentos</h2>
+                <form id="foodForm">
+                    <input type="text" id="foodName" placeholder="Nombre del alimento" required>
+                    <input type="number" id="foodQty" placeholder="Cantidad (kg/unidades)" step="0.1" required>
+                    <label for="foodDays">Días para vencimiento:</label>
+                    <input type="number" id="foodDays" min="0" placeholder="Ej. 2" required>
+                    <button type="submit">Agregar a Inventario</button>
+                </form>
+
+                <h3 style="margin-top: 20px; font-size: 1rem;">Estado de Inventario</h3>
+                <div id="foodList"></div>
+            </div>
+
+            <!-- Módulo de Energía -->
+            <div class="card">
+                <h2>⚡ Monitoreo de Energía & Fantasma</h2>
+                <form id="energyForm">
+                    <input type="text" id="applianceName" placeholder="Aparato (ej. Refris, TV, Focos)" required>
+                    <input type="number" id="watts" placeholder="Potencia (Watts)" required>
+                    <input type="number" id="hours" placeholder="Horas de uso al día" step="0.5" required>
+                    <label>
+                        <input type="checkbox" id="phantomPower"> ¿Consume energía fantasma (standby)?
+                    </label>
+                    <button type="submit">Registrar Consumo</button>
+                </form>
+
+                <h3 style="margin-top: 20px; font-size: 1rem;">Aparatos Registrados</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Equipo</th>
+                            <th>kWh/Mes</th>
+                            <th>S/ Est.</th>
+                        </tr>
+                    </thead>
+                    <tbody id="energyList"></tbody>
+                </table>
+            </div>
+
+        </div>
     </div>
 
     <script>
-        const form = document.getElementById('sustainability-form');
-        let totalCo2 = 0;
-        let totalMoney = 0;
+        // Estructura de Datos y Estado Inicial
+        let appData = {
+            mode: 'hogar',
+            foods: [],
+            appliances: [],
+            totalCO2: 0,
+            totalSoles: 0
+        };
 
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const category = document.getElementById('category').value;
-            const amount = parseFloat(document.getElementById('value').value);
-
-            if (isNaN(amount) || amount <= 0) return;
-
-            // Lógica de cálculo estimada
-            if (category === 'energia') {
-                totalCo2 += amount * 0.5; // Estimación de kg CO2 por kWh ahorrado/optimizado
-                totalMoney += amount * 0.75; // Estimación en soles
-            } else if (category === 'alimentos') {
-                totalCo2 += amount * 1.2; 
-                totalMoney += amount * 4.0;
-            } else if (category === 'reciclaje') {
-                totalCo2 += amount * 0.8;
-                totalMoney += amount * 1.5;
+        // Cargar datos al iniciar
+        window.onload = function() {
+            const saved = localStorage.getItem('casaCicloData');
+            if (saved) {
+                appData = JSON.parse(saved);
+                document.getElementById('appMode').value = appData.mode;
             }
+            renderAll();
+        };
 
-            // Actualizar en pantalla
-            document.getElementById('co2-result').innerText = totalCo2.toFixed(1) + ' kg';
-            document.getElementById('money-result').innerText = 'S/ ' + totalMoney.toFixed(2);
+        function saveData() {
+            localStorage.setItem('casaCicloData', JSON.stringify(appData));
+            renderAll();
+        }
 
-            form.reset();
+        function toggleMode() {
+            appData.mode = document.getElementById('appMode').value;
+            saveData();
+        }
+
+        // --- MÓDULO ALIMENTOS ---
+        document.getElementById('foodForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('foodName').value;
+            const qty = parseFloat(document.getElementById('foodQty').value);
+            const days = parseInt(document.getElementById('foodDays').value);
+
+            appData.foods.push({ id: Date.now(), name, qty, days });
+            document.getElementById('foodForm').reset();
+            saveData();
         });
-    </script>
 
+        function consumeFood(id) {
+            const food = appData.foods.find(f => f.id === id);
+            if (food) {
+                // Prevenir desperdicio suma impacto positivo
+                appData.totalCO2 += food.qty * 2.5; 
+                appData.totalSoles += food.qty * 4.0;
+                appData.foods = appData.foods.filter(f => f.id !== id);
+                saveData();
+            }
+        }
+
+        // --- MÓDULO ENERGÍA ---
+        document.getElementById('energyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('applianceName').value;
+            const watts = parseFloat(document.getElementById('watts').value);
+            const hours = parseFloat(document.getElementById('hours').value);
+            const isPhantom = document.getElementById('phantomPower').checked;
+
+            // Cálculo mensual
+            const kwhMonth = ((watts * hours * 30) / 1000);
+            const costMonth = kwhMonth * 0.85; // Tarifa prom. Perú (~S/ 0.85 por kWh)
+
+            appData.appliances.push({ id: Date.now(), name, kwhMonth, costMonth, isPhantom });
+            document.getElementById('energyForm').reset();
+            saveData();
+        });
+
+        // --- RENDERIZADO VISUAL ---
+        function renderAll() {
+            document.getElementById('modeLabel').innerText = appData.mode === 'hogar' ? 'Hogar' : 'Colegio / Comedor';
+            document.getElementById('totalCO2').innerText = appData.totalCO2.toFixed(1) + ' kg';
+            document.getElementById('totalSoles').innerText = 'S/ ' + appData.totalSoles.toFixed(2);
+
+            // Render Alimentos (Semáforo)
+            const foodListDiv = document.getElementById('foodList');
+            foodListDiv.innerHTML = '';
+            
+            appData.foods.sort((a, b) => a.days - b.days).forEach(item => {
+                let statusClass = 'status-green';
+                let tagClass = 'tag-green';
+                let statusText = 'Fresco';
+
+                if (item.days <= 2) {
+                    statusClass = 'status-red';
+                    tagClass = 'tag-red';
+                    statusText = 'Urgente';
+                } else if (item.days <= 5) {
+                    statusClass = 'status-yellow';
+                    tagClass = 'tag-yellow';
+                    statusText = 'Consumo Próximo';
+                }
+
+                foodListDiv.innerHTML += `
+                    <div class="traffic-light-item ${statusClass}">
+                        <div>
+                            <strong>${item.name}</strong> (${item.qty} kg/unid)
+                            <br><span class="tag ${tagClass}">${statusText}: ${item.days} días</span>
+                        </div>
+                        <button class="action-btn" onclick="consumeFood(${item.id})">Consumido ✓</button>
+                    </div>
+                `;
+            });
+
+            // Render Energía
+            const energyBody = document.getElementById('energyList');
+            energyBody.innerHTML = '';
+            appData.appliances.forEach(item => {
+                energyBody.innerHTML += `
+                    <tr>
+                        <td>${item.name} ${item.isPhantom ? '👻' : ''}</td>
+                        <td>${item.kwhMonth.toFixed(1)}</td>
+                        <td>S/ ${item.costMonth.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // --- EXPORTACIÓN A CSV PARA EL JURADO ---
+        function exportToCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Casa Ciclo - Reporte de Impacto\n";
+            csvContent += `Modo,${appData.mode}\n`;
+            csvContent += `CO2 Evitado Total (kg),${appData.totalCO2.toFixed(2)}\n`;
+            csvContent += `Ahorro Total (Soles),${appData.totalSoles.toFixed(2)}\n\n`;
+            
+            csvContent += "Inventario de Alimentos\nNombre,Cantidad,Dias Restantes\n";
+            appData.foods.forEach(f => {
+                csvContent += `${f.name},${f.qty},${f.days}\n`;
+            });
+
+            csvContent += "\nAparatos Registrados\nNombre,kWh Mensual,Costo Mensual (S/)\n";
+            appData.appliances.forEach(a => {
+                csvContent += `${a.name},${a.kwhMonth.toFixed(2)},${a.costMonth.toFixed(2)}\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Reporte_CasaCiclo_${appData.mode}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
 </body>
 </html>
