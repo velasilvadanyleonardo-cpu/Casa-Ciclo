@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casa Ciclo - Sistema de Gestión Sostenible</title>
+    <title>Casa Ciclo - Sistema Automatizado Sostenible</title>
     <style>
         :root {
             --primary-color: #2e7d32;
@@ -150,7 +150,7 @@
     <header>
         <div class="header-title">
             <h1>Casa Ciclo</h1>
-            <p>Plataforma de Consumo Responsable y Eficiencia Energética (ODS 12, 7, 13)</p>
+            <p>Plataforma Inteligente y Automatizada (ODS 12, 7, 13)</p>
         </div>
         <div class="mode-selector">
             <label for="appMode"><strong>Modo:</strong></label>
@@ -181,35 +181,42 @@
 
         <div class="grid">
 
-            <!-- Módulo de Alimentos -->
+            <!-- Módulo de Alimentos Inteligente -->
             <div class="card">
-                <h2>🍎 Inventario & Semáforo de Alimentos</h2>
+                <h2>🍎 Inventario Inteligente (Auto-Semáforo)</h2>
                 <form id="foodForm">
-                    <input type="text" id="foodName" placeholder="Nombre del alimento" required>
-                    <input type="number" id="foodQty" placeholder="Cantidad (kg/unidades)" step="0.1" required>
-                    <label for="foodDays">Días para vencimiento:</label>
-                    <input type="number" id="foodDays" min="0" placeholder="Ej. 2" required>
-                    <button type="submit">Agregar a Inventario</button>
+                    <label for="foodType">Selecciona el alimento:</label>
+                    <select id="foodType" required>
+                        <option value="Leche fresca">Leche fresca (Caduca en 3 días)</option>
+                        <option value="Verduras/Hortalizas">Verduras (Caduca en 4 días)</option>
+                        <option value="Fruta madura">Fruta (Caduca en 2 días)</option>
+                        <option value="Carne / Pollo">Carne / Pollo (Caduca en 1 día)</option>
+                        <option value="Abarrotes / Arroz">Abarrotes secos (Caduca en 30 días)</option>
+                    </select>
+                    <input type="number" id="foodQty" placeholder="Cantidad (kg / unidades)" step="0.1" required>
+                    <button type="submit">Añadir con Vencimiento Automático</button>
                 </form>
 
-                <h3 style="margin-top: 20px; font-size: 1rem;">Estado de Inventario</h3>
+                <h3 style="margin-top: 20px; font-size: 1rem;">Estado Actual</h3>
                 <div id="foodList"></div>
             </div>
 
-            <!-- Módulo de Energía -->
+            <!-- Módulo de Energía Inteligente -->
             <div class="card">
-                <h2>⚡ Monitoreo de Energía & Fantasma</h2>
+                <h2>⚡ Monitoreo Energético Automatizado</h2>
                 <form id="energyForm">
-                    <input type="text" id="applianceName" placeholder="Aparato (ej. Refris, TV, Focos)" required>
-                    <input type="number" id="watts" placeholder="Potencia (Watts)" required>
-                    <input type="number" id="hours" placeholder="Horas de uso al día" step="0.5" required>
-                    <label>
-                        <input type="checkbox" id="phantomPower"> ¿Consume energía fantasma (standby)?
-                    </label>
-                    <button type="submit">Registrar Consumo</button>
+                    <label for="applianceSelect">Selecciona el artefacto:</label>
+                    <select id="applianceSelect" required>
+                        <option value="Refrigeradora">Refrigeradora (200W - 24h)</option>
+                        <option value="Televisor LED">Televisor LED (100W - 4h)</option>
+                        <option value="Foco LED">Foco LED (10W - 5h)</option>
+                        <option value="Microondas">Microondas (1200W - 0.5h)</option>
+                        <option value="Computadora/Laptop">Laptop (65W - 6h)</option>
+                    </select>
+                    <button type="submit">Registrar Consumo Automático</button>
                 </form>
 
-                <h3 style="margin-top: 20px; font-size: 1rem;">Aparatos Registrados</h3>
+                <h3 style="margin-top: 20px; font-size: 1rem;">Equipos Registrados</h3>
                 <table>
                     <thead>
                         <tr>
@@ -226,7 +233,6 @@
     </div>
 
     <script>
-        // Estructura de Datos y Estado Inicial
         let appData = {
             mode: 'hogar',
             foods: [],
@@ -235,7 +241,23 @@
             totalSoles: 0
         };
 
-        // Cargar datos al iniciar
+        // Base de datos inteligente preconfigurada para automatizar
+        const defaultFoods = {
+            "Leche fresca": 3,
+            "Verduras/Hortalizas": 4,
+            "Fruta madura": 2,
+            "Carne / Pollo": 1,
+            "Abarrotes / Arroz": 30
+        };
+
+        const defaultAppliances = {
+            "Refrigeradora": { watts: 200, hours: 24, phantom: true },
+            "Televisor LED": { watts: 100, hours: 4, phantom: true },
+            "Foco LED": { watts: 10, hours: 5, phantom: false },
+            "Microondas": { watts: 1200, hours: 0.5, phantom: true },
+            "Computadora/Laptop": { watts: 65, hours: 6, phantom: false }
+        };
+
         window.onload = function() {
             const saved = localStorage.getItem('casaCicloData');
             if (saved) {
@@ -255,12 +277,12 @@
             saveData();
         }
 
-        // --- MÓDULO ALIMENTOS ---
+        // --- AUTOMATIZACIÓN DE ALIMENTOS ---
         document.getElementById('foodForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const name = document.getElementById('foodName').value;
+            const name = document.getElementById('foodType').value;
             const qty = parseFloat(document.getElementById('foodQty').value);
-            const days = parseInt(document.getElementById('foodDays').value);
+            const days = defaultFoods[name] || 5; // Asignación automática de días según tipo
 
             appData.foods.push({ id: Date.now(), name, qty, days });
             document.getElementById('foodForm').reset();
@@ -270,7 +292,6 @@
         function consumeFood(id) {
             const food = appData.foods.find(f => f.id === id);
             if (food) {
-                // Prevenir desperdicio suma impacto positivo
                 appData.totalCO2 += food.qty * 2.5; 
                 appData.totalSoles += food.qty * 4.0;
                 appData.foods = appData.foods.filter(f => f.id !== id);
@@ -278,20 +299,23 @@
             }
         }
 
-        // --- MÓDULO ENERGÍA ---
+        // --- AUTOMATIZACIÓN DE ENERGÍA ---
         document.getElementById('energyForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const name = document.getElementById('applianceName').value;
-            const watts = parseFloat(document.getElementById('watts').value);
-            const hours = parseFloat(document.getElementById('hours').value);
-            const isPhantom = document.getElementById('phantomPower').checked;
+            const selectedKey = document.getElementById('applianceSelect').value;
+            const config = defaultAppliances[selectedKey];
 
-            // Cálculo mensual
-            const kwhMonth = ((watts * hours * 30) / 1000);
-            const costMonth = kwhMonth * 0.85; // Tarifa prom. Perú (~S/ 0.85 por kWh)
+            // Cálculo mensual automatizado por watts y horas predefinidas
+            const kwhMonth = ((config.watts * config.hours * 30) / 1000);
+            const costMonth = kwhMonth * 0.85; 
 
-            appData.appliances.push({ id: Date.now(), name, kwhMonth, costMonth, isPhantom });
-            document.getElementById('energyForm').reset();
+            appData.appliances.push({ 
+                id: Date.now(), 
+                name: selectedKey, 
+                kwhMonth, 
+                costMonth, 
+                isPhantom: config.phantom 
+            });
             saveData();
         });
 
@@ -301,7 +325,6 @@
             document.getElementById('totalCO2').innerText = appData.totalCO2.toFixed(1) + ' kg';
             document.getElementById('totalSoles').innerText = 'S/ ' + appData.totalSoles.toFixed(2);
 
-            // Render Alimentos (Semáforo)
             const foodListDiv = document.getElementById('foodList');
             foodListDiv.innerHTML = '';
             
@@ -331,7 +354,6 @@
                 `;
             });
 
-            // Render Energía
             const energyBody = document.getElementById('energyList');
             energyBody.innerHTML = '';
             appData.appliances.forEach(item => {
@@ -345,10 +367,9 @@
             });
         }
 
-        // --- EXPORTACIÓN A CSV PARA EL JURADO ---
         function exportToCSV() {
             let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Casa Ciclo - Reporte de Impacto\n";
+            csvContent += "Casa Ciclo - Reporte Automatizado de Impacto\n";
             csvContent += `Modo,${appData.mode}\n`;
             csvContent += `CO2 Evitado Total (kg),${appData.totalCO2.toFixed(2)}\n`;
             csvContent += `Ahorro Total (Soles),${appData.totalSoles.toFixed(2)}\n\n`;
@@ -366,7 +387,7 @@
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Reporte_CasaCiclo_${appData.mode}.csv`);
+            link.setAttribute("download", `Reporte_CasaCiclo_Automatico_${appData.mode}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
