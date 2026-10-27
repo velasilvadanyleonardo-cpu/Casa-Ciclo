@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casa Ciclo - Sistema Automatizado Sostenible</title>
+    <title>Casa Ciclo - Gestión Automatizada</title>
     <style>
         :root {
             --primary-color: #2e7d32;
@@ -136,8 +136,8 @@
         .tag-green { background: var(--success-color); color: white; }
 
         .action-btn {
-            padding: 4px 8px;
-            font-size: 0.8rem;
+            padding: 6px 12px;
+            font-size: 0.85rem;
             margin-left: 5px;
         }
 
@@ -150,7 +150,7 @@
     <header>
         <div class="header-title">
             <h1>Casa Ciclo</h1>
-            <p>Plataforma Inteligente y Automatizada (ODS 12, 7, 13)</p>
+            <p>Sistema Automatizado de Consumo Responsable</p>
         </div>
         <div class="mode-selector">
             <label for="appMode"><strong>Modo:</strong></label>
@@ -163,60 +163,60 @@
 
     <div class="container">
         
-        <!-- Dashboard General -->
+        <!-- Panel de Impacto -->
         <div class="card" style="margin-bottom: 20px;">
             <h2>Panel de Impacto Unificado (<span id="modeLabel">Hogar</span>)</h2>
             <div class="stats-grid">
                 <div class="stat-box">
                     <h3>CO₂ Evitado Acumulado</h3>
-                    <p id="totalCO2">0.0 kg</p>
+                    <p id="totalCO2">0 kg</p>
                 </div>
                 <div class="stat-box">
                     <h3>Ahorro Económico</h3>
-                    <p id="totalSoles">S/ 0.00</p>
+                    <p id="totalSoles">S/ 0</p>
                 </div>
             </div>
-            <button class="btn-secondary" onclick="exportToCSV()">📥 Exportar Reporte CSV para Jurado</button>
+            <button class="btn-secondary" onclick="exportToCSV()">📥 Exportar Reporte CSV</button>
         </div>
 
         <div class="grid">
 
-            <!-- Módulo de Alimentos Inteligente -->
+            <!-- Módulo Alimentos con Buscador -->
             <div class="card">
-                <h2>🍎 Inventario Inteligente (Auto-Semáforo)</h2>
+                <h2>🍎 Inventario de Alimentos</h2>
                 <form id="foodForm">
-                    <label for="foodType">Selecciona el alimento:</label>
-                    <select id="foodType" required>
-                        <option value="Leche fresca">Leche fresca (Caduca en 3 días)</option>
-                        <option value="Verduras/Hortalizas">Verduras (Caduca en 4 días)</option>
-                        <option value="Fruta madura">Fruta (Caduca en 2 días)</option>
-                        <option value="Carne / Pollo">Carne / Pollo (Caduca en 1 día)</option>
-                        <option value="Abarrotes / Arroz">Abarrotes secos (Caduca en 30 días)</option>
-                    </select>
-                    <input type="number" id="foodQty" placeholder="Cantidad (kg / unidades)" step="0.1" required>
-                    <button type="submit">Añadir con Vencimiento Automático</button>
+                    <label for="foodInput">Busca o selecciona un alimento:</label>
+                    <input list="foodDatabase" id="foodInput" placeholder="Escribe un alimento (ej. Manzana, Pollo...)" required>
+                    <datalist id="foodDatabase"></datalist>
+
+                    <label for="foodQty">Cantidad (unidades / kg enteros):</label>
+                    <input type="number" id="foodQty" min="1" step="1" value="1" required>
+
+                    <button type="submit">Agregar al Inventario</button>
                 </form>
 
-                <h3 style="margin-top: 20px; font-size: 1rem;">Estado Actual</h3>
+                <h3 style="margin-top: 20px; font-size: 1rem;">Estado del Inventario</h3>
                 <div id="foodList"></div>
             </div>
 
-            <!-- Módulo de Energía Inteligente -->
+            <!-- Módulo Energía -->
             <div class="card">
-                <h2>⚡ Monitoreo Energético Automatizado</h2>
+                <h2>⚡ Monitoreo de Energía</h2>
                 <form id="energyForm">
                     <label for="applianceSelect">Selecciona el artefacto:</label>
                     <select id="applianceSelect" required>
-                        <option value="Refrigeradora">Refrigeradora (200W - 24h)</option>
-                        <option value="Televisor LED">Televisor LED (100W - 4h)</option>
-                        <option value="Foco LED">Foco LED (10W - 5h)</option>
-                        <option value="Microondas">Microondas (1200W - 0.5h)</option>
-                        <option value="Computadora/Laptop">Laptop (65W - 6h)</option>
+                        <option value="Refrigeradora">Refrigeradora</option>
+                        <option value="Televisor LED">Televisor LED</option>
+                        <option value="Foco LED">Foco LED</option>
+                        <option value="Microondas">Microondas</option>
+                        <option value="Computadora/Laptop">Computadora / Laptop</option>
+                        <option value="Ventilador">Ventilador</option>
+                        <option value="Hervidor Eléctrico">Hervidor Eléctrico</option>
                     </select>
-                    <button type="submit">Registrar Consumo Automático</button>
+                    <button type="submit">Registrar Artefacto</button>
                 </form>
 
-                <h3 style="margin-top: 20px; font-size: 1rem;">Equipos Registrados</h3>
+                <h3 style="margin-top: 20px; font-size: 1rem;">Aparatos Registrados</h3>
                 <table>
                     <thead>
                         <tr>
@@ -233,6 +233,40 @@
     </div>
 
     <script>
+        // Base de datos de alimentos con días estimados automáticos de caducidad
+        const foodCatalog = {
+            // Frutas
+            "Manzana": 10, "Plátano / Banano": 4, "Naranja": 12, "Mandarina": 8, "Fresa": 2, 
+            "Uva": 5, "Mango": 5, "Papaya": 4, "Piña": 5, "Pera": 6, "Durazno": 4, "Limón": 14,
+            "Palta / Aguacate": 3, "Sandía": 6, "Melón": 5, "Arándanos": 4, "Ciruela": 5,
+            
+            // Verduras y Tubérculos
+            "Tomate": 4, "Lechuga": 3, "Zanahoria": 12, "Papa / Patata": 20, "Cebolla": 20,
+            "Ajo": 30, "Espinaca": 3, "Brócoli": 4, "Pepino": 5, "Pimiento": 7, "Calabaza": 15,
+            "Camote": 20, "Choclo / Maíz": 5, "Vainita": 5, "Zapallo": 10,
+
+            // Carnes y Pescados
+            "Pollo fresco": 2, "Carne de res": 3, "Carne de cerdo": 3, "Pescado fresco": 1,
+            "Mariscos": 1, "Jamón / Embutidos": 5, "Salchicha": 5,
+
+            // Lácteos y Huevos
+            "Leche fresca": 3, "Queso fresco": 5, "Yogurt": 10, "Huevo": 21, "Mantequilla": 30,
+
+            // Panadería y Abarrotes
+            "Pan": 3, "Arroz": 180, "Fideos / Pasta": 180, "Avena": 120, "Lentejas / Menestras": 180,
+            "Aceite": 180, "Atún en lata": 365
+        };
+
+        const defaultAppliances = {
+            "Refrigeradora": { watts: 200, hours: 24, phantom: true },
+            "Televisor LED": { watts: 100, hours: 4, phantom: true },
+            "Foco LED": { watts: 10, hours: 5, phantom: false },
+            "Microondas": { watts: 1200, hours: 0.5, phantom: true },
+            "Computadora/Laptop": { watts: 65, hours: 6, phantom: false },
+            "Ventilador": { watts: 50, hours: 6, phantom: false },
+            "Hervidor Eléctrico": { watts: 1500, hours: 0.3, phantom: false }
+        };
+
         let appData = {
             mode: 'hogar',
             foods: [],
@@ -241,24 +275,8 @@
             totalSoles: 0
         };
 
-        // Base de datos inteligente preconfigurada para automatizar
-        const defaultFoods = {
-            "Leche fresca": 3,
-            "Verduras/Hortalizas": 4,
-            "Fruta madura": 2,
-            "Carne / Pollo": 1,
-            "Abarrotes / Arroz": 30
-        };
-
-        const defaultAppliances = {
-            "Refrigeradora": { watts: 200, hours: 24, phantom: true },
-            "Televisor LED": { watts: 100, hours: 4, phantom: true },
-            "Foco LED": { watts: 10, hours: 5, phantom: false },
-            "Microondas": { watts: 1200, hours: 0.5, phantom: true },
-            "Computadora/Laptop": { watts: 65, hours: 6, phantom: false }
-        };
-
         window.onload = function() {
+            populateDatalist();
             const saved = localStorage.getItem('casaCicloData');
             if (saved) {
                 appData = JSON.parse(saved);
@@ -266,6 +284,16 @@
             }
             renderAll();
         };
+
+        function populateDatalist() {
+            const datalist = document.getElementById('foodDatabase');
+            datalist.innerHTML = '';
+            Object.keys(foodCatalog).forEach(food => {
+                const option = document.createElement('option');
+                option.value = food;
+                datalist.appendChild(option);
+            });
+        }
 
         function saveData() {
             localStorage.setItem('casaCicloData', JSON.stringify(appData));
@@ -277,37 +305,41 @@
             saveData();
         }
 
-        // --- AUTOMATIZACIÓN DE ALIMENTOS ---
+        // --- REGISTRO DE ALIMENTOS ---
         document.getElementById('foodForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const name = document.getElementById('foodType').value;
-            const qty = parseFloat(document.getElementById('foodQty').value);
-            const days = defaultFoods[name] || 5; // Asignación automática de días según tipo
+            const nameInput = document.getElementById('foodInput').value.trim();
+            const qty = parseInt(document.getElementById('foodQty').value, 10);
 
-            appData.foods.push({ id: Date.now(), name, qty, days });
+            if (!nameInput || isNaN(qty) || qty < 1) return;
+
+            // Busca días configurados o asigna 5 por defecto si escribe un alimento nuevo
+            const days = foodCatalog[nameInput] || 5;
+
+            appData.foods.push({ id: Date.now(), name: nameInput, qty: Math.round(qty), days });
             document.getElementById('foodForm').reset();
+            document.getElementById('foodQty').value = 1;
             saveData();
         });
 
         function consumeFood(id) {
             const food = appData.foods.find(f => f.id === id);
             if (food) {
-                appData.totalCO2 += food.qty * 2.5; 
-                appData.totalSoles += food.qty * 4.0;
+                appData.totalCO2 += Math.round(food.qty * 2); 
+                appData.totalSoles += Math.round(food.qty * 4);
                 appData.foods = appData.foods.filter(f => f.id !== id);
                 saveData();
             }
         }
 
-        // --- AUTOMATIZACIÓN DE ENERGÍA ---
+        // --- REGISTRO DE ENERGÍA ---
         document.getElementById('energyForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const selectedKey = document.getElementById('applianceSelect').value;
             const config = defaultAppliances[selectedKey];
 
-            // Cálculo mensual automatizado por watts y horas predefinidas
-            const kwhMonth = ((config.watts * config.hours * 30) / 1000);
-            const costMonth = kwhMonth * 0.85; 
+            const kwhMonth = Math.round(((config.watts * config.hours * 30) / 1000));
+            const costMonth = Math.round(kwhMonth * 0.85); 
 
             appData.appliances.push({ 
                 id: Date.now(), 
@@ -322,8 +354,8 @@
         // --- RENDERIZADO VISUAL ---
         function renderAll() {
             document.getElementById('modeLabel').innerText = appData.mode === 'hogar' ? 'Hogar' : 'Colegio / Comedor';
-            document.getElementById('totalCO2').innerText = appData.totalCO2.toFixed(1) + ' kg';
-            document.getElementById('totalSoles').innerText = 'S/ ' + appData.totalSoles.toFixed(2);
+            document.getElementById('totalCO2').innerText = Math.round(appData.totalCO2) + ' kg';
+            document.getElementById('totalSoles').innerText = 'S/ ' + Math.round(appData.totalSoles);
 
             const foodListDiv = document.getElementById('foodList');
             foodListDiv.innerHTML = '';
@@ -346,8 +378,8 @@
                 foodListDiv.innerHTML += `
                     <div class="traffic-light-item ${statusClass}">
                         <div>
-                            <strong>${item.name}</strong> (${item.qty} kg/unid)
-                            <br><span class="tag ${tagClass}">${statusText}: ${item.days} días</span>
+                            <strong>${item.name}</strong> (${item.qty} unid/kg)
+                            <br><span class="tag ${tagClass}">${statusText}: aprox. ${item.days} días</span>
                         </div>
                         <button class="action-btn" onclick="consumeFood(${item.id})">Consumido ✓</button>
                     </div>
@@ -360,8 +392,8 @@
                 energyBody.innerHTML += `
                     <tr>
                         <td>${item.name} ${item.isPhantom ? '👻' : ''}</td>
-                        <td>${item.kwhMonth.toFixed(1)}</td>
-                        <td>S/ ${item.costMonth.toFixed(2)}</td>
+                        <td>${item.kwhMonth}</td>
+                        <td>S/ ${item.costMonth}</td>
                     </tr>
                 `;
             });
@@ -369,10 +401,10 @@
 
         function exportToCSV() {
             let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Casa Ciclo - Reporte Automatizado de Impacto\n";
+            csvContent += "Casa Ciclo - Reporte de Impacto\n";
             csvContent += `Modo,${appData.mode}\n`;
-            csvContent += `CO2 Evitado Total (kg),${appData.totalCO2.toFixed(2)}\n`;
-            csvContent += `Ahorro Total (Soles),${appData.totalSoles.toFixed(2)}\n\n`;
+            csvContent += `CO2 Evitado Total (kg),${Math.round(appData.totalCO2)}\n`;
+            csvContent += `Ahorro Total (Soles),${Math.round(appData.totalSoles)}\n\n`;
             
             csvContent += "Inventario de Alimentos\nNombre,Cantidad,Dias Restantes\n";
             appData.foods.forEach(f => {
@@ -381,13 +413,13 @@
 
             csvContent += "\nAparatos Registrados\nNombre,kWh Mensual,Costo Mensual (S/)\n";
             appData.appliances.forEach(a => {
-                csvContent += `${a.name},${a.kwhMonth.toFixed(2)},${a.costMonth.toFixed(2)}\n`;
+                csvContent += `${a.name},${a.kwhMonth},${a.costMonth}\n`;
             });
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Reporte_CasaCiclo_Automatico_${appData.mode}.csv`);
+            link.setAttribute("download", `Reporte_CasaCiclo_${appData.mode}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
