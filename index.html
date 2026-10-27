@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casa Ciclo - Hogar Sostenible</title>
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #81c784;
+            --background-color: #f4f6f4;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 5px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #1b5e20;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-box {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .stat-box h3 {
+            margin: 0 0 10px 0;
+            color: #2e7d32;
+        }
+
+        .stat-box p {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Casa Ciclo</h1>
+        <p>App web para un hogar sostenible</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- Sección de Registro -->
+        <div class="card">
+            <h2>Registro de Actividades Sostenibles</h2>
+            <form id="sustainability-form">
+                <label for="category">Categoría:</label>
+                <select id="category" required>
+                    <option value="energia">Consumo de Energía (kWh)</option>
+                    <option value="alimentos">Alimentos Sostenibles / Locales (kg)</option>
+                    <option value="reciclaje">Reciclaje / Residuos (kg)</option>
+                </select>
+
+                <label for="value">Cantidad:</label>
+                <input type="number" id="value" step="0.1" placeholder="Ej. 5" required>
+
+                <button type="submit">Registrar y Calcular</button>
+            </form>
+        </div>
+
+        <!-- Sección de Estadísticas y Resultados -->
+        <div class="card">
+            <h2>Impacto y Ahorro en tu Hogar</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <h3>CO2 Evitado</h3>
+                    <p id="co2-result">0.0 kg</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Soles Ahorrados</h3>
+                    <p id="money-result">S/ 0.00</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const form = document.getElementById('sustainability-form');
+        let totalCo2 = 0;
+        let totalMoney = 0;
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const category = document.getElementById('category').value;
+            const amount = parseFloat(document.getElementById('value').value);
+
+            if (isNaN(amount) || amount <= 0) return;
+
+            // Lógica de cálculo estimada
+            if (category === 'energia') {
+                totalCo2 += amount * 0.5; // Estimación de kg CO2 por kWh ahorrado/optimizado
+                totalMoney += amount * 0.75; // Estimación en soles
+            } else if (category === 'alimentos') {
+                totalCo2 += amount * 1.2; 
+                totalMoney += amount * 4.0;
+            } else if (category === 'reciclaje') {
+                totalCo2 += amount * 0.8;
+                totalMoney += amount * 1.5;
+            }
+
+            // Actualizar en pantalla
+            document.getElementById('co2-result').innerText = totalCo2.toFixed(1) + ' kg';
+            document.getElementById('money-result').innerText = 'S/ ' + totalMoney.toFixed(2);
+
+            form.reset();
+        });
+    </script>
+
+</body>
+</html>
