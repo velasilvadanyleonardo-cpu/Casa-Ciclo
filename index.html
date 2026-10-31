@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casa Ciclo - Gestión Automatizada</title>
+    <title>Casa Ciclo - Sistema de gestión del consumo responsable</title>
     <style>
         :root {
             --primary-color: #2e7d32;
@@ -14,6 +14,7 @@
             --danger-color: #e53935;
             --warning-color: #fdd835;
             --success-color: #43a047;
+            --info-color: #1976d2;
         }
 
         body {
@@ -28,23 +29,11 @@
             background-color: var(--primary-color);
             color: white;
             padding: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
+            text-align: center;
         }
 
-        .header-title h1 { margin: 0; font-size: 1.8rem; }
-        .header-title p { margin: 5px 0 0 0; font-size: 0.9rem; opacity: 0.9; }
-
-        .mode-selector {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 8px 15px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        header h1 { margin: 0; font-size: 1.8rem; }
+        header p { margin: 5px 0 0 0; font-size: 0.9rem; opacity: 0.9; }
 
         .container {
             max-width: 1000px;
@@ -52,16 +41,11 @@
             padding: 0 15px;
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
         .card {
             background-color: var(--card-bg);
             border-radius: 8px;
             padding: 20px;
+            margin-bottom: 20px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
@@ -71,24 +55,6 @@
             padding-bottom: 8px;
             margin-top: 0;
         }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .stat-box {
-            background-color: #e8f5e9;
-            padding: 15px;
-            border-radius: 6px;
-            text-align: center;
-            border-left: 5px solid var(--primary-color);
-        }
-
-        .stat-box h3 { margin: 0; font-size: 0.9rem; color: #1b5e20; }
-        .stat-box p { font-size: 1.4rem; font-weight: bold; margin: 5px 0 0 0; }
 
         form { display: flex; flex-direction: column; gap: 10px; }
         input, select, button {
@@ -108,17 +74,16 @@
         }
 
         button:hover { background-color: #1b5e20; }
-        .btn-secondary { background-color: #555; }
-        .btn-secondary:hover { background-color: #333; }
 
         .traffic-light-item {
-            padding: 10px;
+            padding: 12px;
             border-radius: 6px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: #333;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .status-red { background-color: #ffebee; border-left: 5px solid var(--danger-color); }
@@ -135,153 +100,90 @@
         .tag-yellow { background: var(--warning-color); color: #333; }
         .tag-green { background: var(--success-color); color: white; }
 
-        .action-btn {
-            padding: 6px 12px;
-            font-size: 0.85rem;
-            margin-left: 5px;
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
         }
 
+        .action-btn {
+            padding: 6px 10px;
+            font-size: 0.8rem;
+            border-radius: 4px;
+        }
+
+        .btn-consume { background-color: var(--success-color); }
+        .btn-freeze { background-color: var(--info-color); }
+        .btn-compost { background-color: #795548; }
+        .btn-trash { background-color: var(--danger-color); }
+
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; font-size: 0.9rem; }
+        th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="header-title">
-            <h1>Casa Ciclo</h1>
-            <p>Sistema Automatizado de Consumo Responsable</p>
-        </div>
-        <div class="mode-selector">
-            <label for="appMode"><strong>Modo:</strong></label>
-            <select id="appMode" onchange="toggleMode()">
-                <option value="hogar">🏠 Hogar</option>
-                <option value="colegio">🏫 Colegio / Comedor</option>
-            </select>
-        </div>
+        <h1>Casa Ciclo</h1>
+        <p>Sistema de gestión del consumo responsable</p>
     </header>
 
     <div class="container">
         
-        <!-- Panel de Impacto -->
-        <div class="card" style="margin-bottom: 20px;">
-            <h2>Panel de Impacto Unificado (<span id="modeLabel">Hogar</span>)</h2>
-            <div class="stats-grid">
-                <div class="stat-box">
-                    <h3>CO₂ Evitado Acumulado</h3>
-                    <p id="totalCO2">0 kg</p>
-                </div>
-                <div class="stat-box">
-                    <h3>Ahorro Económico</h3>
-                    <p id="totalSoles">S/ 0</p>
-                </div>
-            </div>
-            <button class="btn-secondary" onclick="exportToCSV()">📥 Exportar Reporte CSV</button>
+        <!-- Módulo de Inventario de Alimentos -->
+        <div class="card">
+            <h2>🍎 Inventario de Alimentos</h2>
+            <form id="foodForm">
+                <label for="foodInput">Alimento:</label>
+                <input list="foodDatabase" id="foodInput" placeholder="Escribe o busca un alimento..." required>
+                <datalist id="foodDatabase"></datalist>
+
+                <label for="foodQty">Cantidad (kg / unidades):</label>
+                <input type="number" id="foodQty" min="0.01" step="any" placeholder="Ej. 0.5" required>
+
+                <button type="submit">Agregar al Inventario</button>
+            </form>
+
+            <h3 style="margin-top: 25px; font-size: 1.1rem;">Inventario Activo (Semáforo Dinámico)</h3>
+            <div id="foodList"></div>
         </div>
 
-        <div class="grid">
-
-            <!-- Módulo Alimentos con Buscador -->
-            <div class="card">
-                <h2>🍎 Inventario de Alimentos</h2>
-                <form id="foodForm">
-                    <label for="foodInput">Busca o selecciona un alimento:</label>
-                    <input list="foodDatabase" id="foodInput" placeholder="Escribe un alimento (ej. Manzana, Pollo...)" required>
-                    <datalist id="foodDatabase"></datalist>
-
-                    <label for="foodQty">Cantidad (unidades / kg enteros):</label>
-                    <input type="number" id="foodQty" min="1" step="1" value="1" required>
-
-                    <button type="submit">Agregar al Inventario</button>
-                </form>
-
-                <h3 style="margin-top: 20px; font-size: 1rem;">Estado del Inventario</h3>
-                <div id="foodList"></div>
-            </div>
-
-            <!-- Módulo Energía -->
-            <div class="card">
-                <h2>⚡ Monitoreo de Energía</h2>
-                <form id="energyForm">
-                    <label for="applianceSelect">Selecciona el artefacto:</label>
-                    <select id="applianceSelect" required>
-                        <option value="Refrigeradora">Refrigeradora</option>
-                        <option value="Televisor LED">Televisor LED</option>
-                        <option value="Foco LED">Foco LED</option>
-                        <option value="Microondas">Microondas</option>
-                        <option value="Computadora/Laptop">Computadora / Laptop</option>
-                        <option value="Ventilador">Ventilador</option>
-                        <option value="Hervidor Eléctrico">Hervidor Eléctrico</option>
-                    </select>
-                    <button type="submit">Registrar Artefacto</button>
-                </form>
-
-                <h3 style="margin-top: 20px; font-size: 1rem;">Aparatos Registrados</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Equipo</th>
-                            <th>kWh/Mes</th>
-                            <th>S/ Est.</th>
-                        </tr>
-                    </thead>
-                    <tbody id="energyList"></tbody>
-                </table>
-            </div>
-
+        <!-- Módulo de Historial y Cierre -->
+        <div class="card">
+            <h2>📜 Historial de Alimentos y Auditoría</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha Cierre</th>
+                        <th>Alimento</th>
+                        <th>Cantidad</th>
+                        <th>Estado Final</th>
+                        <th>Días Restantes</th>
+                    </tr>
+                </thead>
+                <tbody id="historyList"></tbody>
+            </table>
         </div>
+
     </div>
 
     <script>
-        // Base de datos de alimentos con días estimados automáticos de caducidad
+        // Catálogo de vida útil teórica (en días)
         const foodCatalog = {
-            // Frutas
-            "Manzana": 10, "Plátano / Banano": 4, "Naranja": 12, "Mandarina": 8, "Fresa": 2, 
-            "Uva": 5, "Mango": 5, "Papaya": 4, "Piña": 5, "Pera": 6, "Durazno": 4, "Limón": 14,
-            "Palta / Aguacate": 3, "Sandía": 6, "Melón": 5, "Arándanos": 4, "Ciruela": 5,
-            
-            // Verduras y Tubérculos
-            "Tomate": 4, "Lechuga": 3, "Zanahoria": 12, "Papa / Patata": 20, "Cebolla": 20,
-            "Ajo": 30, "Espinaca": 3, "Brócoli": 4, "Pepino": 5, "Pimiento": 7, "Calabaza": 15,
-            "Camote": 20, "Choclo / Maíz": 5, "Vainita": 5, "Zapallo": 10,
-
-            // Carnes y Pescados
-            "Pollo fresco": 2, "Carne de res": 3, "Carne de cerdo": 3, "Pescado fresco": 1,
-            "Mariscos": 1, "Jamón / Embutidos": 5, "Salchicha": 5,
-
-            // Lácteos y Huevos
-            "Leche fresca": 3, "Queso fresco": 5, "Yogurt": 10, "Huevo": 21, "Mantequilla": 30,
-
-            // Panadería y Abarrotes
-            "Pan": 3, "Arroz": 180, "Fideos / Pasta": 180, "Avena": 120, "Lentejas / Menestras": 180,
-            "Aceite": 180, "Atún en lata": 365
+            "Pollo fresco": 2, "Carne de res": 3, "Pescado fresco": 1, "Manzana": 10,
+            "Plátano / Banano": 4, "Leche fresca": 3, "Queso fresco": 5, "Tomate": 4,
+            "Lechuga": 3, "Papa / Patata": 20, "Pan": 3, "Huevo": 21
         };
 
-        const defaultAppliances = {
-            "Refrigeradora": { watts: 200, hours: 24, phantom: true },
-            "Televisor LED": { watts: 100, hours: 4, phantom: true },
-            "Foco LED": { watts: 10, hours: 5, phantom: false },
-            "Microondas": { watts: 1200, hours: 0.5, phantom: true },
-            "Computadora/Laptop": { watts: 65, hours: 6, phantom: false },
-            "Ventilador": { watts: 50, hours: 6, phantom: false },
-            "Hervidor Eléctrico": { watts: 1500, hours: 0.3, phantom: false }
-        };
-
+        // Estado global del sistema
         let appData = {
-            mode: 'hogar',
             foods: [],
-            appliances: [],
-            totalCO2: 0,
-            totalSoles: 0
+            history: []
         };
 
         window.onload = function() {
             populateDatalist();
-            const saved = localStorage.getItem('casaCicloData');
-            if (saved) {
-                appData = JSON.parse(saved);
-                document.getElementById('appMode').value = appData.mode;
-            }
+            loadLocalStorage();
             renderAll();
         };
 
@@ -289,87 +191,103 @@
             const datalist = document.getElementById('foodDatabase');
             datalist.innerHTML = '';
             Object.keys(foodCatalog).forEach(food => {
-                const option = document.createElement('option');
-                option.value = food;
-                datalist.appendChild(option);
+                const opt = document.createElement('option');
+                opt.value = food;
+                datalist.appendChild(opt);
             });
         }
 
-        function saveData() {
-            localStorage.setItem('casaCicloData', JSON.stringify(appData));
-            renderAll();
-        }
-
-        function toggleMode() {
-            appData.mode = document.getElementById('appMode').value;
-            saveData();
-        }
-
-        // --- REGISTRO DE ALIMENTOS ---
-        document.getElementById('foodForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const nameInput = document.getElementById('foodInput').value.trim();
-            const qty = parseInt(document.getElementById('foodQty').value, 10);
-
-            if (!nameInput || isNaN(qty) || qty < 1) return;
-
-            // Busca días configurados o asigna 5 por defecto si escribe un alimento nuevo
-            const days = foodCatalog[nameInput] || 5;
-
-            appData.foods.push({ id: Date.now(), name: nameInput, qty: Math.round(qty), days });
-            document.getElementById('foodForm').reset();
-            document.getElementById('foodQty').value = 1;
-            saveData();
-        });
-
-        function consumeFood(id) {
-            const food = appData.foods.find(f => f.id === id);
-            if (food) {
-                appData.totalCO2 += Math.round(food.qty * 2); 
-                appData.totalSoles += Math.round(food.qty * 4);
-                appData.foods = appData.foods.filter(f => f.id !== id);
-                saveData();
+        function loadLocalStorage() {
+            try {
+                const saved = localStorage.getItem('casaCicloPhase1');
+                if (saved) {
+                    appData = JSON.parse(saved);
+                }
+            } catch (e) {
+                console.error("Fallo crítico en almacenamiento local, reiniciando estado:", e);
+                appData = { foods: [], history: [] };
             }
         }
 
-        // --- REGISTRO DE ENERGÍA ---
-        document.getElementById('energyForm').addEventListener('submit', function(e) {
+        function saveData() {
+            localStorage.setItem('casaCicloPhase1', JSON.stringify(appData));
+            renderAll();
+        }
+
+        // Lógica de registro con soporte estricto de decimales y fechas relativas
+        document.getElementById('foodForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const selectedKey = document.getElementById('applianceSelect').value;
-            const config = defaultAppliances[selectedKey];
+            const nameInput = document.getElementById('foodInput').value.trim();
+            const qtyInput = parseFloat(document.getElementById('foodQty').value);
 
-            const kwhMonth = Math.round(((config.watts * config.hours * 30) / 1000));
-            const costMonth = Math.round(kwhMonth * 0.85); 
+            if (!nameInput || isNaN(qtyInput) || qtyInput <= 0) return;
 
-            appData.appliances.push({ 
-                id: Date.now(), 
-                name: selectedKey, 
-                kwhMonth, 
-                costMonth, 
-                isPhantom: config.phantom 
+            const totalShelfLife = foodCatalog[nameInput] || 5; 
+            const todayStr = new Date().toISOString().split('T')[0];
+
+            appData.foods.push({
+                id: Date.now(),
+                name: nameInput,
+                qty: qtyInput,
+                shelfLifeDays: totalShelfLife,
+                dateAdded: todayStr
             });
+
+            document.getElementById('foodForm').reset();
             saveData();
         });
 
-        // --- RENDERIZADO VISUAL ---
-        function renderAll() {
-            document.getElementById('modeLabel').innerText = appData.mode === 'hogar' ? 'Hogar' : 'Colegio / Comedor';
-            document.getElementById('totalCO2').innerText = Math.round(appData.totalCO2) + ' kg';
-            document.getElementById('totalSoles').innerText = 'S/ ' + Math.round(appData.totalSoles);
+        // Cálculo dinámico de días restantes en tiempo real
+        function getRemainingDays(item) {
+            const addedDate = new Date(item.dateAdded);
+            const currentDate = new Date();
+            const diffTime = currentDate - addedDate;
+            const elapsedDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            return item.shelfLifeDays - elapsedDays;
+        }
 
+        // Cierre con los 4 botones obligatorios y regla estricta de salvado
+        function closeFood(id, actionType) {
+            const index = appData.foods.findIndex(f => f.id === id);
+            if (index === -1) return;
+
+            const item = appData.foods[index];
+            const remainingDays = getRemainingDays(item);
+
+            const wasCritical = remainingDays <= 5;
+            const isSaved = wasCritical && (actionType === 'Consumido' || actionType === 'Congelado' || actionType === 'Compostado');
+
+            const historyEntry = {
+                id: Date.now(),
+                name: item.name,
+                qty: item.qty,
+                dateClosed: new Date().toISOString().split('T')[0],
+                finalState: actionType,
+                remainingDaysAtClose: remainingDays,
+                isSaved: isSaved
+            };
+
+            appData.history.push(historyEntry);
+            appData.foods.splice(index, 1);
+            saveData();
+        }
+
+        // Renderizado del DOM
+        function renderAll() {
             const foodListDiv = document.getElementById('foodList');
             foodListDiv.innerHTML = '';
-            
-            appData.foods.sort((a, b) => a.days - b.days).forEach(item => {
+
+            appData.foods.forEach(item => {
+                const remaining = getRemainingDays(item);
                 let statusClass = 'status-green';
                 let tagClass = 'tag-green';
                 let statusText = 'Fresco';
 
-                if (item.days <= 2) {
+                if (remaining <= 2) {
                     statusClass = 'status-red';
                     tagClass = 'tag-red';
                     statusText = 'Urgente';
-                } else if (item.days <= 5) {
+                } else if (remaining <= 5) {
                     statusClass = 'status-yellow';
                     tagClass = 'tag-yellow';
                     statusText = 'Consumo Próximo';
@@ -378,51 +296,32 @@
                 foodListDiv.innerHTML += `
                     <div class="traffic-light-item ${statusClass}">
                         <div>
-                            <strong>${item.name}</strong> (${item.qty} unid/kg)
-                            <br><span class="tag ${tagClass}">${statusText}: aprox. ${item.days} días</span>
+                            <strong>${item.name}</strong> — ${item.qty} kg/unid
+                            <br><span class="tag ${tagClass}">${statusText}: ${remaining} días restantes</span>
                         </div>
-                        <button class="action-btn" onclick="consumeFood(${item.id})">Consumido ✓</button>
+                        <div class="action-buttons">
+                            <button class="action-btn btn-consume" onclick="closeFood(${item.id}, 'Consumido')">Consumido</button>
+                            <button class="action-btn btn-freeze" onclick="closeFood(${item.id}, 'Congelado')">Congelado</button>
+                            <button class="action-btn btn-compost" onclick="closeFood(${item.id}, 'Compostado')">Compostado</button>
+                            <button class="action-btn btn-trash" onclick="closeFood(${item.id}, 'Botado')">Botado</button>
+                        </div>
                     </div>
                 `;
             });
 
-            const energyBody = document.getElementById('energyList');
-            energyBody.innerHTML = '';
-            appData.appliances.forEach(item => {
-                energyBody.innerHTML += `
+            const historyBody = document.getElementById('historyList');
+            historyBody.innerHTML = '';
+            appData.history.slice().reverse().forEach(h => {
+                historyBody.innerHTML += `
                     <tr>
-                        <td>${item.name} ${item.isPhantom ? '👻' : ''}</td>
-                        <td>${item.kwhMonth}</td>
-                        <td>S/ ${item.costMonth}</td>
+                        <td>${h.dateClosed}</td>
+                        <td>${h.name}</td>
+                        <td>${h.qty}</td>
+                        <td><strong>${h.finalState}</strong> ${h.isSaved ? '🌱 (Salvado)' : ''}</td>
+                        <td>${h.remainingDaysAtClose} días</td>
                     </tr>
                 `;
             });
-        }
-
-        function exportToCSV() {
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Casa Ciclo - Reporte de Impacto\n";
-            csvContent += `Modo,${appData.mode}\n`;
-            csvContent += `CO2 Evitado Total (kg),${Math.round(appData.totalCO2)}\n`;
-            csvContent += `Ahorro Total (Soles),${Math.round(appData.totalSoles)}\n\n`;
-            
-            csvContent += "Inventario de Alimentos\nNombre,Cantidad,Dias Restantes\n";
-            appData.foods.forEach(f => {
-                csvContent += `${f.name},${f.qty},${f.days}\n`;
-            });
-
-            csvContent += "\nAparatos Registrados\nNombre,kWh Mensual,Costo Mensual (S/)\n";
-            appData.appliances.forEach(a => {
-                csvContent += `${a.name},${a.kwhMonth},${a.costMonth}\n`;
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Reporte_CasaCiclo_${appData.mode}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
         }
     </script>
 </body>
