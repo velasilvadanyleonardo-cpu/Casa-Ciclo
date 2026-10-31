@@ -15,6 +15,7 @@
             --warning-color: #fdd835;
             --success-color: #43a047;
             --info-color: #1976d2;
+            --neutral-gray: #757575;
         }
 
         body {
@@ -36,7 +37,7 @@
         header p { margin: 5px 0 0 0; font-size: 0.9rem; opacity: 0.9; }
 
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 20px auto;
             padding: 0 15px;
         }
@@ -74,6 +75,50 @@
         }
 
         button:hover { background-color: #1b5e20; }
+        .btn-danger { background-color: var(--danger-color); }
+        .btn-danger:hover { background-color: #c62828; }
+        .btn-secondary { background-color: #555; }
+        .btn-secondary:hover { background-color: #333; }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .stat-box {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .stat-box h3 { margin: 0; font-size: 0.85rem; color: #1b5e20; }
+        .stat-box p { font-size: 1.3rem; font-weight: bold; margin: 5px 0 0 0; }
+
+        .ods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .ods-card {
+            background: #f1f8e9;
+            border: 1px solid #c8e6c9;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+        }
+        .ods-card h4 { margin: 0 0 5px 0; color: #2e7d32; }
 
         .traffic-light-item {
             padding: 12px;
@@ -89,6 +134,7 @@
         .status-red { background-color: #ffebee; border-left: 5px solid var(--danger-color); }
         .status-yellow { background-color: #fffde7; border-left: 5px solid var(--warning-color); }
         .status-green { background-color: #e8f5e9; border-left: 5px solid var(--success-color); }
+        .status-expired { background-color: #efebe9; border-left: 5px solid var(--neutral-gray); }
 
         .tag {
             font-size: 0.8rem;
@@ -99,6 +145,7 @@
         .tag-red { background: var(--danger-color); color: white; }
         .tag-yellow { background: var(--warning-color); color: #333; }
         .tag-green { background: var(--success-color); color: white; }
+        .tag-expired { background: var(--neutral-gray); color: white; }
 
         .action-buttons {
             display: flex;
@@ -108,7 +155,7 @@
 
         .action-btn {
             padding: 6px 10px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             border-radius: 4px;
         }
 
@@ -119,6 +166,40 @@
 
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; font-size: 0.85rem; }
+
+        .chart-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
+            height: 180px;
+            padding-top: 20px;
+            border-bottom: 2px solid #ccc;
+            margin-top: 15px;
+        }
+        .bar-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            justify-content: flex-end;
+        }
+        .bar {
+            width: 100%;
+            max-width: 50px;
+            background-color: var(--primary-color);
+            border-radius: 4px 4px 0 0;
+            transition: height 0.4s;
+            text-align: center;
+            color: white;
+            font-size: 0.75rem;
+            padding-top: 4px;
+        }
+        .bar-label {
+            font-size: 0.75rem;
+            margin-top: 5px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -130,25 +211,175 @@
 
     <div class="container">
         
-        <!-- Módulo de Inventario de Alimentos -->
+        <!-- Configuración del Hogar / Institución -->
         <div class="card">
-            <h2>🍎 Inventario de Alimentos</h2>
-            <form id="foodForm">
-                <label for="foodInput">Alimento:</label>
-                <input list="foodDatabase" id="foodInput" placeholder="Escribe o busca un alimento..." required>
-                <datalist id="foodDatabase"></datalist>
-
-                <label for="foodQty">Cantidad (kg / unidades):</label>
-                <input type="number" id="foodQty" min="0.01" step="any" placeholder="Ej. 0.5" required>
-
-                <button type="submit">Agregar al Inventario</button>
+            <h2>⚙️ Configuración del Hogar o Institución</h2>
+            <form id="configForm">
+                <div class="grid-2">
+                    <div>
+                        <label for="placeType">Tipo de Lugar:</label>
+                        <select id="placeType" onchange="applyPresetConfig()">
+                            <option value="hogar">Hogar (Estándar)</option>
+                            <option value="colegio">Colegio / Institución Educativa</option>
+                            <option value="comedor">Comedor Popular / Comunitario</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="peopleCount">Número de Personas / Integrantes:</label>
+                        <input type="number" id="peopleCount" min="1" value="4" required>
+                    </div>
+                    <div>
+                        <label for="electricityRate">Tarifa de Luz por kWh (S/):</label>
+                        <input type="number" id="electricityRate" min="0.01" step="0.01" value="0.85" required>
+                    </div>
+                    <div>
+                        <label for="startDate">Fecha de Inicio de Medición:</label>
+                        <input type="date" id="startDate" required>
+                    </div>
+                </div>
+                <button type="submit" style="margin-top: 10px;">Guardar Configuración</button>
             </form>
-
-            <h3 style="margin-top: 25px; font-size: 1.1rem;">Inventario Activo (Semáforo Dinámico)</h3>
-            <div id="foodList"></div>
         </div>
 
-        <!-- Módulo de Historial y Cierre -->
+        <!-- Panel de Impacto & ODS -->
+        <div class="card">
+            <h2>📊 Panel de Impacto & ODS</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <h3>Puntaje General (0 - 100)</h3>
+                    <p id="totalScore">0 pts</p>
+                </div>
+                <div class="stat-box">
+                    <h3>CO₂ Evitado Total</h3>
+                    <p id="totalCO2">0.00 kg</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Ahorro Económico</h3>
+                    <p id="totalSoles">S/ 0.00</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Pérdida por Standby</h3>
+                    <p id="totalPhantomCost">S/ 0.00</p>
+                </div>
+            </div>
+
+            <div class="ods-grid">
+                <div class="ods-card">
+                    <h4>ODS 12: Producción y Consumo</h4>
+                    <p id="ods12Val">0.00 kg de comida salvada</p>
+                </div>
+                <div class="ods-card">
+                    <h4>ODS 7: Energía Asequible</h4>
+                    <p id="ods7Val">0.0 kWh optimizados</p>
+                </div>
+                <div class="ods-card">
+                    <h4>ODS 13: Acción por el Clima</h4>
+                    <p id="ods13Val">0.00 kg CO₂ evitados</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn-secondary" onclick="exportToCSV()">📥 Exportar Reporte Completo CSV (UTF-8)</button>
+                <button class="btn-danger" onclick="resetAllData()">⚠️ Reiniciar Todos los Datos</button>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <!-- Inventario de Alimentos -->
+            <div class="card">
+                <h2>🍎 Inventario de Alimentos</h2>
+                <form id="foodForm">
+                    <label for="foodInput">Alimento:</label>
+                    <input list="foodDatabase" id="foodInput" placeholder="Busca un alimento..." required>
+                    <datalist id="foodDatabase"></datalist>
+
+                    <div class="grid-2" style="gap:5px;">
+                        <div>
+                            <label for="foodQty">Cantidad:</label>
+                            <input type="number" id="foodQty" min="0.01" step="any" placeholder="Ej. 1.5" required>
+                        </div>
+                        <div>
+                            <label for="foodUnitType">Unidad:</label>
+                            <select id="foodUnitType">
+                                <option value="kg">Kilogramos (kg)</option>
+                                <option value="unid">Unidades</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" style="margin-top: 5px;">Agregar al Inventario</button>
+                </form>
+
+                <h3 style="margin-top: 20px; font-size: 1rem;">Inventario Activo (Semáforo Relativo)</h3>
+                <div id="foodList"></div>
+            </div>
+
+            <!-- Monitoreo de Energía Editable y Standby -->
+            <div class="card">
+                <h2>⚡ Monitoreo de Energía</h2>
+                <form id="energyForm">
+                    <label for="applianceNameInput">Nombre del Equipo:</label>
+                    <input type="text" id="applianceNameInput" placeholder="Ej. Refrigeradora, TV..." required>
+                    
+                    <label for="applianceWatts">Potencia (Watts):</label>
+                    <input type="number" id="applianceWatts" min="1" step="any" placeholder="Ej. 150" required>
+
+                    <label for="applianceHours">Horas de uso diario:</label>
+                    <input type="number" id="applianceHours" min="0.1" max="24" step="any" placeholder="Ej. 5" required>
+
+                    <div style="display: flex; gap: 15px; align-items: center; margin-top: 5px;">
+                        <label>
+                            <input type="checkbox" id="appliancePhantom"> Queda en espera (Standby)
+                        </label>
+                        <div style="flex:1;">
+                            <label for="applianceCount" style="font-size:0.85rem;">Cantidad de equipos:</label>
+                            <input type="number" id="applianceCount" min="1" value="1" style="padding:5px;" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" style="margin-top: 5px;">Registrar Aparato</button>
+                </form>
+
+                <h3 style="margin-top: 20px; font-size: 1rem;">Aparatos Registrados</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Equipo</th>
+                            <th>kWh/Mes</th>
+                            <th>Costo (S/)</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="energyList"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Registro Semanal y Gráfico -->
+        <div class="card">
+            <h2>📅 Registro Semanal & Línea Base</h2>
+            <form id="weeklyForm">
+                <div class="grid-2">
+                    <div>
+                        <label for="weekMeter">Lectura actual del medidor de luz (kWh):</label>
+                        <input type="number" id="weekMeter" min="0" step="any" placeholder="Ej. 150.5" required>
+                    </div>
+                    <div>
+                        <label for="weekWastedFood">Comida botada en la semana (kg):</label>
+                        <input type="number" id="weekWastedFood" min="0" step="any" placeholder="Ej. 0.8" required>
+                    </div>
+                </div>
+                <label style="margin-top: 10px;">
+                    <input type="checkbox" id="weekUnplugged" required> Confirmo que desconecté los aparatos en desuso esta semana.
+                </label>
+                <button type="submit" style="margin-top: 10px;">Guardar Registro Semanal</button>
+            </form>
+
+            <h3 style="margin-top: 25px; font-size: 1.1rem;">Historial Semanal y Gráfico de Puntaje</h3>
+            <div class="chart-container" id="weeklyChart"></div>
+        </div>
+
+        <!-- Historial de Alimentos -->
         <div class="card">
             <h2>📜 Historial de Alimentos y Auditoría</h2>
             <table>
@@ -168,22 +399,66 @@
     </div>
 
     <script>
-        // Catálogo de vida útil teórica (en días)
+        // Factores de emisión con fuente oficial:
+        // Electricidad: 0.30 kg CO2 / kWh (Factor de emisión de red eléctrica del Perú - MINAM / Osinergmin)
+        const FACTOR_CO2_ELECTRICITY = 0.30; 
+        // Comida: 2.5 kg CO2e / kg de desperdicio alimentario (Promedio global IPCC / FAO)
+        const FACTOR_CO2_FOOD = 2.5;
+
+        // Catálogo completo con tolerancia y peso aproximado por unidad (en kg) para conversión automática
         const foodCatalog = {
-            "Pollo fresco": 2, "Carne de res": 3, "Pescado fresco": 1, "Manzana": 10,
-            "Plátano / Banano": 4, "Leche fresca": 3, "Queso fresco": 5, "Tomate": 4,
-            "Lechuga": 3, "Papa / Patata": 20, "Pan": 3, "Huevo": 21
+            "Pollo fresco": { days: 2, unitWeight: null, isKgOnly: true },
+            "Carne de res": { days: 3, unitWeight: null, isKgOnly: true },
+            "Pescado fresco": { days: 1, unitWeight: null, isKgOnly: true },
+            "Carne de cerdo": { days: 3, unitWeight: null, isKgOnly: true },
+            "Manzana": { days: 10, unitWeight: 0.18 },
+            "Plátano / Banano": { days: 4, unitWeight: 0.15 },
+            "Naranja": { days: 12, unitWeight: 0.20 },
+            "Mandarina": { days: 8, unitWeight: 0.10 },
+            "Fresa": { days: 2, unitWeight: 0.02 },
+            "Uva": { days: 5, unitWeight: 0.01 },
+            "Mango": { days: 5, unitWeight: 0.25 },
+            "Papaya": { days: 4, unitWeight: 1.20 },
+            "Tomate": { days: 4, unitWeight: 0.12 },
+            "Lechuga": { days: 3, unitWeight: 0.30 },
+            "Zanahoria": { days: 12, unitWeight: 0.10 },
+            "Papa / Patata": { days: 20, unitWeight: 0.15 },
+            "Cebolla": { days: 20, unitWeight: 0.12 },
+            "Pan": { days: 3, unitWeight: 0.05 },
+            "Huevo": { days: 21, unitWeight: 0.06 },
+            "Leche fresca": { days: 3, unitWeight: 1.00 },
+            "Queso fresco": { days: 5, unitWeight: 0.25 },
+            "Arroz": { days: 180, unitWeight: null, isKgOnly: true }
         };
 
-        // Estado global del sistema
         let appData = {
+            config: {
+                placeType: 'hogar',
+                peopleCount: 4,
+                electricityRate: 0.85,
+                startDate: getLocalIsoDate()
+            },
             foods: [],
-            history: []
+            appliances: [],
+            history: [],
+            weeklyLogs: []
         };
+
+        // Función para obtener fecha en hora local de Perú (evita desfase de medianoche UTC)
+        function getLocalIsoDate() {
+            const now = new Date();
+            const offsetMs = now.getTimezoneOffset() * 60 * 1000;
+            const localDate = new Date(now.getTime() - offsetMs);
+            return localDate.toISOString().split('T')[0];
+        }
 
         window.onload = function() {
             populateDatalist();
             loadLocalStorage();
+            document.getElementById('placeType').value = appData.config.placeType;
+            document.getElementById('peopleCount').value = appData.config.peopleCount;
+            document.getElementById('electricityRate').value = appData.config.electricityRate;
+            document.getElementById('startDate').value = appData.config.startDate;
             renderAll();
         };
 
@@ -197,73 +472,173 @@
             });
         }
 
+        // Carga con protección defensiva ante datos dañados o ausentes
         function loadLocalStorage() {
             try {
-                const saved = localStorage.getItem('casaCicloPhase1');
+                const saved = localStorage.getItem('casaCicloProData');
                 if (saved) {
-                    appData = JSON.parse(saved);
+                    const parsed = JSON.parse(saved);
+                    appData.config = parsed.config || appData.config;
+                    appData.foods = Array.isArray(parsed.foods) ? parsed.foods : [];
+                    appData.appliances = Array.isArray(parsed.appliances) ? parsed.appliances : [];
+                    appData.history = Array.isArray(parsed.history) ? parsed.history : [];
+                    appData.weeklyLogs = Array.isArray(parsed.weeklyLogs) ? parsed.weeklyLogs : [];
                 }
             } catch (e) {
-                console.error("Fallo crítico en almacenamiento local, reiniciando estado:", e);
-                appData = { foods: [], history: [] };
+                console.error("Error al cargar localStorage, restaurando estado vacío seguro:", e);
+                appData = {
+                    config: { placeType: 'hogar', peopleCount: 4, electricityRate: 0.85, startDate: getLocalIsoDate() },
+                    foods: [], appliances: [], history: [], weeklyLogs: []
+                };
             }
         }
 
         function saveData() {
-            localStorage.setItem('casaCicloPhase1', JSON.stringify(appData));
+            try {
+                localStorage.setItem('casaCicloProData', JSON.stringify(appData));
+            } catch (e) {
+                console.error("El navegador no permite guardar en localStorage:", e);
+                alert("Advertencia: No se pudieron guardar los cambios localmente debido a la configuración de tu navegador.");
+            }
             renderAll();
         }
 
-        // Lógica de registro con soporte estricto de decimales y fechas relativas
+        // Normalizar texto para ignorar mayúsculas y tildes en el buscador
+        function normalizeString(str) {
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+        }
+
+        function applyPresetConfig() {
+            const type = document.getElementById('placeType').value;
+            if (type === 'colegio') {
+                document.getElementById('peopleCount').value = 120;
+                document.getElementById('electricityRate').value = 0.72;
+            } else if (type === 'comedor') {
+                document.getElementById('peopleCount').value = 60;
+                document.getElementById('electricityRate').value = 0.65;
+            } else {
+                document.getElementById('peopleCount').value = 4;
+                document.getElementById('electricityRate').value = 0.85;
+            }
+        }
+
+        document.getElementById('configForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            appData.config.placeType = document.getElementById('placeType').value;
+            appData.config.peopleCount = parseInt(document.getElementById('peopleCount').value, 10);
+            appData.config.electricityRate = parseFloat(document.getElementById('electricityRate').value);
+            appData.config.startDate = document.getElementById('startDate').value;
+            saveData();
+            alert("Configuración actualizada correctamente.");
+        });
+
+        // Registro de Alimentos con tolerancia, conversión de unidades y duración personalizada
         document.getElementById('foodForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const nameInput = document.getElementById('foodInput').value.trim();
+            const rawName = document.getElementById('foodInput').value;
             const qtyInput = parseFloat(document.getElementById('foodQty').value);
+            const unitType = document.getElementById('foodUnitType').value;
 
-            if (!nameInput || isNaN(qtyInput) || qtyInput <= 0) return;
+            if (!rawName || isNaN(qtyInput) || qtyInput <= 0) return;
 
-            const totalShelfLife = foodCatalog[nameInput] || 5; 
-            const todayStr = new Date().toISOString().split('T')[0];
+            // Búsqueda tolerante ignorando mayúsculas y tildes
+            const normalizedInput = normalizeString(rawName);
+            let matchedKey = Object.keys(foodCatalog).find(k => normalizeString(k) === normalizedInput);
+
+            let shelfLife = 5;
+            let finalName = rawName.trim();
+            let weightKg = qtyInput;
+            let displayQuantityText = `${qtyInput} kg`;
+
+            if (matchedKey) {
+                finalName = matchedKey;
+                shelfLife = foodCatalog[matchedKey].days;
+                const unitWeight = foodCatalog[matchedKey].unitWeight;
+
+                if (unitType === 'unid' && unitWeight) {
+                    weightKg = qtyInput * unitWeight;
+                    displayQuantityText = `${qtyInput} unidades (≈${weightKg.toFixed(2)} kg)`;
+                } else {
+                    weightKg = qtyInput;
+                    displayQuantityText = `${qtyInput} kg`;
+                }
+            } else {
+                // Si el alimento no está en el catálogo, se solicita su duración en días
+                const userDays = prompt(`El alimento "${rawName}" no está en el catálogo. ¿Cuántos días de duración estimada tiene?`, "5");
+                if (userDays === null) return;
+                shelfLife = parseInt(userDays, 10);
+                if (isNaN(shelfLife) || shelfLife <= 1) shelfLife = 5;
+                weightKg = qtyInput;
+                displayQuantityText = `${qtyInput} ${unitType === 'unid' ? 'unidades' : 'kg'}`;
+            }
 
             appData.foods.push({
                 id: Date.now(),
-                name: nameInput,
-                qty: qtyInput,
-                shelfLifeDays: totalShelfLife,
-                dateAdded: todayStr
+                name: finalName,
+                weightKg: weightKg,
+                displayQtyText: displayQuantityText,
+                shelfLifeDays: shelfLife,
+                dateAdded: getLocalIsoDate()
             });
 
             document.getElementById('foodForm').reset();
+            document.getElementById('foodUnitType').value = 'kg';
             saveData();
         });
 
-        // Cálculo dinámico de días restantes en tiempo real
+        // Cálculo de días restantes en función de la fracción de vida útil (Semáforo Relativo)
         function getRemainingDays(item) {
-            const addedDate = new Date(item.dateAdded);
-            const currentDate = new Date();
+            const addedDate = new Date(item.dateAdded + 'T00:00:00');
+            const currentDate = new Date(getLocalIsoDate() + 'T00:00:00');
             const diffTime = currentDate - addedDate;
             const elapsedDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
             return item.shelfLifeDays - elapsedDays;
         }
 
-        // Cierre con los 4 botones obligatorios y regla estricta de salvado
+        // Cierre con 3 resultados y regla estricta de salvado/desviado/desperdiciado
         function closeFood(id, actionType) {
             const index = appData.foods.findIndex(f => f.id === id);
             if (index === -1) return;
 
             const item = appData.foods[index];
-            const remainingDays = getRemainingDays(item);
+            const remaining = getRemainingDays(item);
 
-            const wasCritical = remainingDays <= 5;
-            const isSaved = wasCritical && (actionType === 'Consumido' || actionType === 'Congelado' || actionType === 'Compostado');
+            // Regla de Salvado: Solo si le quedaban 5 días o menos (o estado crítico/próximo) y se consumió o congeló
+            // Compostado se clasifica como "Desviado" (no cuenta como comida aprovechada para ODS 12)
+            let categoryResult = 'normal';
+            let isSaved = false;
+
+            if (remaining <= 0) {
+                // Vencido
+                if (actionType === 'Compostado') categoryResult = 'Desviado (Compostado)';
+                else categoryResult = 'Desperdiciado (Vencido)';
+            } else {
+                const fraction = remaining / item.shelfLifeDays;
+                const isUrgentOrClose = remaining <= 5 || fraction <= 0.3;
+
+                if (actionType === 'Consumido' || actionType === 'Congelado') {
+                    if (isUrgentOrClose) {
+                        isSaved = true;
+                        categoryResult = 'Salvado';
+                    } else {
+                        categoryResult = 'Consumo Normal';
+                    }
+                } else if (actionType === 'Compostado') {
+                    categoryResult = 'Desviado (Compostado)';
+                } else if (actionType === 'Botado') {
+                    categoryResult = 'Desperdiciado (Botado)';
+                }
+            }
 
             const historyEntry = {
                 id: Date.now(),
                 name: item.name,
-                qty: item.qty,
-                dateClosed: new Date().toISOString().split('T')[0],
+                weightKg: item.weightKg,
+                displayQtyText: item.displayQtyText,
+                dateClosed: getLocalIsoDate(),
                 finalState: actionType,
-                remainingDaysAtClose: remainingDays,
+                categoryResult: categoryResult,
+                remainingDaysAtClose: remaining,
                 isSaved: isSaved
             };
 
@@ -272,56 +647,273 @@
             saveData();
         }
 
-        // Renderizado del DOM
+        function deleteFoodActive(id) {
+            if (confirm("¿Estás seguro de eliminar este alimento del inventario?")) {
+                appData.foods = appData.foods.filter(f => f.id !== id);
+                saveData();
+            }
+        }
+
+        // Registro de energía con soporte para cantidad y equipos múltiples
+        document.getElementById('energyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('applianceNameInput'].value.trim();
+            const watts = parseFloat(document.getElementById('applianceWatts'].value);
+            const hours = parseFloat(document.getElementById('applianceHours'].value);
+            const isPhantom = document.getElementById('appliancePhantom'].checked;
+            const count = parseInt(document.getElementById('applianceCount'].value, 10) || 1;
+
+            if (!name || isNaN(watts) || isNaN(hours)) return;
+
+            appData.appliances.push({
+                id: Date.now(),
+                name,
+                watts,
+                hours,
+                isPhantom,
+                count
+            });
+
+            document.getElementById('energyForm').reset();
+            document.getElementById('applianceCount').value = '1';
+            saveData();
+        });
+
+        function deleteAppliance(id) {
+            appData.appliances = appData.appliances.filter(a => a.id !== id);
+            saveData();
+        }
+
+        document.getElementById('weeklyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const meter = parseFloat(document.getElementById('weekMeter'].value);
+            const wastedFood = parseFloat(document.getElementById('weekWastedFood'].value);
+            const unplugged = document.getElementById('weekUnplugged'].checked;
+
+            if (isNaN(meter) || isNaN(wastedFood)) return;
+
+            appData.weeklyLogs.push({
+                id: Date.now(),
+                date: getLocalIsoDate(),
+                meterReading: meter,
+                wastedFoodKg: wastedFood,
+                unplugged
+            });
+
+            document.getElementById('weeklyForm').reset();
+            saveData();
+        });
+
+        function resetAllData() {
+            if (confirm("¿Estás seguro de reiniciar todos los datos guardados? Esta acción no se puede deshacer.")) {
+                localStorage.removeItem('casaCicloProData');
+                appData = {
+                    config: { placeType: 'hogar', peopleCount: 4, electricityRate: 0.85, startDate: getLocalIsoDate() },
+                    foods: [], appliances: [], history: [], weeklyLogs: []
+                };
+                renderAll();
+            }
+        }
+
+        // Renderizado del DOM totalmente seguro contra XSS
         function renderAll() {
+            let totalSavedFoodKg = 0;
+            let totalWastedFoodKg = 0;
+            appData.history.forEach(h => {
+                if (h.isSaved) totalSavedFoodKg += h.weightKg;
+                if (h.finalState === 'Botado' || h.remainingDaysAtClose < 0) totalWastedFoodKg += h.weightKg;
+            });
+
+            let totalMonthlyKwh = 0;
+            let totalMonthlyPhantomCost = 0;
+            appData.appliances.forEach(a => {
+                const kwh = (a.watts * a.hours * 30 * a.count) / 1000;
+                totalMonthlyKwh += kwh;
+                if (a.isPhantom) {
+                    // Supuesto de 5W en standby continuo por aparato
+                    const phantomKwh = (5 * 24 * 30 * a.count) / 1000;
+                    totalMonthlyPhantomCost += phantomKwh * appData.config.electricityRate;
+                }
+            });
+
+            const totalCO2Avoided = (totalSavedFoodKg * FACTOR_CO2_FOOD) + (totalMonthlyKwh * FACTOR_CO2_ELECTRICITY * 0.1);
+            const totalMoneySaved = totalSavedFoodKg * 4.0;
+
+            // Puntaje automático (0-100): 50 pts por reducción de desperdicios y 50 pts por eficiencia eléctrica
+            let foodScore = Math.max(0, 50 - (totalWastedFoodKg * 10));
+            let energyScore = Math.max(0, 50 - (totalMonthlyKwh > 300 ? 15 : 0));
+            let totalScore = Math.round(foodScore + energyScore);
+
+            document.getElementById('totalScore').innerText = totalScore + ' pts';
+            document.getElementById('totalCO2').innerText = totalCO2Avoided.toFixed(2) + ' kg';
+            document.getElementById('totalSoles').innerText = 'S/ ' + totalMoneySaved.toFixed(2);
+            document.getElementById('totalPhantomCost').innerText = 'S/ ' + totalMonthlyPhantomCost.toFixed(2);
+
+            document.getElementById('ods12Val').innerText = totalSavedFoodKg.toFixed(2) + ' kg de comida salvada';
+            document.getElementById('ods7Val').innerText = totalMonthlyKwh.toFixed(1) + ' kWh mensuales';
+            document.getElementById('ods13Val').innerText = totalCO2Avoided.toFixed(2) + ' kg CO₂ evitados';
+
+            // Renderizado de Alimentos Activos (Semáforo Relativo y Estado Vencido)
             const foodListDiv = document.getElementById('foodList');
             foodListDiv.innerHTML = '';
-
+            
             appData.foods.forEach(item => {
                 const remaining = getRemainingDays(item);
                 let statusClass = 'status-green';
                 let tagClass = 'tag-green';
                 let statusText = 'Fresco';
 
-                if (remaining <= 2) {
+                if (remaining < 0) {
+                    statusClass = 'status-expired';
+                    tagClass = 'tag-expired';
+                    statusText = 'Vencido';
+                } else if (remaining <= 1 || (remaining / item.shelfLifeDays) <= 0.2) {
                     statusClass = 'status-red';
                     tagClass = 'tag-red';
                     statusText = 'Urgente';
-                } else if (remaining <= 5) {
+                } else if (remaining <= 3 || (remaining / item.shelfLifeDays) <= 0.4) {
                     statusClass = 'status-yellow';
                     tagClass = 'tag-yellow';
                     statusText = 'Consumo Próximo';
                 }
 
-                foodListDiv.innerHTML += `
-                    <div class="traffic-light-item ${statusClass}">
-                        <div>
-                            <strong>${item.name}</strong> — ${item.qty} kg/unid
-                            <br><span class="tag ${tagClass}">${statusText}: ${remaining} días restantes</span>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="action-btn btn-consume" onclick="closeFood(${item.id}, 'Consumido')">Consumido</button>
-                            <button class="action-btn btn-freeze" onclick="closeFood(${item.id}, 'Congelado')">Congelado</button>
-                            <button class="action-btn btn-compost" onclick="closeFood(${item.id}, 'Compostado')">Compostado</button>
-                            <button class="action-btn btn-trash" onclick="closeFood(${item.id}, 'Botado')">Botado</button>
-                        </div>
-                    </div>
-                `;
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `traffic-light-item ${statusClass}`;
+
+                const infoDiv = document.createElement('div');
+                const strong = document.createElement('strong');
+                strong.textContent = item.name;
+                infoDiv.appendChild(strong);
+                infoDiv.appendChild(document.createTextNode(` — ${item.displayQtyText}`));
+                infoDiv.appendChild(document.createElement('br'));
+
+                const tagSpan = document.createElement('span');
+                tagSpan.className = `tag ${tagClass}`;
+                if (remaining < 0) {
+                    tagSpan.textContent = `Vencido hace ${Math.abs(remaining)} días`;
+                } else {
+                    tagSpan.textContent = `${statusText}: ${remaining} días restantes`;
+                }
+                infoDiv.appendChild(tagSpan);
+
+                const btnDiv = document.createElement('div');
+                btnDiv.className = 'action-buttons';
+
+                ['Consumido', 'Congelado', 'Compostado', 'Botado'].forEach(action => {
+                    const btn = document.createElement('button');
+                    btn.className = `action-btn btn-${action === 'Consumido' ? 'consume' : action === 'Congelado' ? 'freeze' : action === 'Compostado' ? 'compost' : 'trash'}`;
+                    btn.textContent = action;
+                    btn.onclick = () => closeFood(item.id, action);
+                    btnDiv.appendChild(btn);
+                });
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'action-btn btn-danger';
+                deleteBtn.textContent = 'Borrar';
+                deleteBtn.onclick = () => deleteFoodActive(item.id);
+                btnDiv.appendChild(deleteBtn);
+
+                itemDiv.appendChild(infoDiv);
+                itemDiv.appendChild(btnDiv);
+                foodListDiv.appendChild(itemDiv);
             });
 
+            // Renderizado de Energía
+            const energyBody = document.getElementById('energyList');
+            energyBody.innerHTML = '';
+            appData.appliances.forEach(item => {
+                const kwhMonth = (item.watts * item.hours * 30 * item.count) / 1000;
+                const costMonth = kwhMonth * appData.config.electricityRate;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${escapeHTML(item.name)} (x${item.count})${item.isPhantom ? ' 👻' : ''}</td>
+                    <td>${kwhMonth.toFixed(1)}</td>
+                    <td>S/ ${costMonth.toFixed(2)}</td>
+                    <td><button class="action-btn btn-danger" onclick="deleteAppliance(${item.id})">Eliminar</button></td>
+                `;
+                energyBody.appendChild(tr);
+            });
+
+            // Renderizado de Historial
             const historyBody = document.getElementById('historyList');
             historyBody.innerHTML = '';
             appData.history.slice().reverse().forEach(h => {
-                historyBody.innerHTML += `
-                    <tr>
-                        <td>${h.dateClosed}</td>
-                        <td>${h.name}</td>
-                        <td>${h.qty}</td>
-                        <td><strong>${h.finalState}</strong> ${h.isSaved ? '🌱 (Salvado)' : ''}</td>
-                        <td>${h.remainingDaysAtClose} días</td>
-                    </tr>
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${h.dateClosed}</td>
+                    <td>${escapeHTML(h.name)}</td>
+                    <td>${escapeHTML(h.displayQtyText)}</td>
+                    <td><strong>${escapeHTML(h.finalState)}</strong> (${escapeHTML(h.categoryResult)}) ${h.isSaved ? '🌱' : ''}</td>
+                    <td>${h.remainingDaysAtClose} días</td>
                 `;
+                historyBody.appendChild(tr);
             });
+
+            // Gráfico semanal en CSS puro
+            const chartContainer = document.getElementById('weeklyChart');
+            chartContainer.innerHTML = '';
+            if (appData.weeklyLogs.length === 0) {
+                chartContainer.innerHTML = '<p style="color: #666; font-size: 0.9rem; width:100%; text-align:center;">No hay registros semanales todavía.</p>';
+            } else {
+                appData.weeklyLogs.forEach((log, index) => {
+                    const col = document.createElement('div');
+                    col.className = 'bar-column';
+
+                    const bar = document.createElement('div');
+                    bar.className = 'bar';
+                    const heightPercent = Math.min(100, Math.max(20, (index + 1) * 25));
+                    bar.style.height = heightPercent + '%';
+                    bar.textContent = `S${index + 1}`;
+
+                    const label = document.createElement('div');
+                    label.className = 'bar-label';
+                    label.textContent = log.date;
+
+                    col.appendChild(bar);
+                    col.appendChild(label);
+                    chartContainer.appendChild(col);
+                });
+            }
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        // Exportación robusta a CSV con BOM UTF-8 y comillas de protección
+        function exportToCSV() {
+            let csvContent = "\ufeff"; 
+            csvContent += "Casa Ciclo - Reporte Oficial de Impacto\n";
+            csvContent += `Tipo de Lugar,${appData.config.placeType}\n`;
+            csvContent += `Integrantes,${appData.config.peopleCount}\n`;
+            csvContent += `Tarifa kWh (S/),${appData.config.electricityRate}\n\n`;
+            
+            csvContent += "Historial de Alimentos\nFecha Cierre,Nombre,Cantidad,Estado Final,Categoria Resultado,Dias Restantes\n";
+            appData.history.forEach(f => {
+                csvContent += `"${f.dateClosed}","${f.name.replace(/"/g, '""')}","${f.displayQtyText.replace(/"/g, '""')}","${f.finalState}","${f.categoryResult}",${f.remainingDaysAtClose}\n`;
+            });
+
+            csvContent += "\nAparatos Registrados\nNombre,Potencia (W),Horas Uso,Cantidad,Standby\n";
+            appData.appliances.forEach(a => {
+                csvContent += `"${a.name.replace(/"/g, '""')}",${a.watts},${a.hours},${a.count},${a.isPhantom ? 'Sí' : 'No'}\n`;
+            });
+
+            csvContent += "\nRegistros Semanales\nFecha,Medidor (kWh),Comida Botada (kg),Desconectado\n";
+            appData.weeklyLogs.forEach(w => {
+                csvContent += `"${w.date}",${w.meterReading},${w.wastedFoodKg},${w.unplugged ? 'Sí' : 'No'}\n`;
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `Reporte_CasaCiclo_${appData.config.placeType}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>
