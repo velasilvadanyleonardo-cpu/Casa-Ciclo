@@ -399,8 +399,15 @@
 
                     <div id="dynamicApplianceOptions" style="display:flex; flex-direction:column; gap:8px; background:#f9f9f9; padding:10px; border-radius:4px;"></div>
 
-                    <label for="applianceNameInput">Marca / Modelo (Opcional - para reconocerlo):</label>
-                    <input type="text" id="applianceNameInput" placeholder="Ej. LG Smart 55'', Mabe No Frost...">
+                    <!-- Selección Dinámica de Marcas Específicas por Tipo de Aparato -->
+                    <div style="display:flex; flex-direction:column; gap:5px;">
+                        <label for="applianceBrandSelect">Marca del Aparato:</label>
+                        <select id="applianceBrandSelect" onchange="onApplianceBrandChange()"></select>
+                        <input type="text" id="customBrandInput" placeholder="Escribe la marca personalizada..." style="display:none; margin-top:5px;">
+                    </div>
+
+                    <label for="applianceModelInput">Modelo / Descripción corta (Opcional):</label>
+                    <input type="text" id="applianceModelInput" placeholder="Ej. Smart 55'', No Frost, Inverter...">
 
                     <div class="grid-inner">
                         <div>
@@ -525,13 +532,32 @@
     </div>
 
     <script>
-        /*
-         * VALORES REFERENCIALES:
-         * 1. FACTOR_CO2_ELECTRICITY (0.30 kg CO2/kWh): Valor referencial estimado para matriz eléctrica.
-         * 2. FACTOR_CO2_FOOD (2.50 kg CO2e/kg): Promedio referencial global de huella alimentaria.
-         */
         const FACTOR_CO2_ELECTRICITY = 0.30; 
         const FACTOR_CO2_FOOD = 2.5;
+
+        // Marcas dinámicas relacionadas a cada tipo de aparato
+        const applianceBrands = {
+            "Refrigeradora": ["Samsung", "LG", "Whirlpool", "Mabe", "Indurama", "Electrolux", "Bosch", "Daewoo", "Miray", "General Electric", "Otra marca..."],
+            "Televisor": ["Samsung", "LG", "Sony", "TCL", "Hisense", "Panasonic", "Philips", "Xiaomi", "Miray", "AOC", "Otra marca..."],
+            "Foco / Iluminación": ["Philips", "Osram", "General Electric", "Sylvania", "Opel", "iLugnat", "Doremi", "Otra marca..."],
+            "Ventilador": ["Imaco", "Kambrook", "Sole", "Taurus", "Miray", "Recco", "National", "Wurden", "Otra marca..."],
+            "Microondas": ["Samsung", "LG", "Daewoo", "Panasonic", "Whirlpool", "Imaco", "Miray", "Oster", "Otra marca..."],
+            "Computadora / Laptop": ["HP", "Lenovo", "Dell", "Asus", "Acer", "Apple", "MSI", "Huawei", "Samsung", "Otra marca..."],
+            "Lavadora": ["LG", "Samsung", "Whirlpool", "Mabe", "Electrolux", "Bosch", "Daewoo", "Indurama", "Otra marca..."],
+            "Cargador de celular": ["Apple", "Samsung", "Xiaomi", "Motorola", "Huawei", "Anker", "Baseus", "Genérico", "Otra marca..."],
+            "Hervidor eléctrico": ["Oster", "Imaco", "Thomas", "Miray", "Philips", "Wurden", "Recco", "Otra marca..."],
+            "Plancha": ["Oster", "Philips", "Imaco", "Thomas", "Black+Decker", "Miray", "Otra marca..."],
+            "Ducha / Terma eléctrica": ["Sole", "Rotoplas", "Rheem", "Junkers", "Bosch", "Aquamax", "Bryant", "Otra marca..."],
+            "Olla arrocera": ["Oster", "Imaco", "Thomas", "Miray", "Wurden", "Panasonic", "Otra marca..."],
+            "Licuadora": ["Oster", "Imaco", "Thomas", "Philips", "Ninja", "Miray", "Otra marca..."],
+            "Router / Módem": ["TP-Link", "Huawei", "ZTE", "Asus", "D-Link", "Mercusys", "Cisco", "Otra marca..."],
+            "Decodificador TV": ["Movistar", "Claro", "DirecTV", "Kaon", "Technicolor", "ZTE", "Otra marca..."],
+            "Equipo de sonido": ["Sony", "LG", "Panasonic", "JBL", "Pioneer", "Bose", "Samsung", "Otra marca..."],
+            "Secadora de cabello": ["Babyliss", "Gamma", "Philips", "Conair", "Remington", "Imaco", "Otra marca..."],
+            "Calefactor": ["Sole", "Imaco", "Thomas", "Miray", "Kambrook", "Wurden", "Otra marca..."],
+            "Tablet": ["Apple (iPad)", "Samsung", "Lenovo", "Xiaomi", "Amazon Fire", "Huawei", "Otra marca..."],
+            "Air Fryer / Freidora": ["Oster", "Philips", "Ninja", "Imaco", "Thomas", "Midea", "Wurden", "Otra marca..."]
+        };
 
         const applianceCatalog = {
             "Refrigeradora": {
@@ -742,13 +768,41 @@
             onApplianceTypeChange();
         }
 
+        function populateBrandSelect(applianceType) {
+            const brandSel = document.getElementById('applianceBrandSelect');
+            brandSel.innerHTML = '';
+            const brands = applianceBrands[applianceType] || ["Genérico", "Otra marca..."];
+
+            brands.forEach(b => {
+                const opt = document.createElement('option');
+                opt.value = b;
+                opt.textContent = b;
+                brandSel.appendChild(opt);
+            });
+            onApplianceBrandChange();
+        }
+
+        function onApplianceBrandChange() {
+            const brandVal = document.getElementById('applianceBrandSelect').value;
+            const customInput = document.getElementById('customBrandInput');
+            if (brandVal === "Otra marca...") {
+                customInput.style.display = 'block';
+                customInput.required = true;
+            } else {
+                customInput.style.display = 'none';
+                customInput.required = false;
+                customInput.value = '';
+            }
+        }
+
         function onApplianceTypeChange() {
             const type = document.getElementById('applianceTypeSelect').value;
             const conf = applianceCatalog[type];
             const container = document.getElementById('dynamicApplianceOptions');
             container.innerHTML = '';
 
-            // Limpieza y desmarcado del campo de etiqueta al cambiar de aparato
+            populateBrandSelect(type);
+
             document.getElementById('useRealWatts').checked = false;
             const realWattsInput = document.getElementById('realWattsInput');
             realWattsInput.value = '';
@@ -843,7 +897,6 @@
                 }
             } catch (e) {
                 console.error("Error de corrupción en localStorage v2:", e);
-                // Manejo distintivo de corrupción de datos con respaldo
                 const rawCorrupted = localStorage.getItem('casaCicloProData_v2');
                 if (rawCorrupted) {
                     localStorage.setItem('casaCicloProData_v2_corrupted_backup', rawCorrupted);
@@ -1037,7 +1090,6 @@
             const item = appData.foods[index];
             const dateClosed = uiState.foodCloseDates[id] || getLocalIsoDate();
 
-            // Bloqueos de fecha de cierre
             if (dateClosed < appData.config.startDate) {
                 alert(`Error: La fecha de cierre (${dateClosed}) no puede ser anterior a la fecha de inicio de medición (${appData.config.startDate}).`);
                 return;
@@ -1051,7 +1103,6 @@
                 return;
             }
 
-            // Advertencia si la fecha cae antes de la última lectura registrada
             if (appData.weeklyLogs.length > 0) {
                 const lastLogDate = appData.weeklyLogs[appData.weeklyLogs.length - 1].date;
                 if (dateClosed <= lastLogDate) {
@@ -1076,7 +1127,6 @@
                 }
             } else {
                 if (actionType === 'Consumido' || actionType === 'Congelado') {
-                    // Verificación declarada para alimentos en amarillo o rojo
                     if (status.code === 'urgent' || status.code === 'warning') {
                         const wasGoingToWaste = confirm(`El alimento "${item.name}" estaba en riesgo (${status.label}). ¿Realmente ibas a botarlo si no intervenías?`);
                         if (wasGoingToWaste) {
@@ -1121,12 +1171,18 @@
             }
         }
 
-        // Registro de Energía
+        // Registro de Energía con Marcas Dinámicas
         document.getElementById('energyForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const type = document.getElementById('applianceTypeSelect').value;
             const conf = applianceCatalog[type];
-            const brandCustom = document.getElementById('applianceNameInput').value.trim();
+
+            let selectedBrand = document.getElementById('applianceBrandSelect').value;
+            if (selectedBrand === "Otra marca...") {
+                selectedBrand = document.getElementById('customBrandInput').value.trim() || "Genérico";
+            }
+
+            const modelCustom = document.getElementById('applianceModelInput').value.trim();
             const count = parseInt(document.getElementById('applianceCount').value, 10) || 1;
             const usage = document.getElementById('usageLevel').value;
             const useReal = document.getElementById('useRealWatts').checked;
@@ -1152,12 +1208,13 @@
             }
 
             let hours = conf.continuous ? 24 : conf.getHours(usage);
-            let displayName = brandCustom ? `${type} (${brandCustom})` : type;
+            let displayName = modelCustom ? `${type} - ${selectedBrand} (${modelCustom})` : `${type} - ${selectedBrand}`;
             let standbyW = conf.defaultStandby;
 
             appData.appliances.push({
                 id: Date.now(),
                 type: type,
+                brand: selectedBrand,
                 name: displayName,
                 watts: finalWatts,
                 hours: hours,
@@ -1350,7 +1407,6 @@
                 const currFoodDay = latestData.wastedPerDay;
                 const currKwhDay = latestData.kwhPerDay;
 
-                // CONJUNCIÓN LÓGICA (Y): Exige actividad registrada en la base Y en el periodo actual
                 const hasFoodDataBoth = (latestData.foodActivityCount > 0 && baseData.foodActivityCount > 0);
                 const energyScore = calculateSubScore(baseKwhDay, currKwhDay);
 
@@ -1414,7 +1470,6 @@
                 totalMonthlyKwhEst += (kwhUse + kwhStandby);
             });
 
-            // Paneles
             document.getElementById('totalScore').innerText = summary.currentScoreText;
             document.getElementById('totalCO2').innerText = summary.totalCO2AvoidedCumulative.toFixed(2) + ' kg';
             document.getElementById('wastedPerCapita').innerText = summary.lastWastedPerCapitaDay.toFixed(3) + ' kg/día';
@@ -1438,7 +1493,6 @@
                 }
             }
 
-            // Comparación Estimado vs Medido SIN TOPE DE 100%
             const compNote = document.getElementById('comparisonNote');
             if (summary.calculatedWeeklyData.length >= 2) {
                 const lastKwhDay = summary.calculatedWeeklyData[summary.calculatedWeeklyData.length - 1].kwhPerDay;
@@ -1459,7 +1513,6 @@
 
             generateAssistantRecommendations();
 
-            // Renderizado Alimentos Activos
             const foodListDiv = document.getElementById('foodList');
             foodListDiv.innerHTML = '';
             
@@ -1527,7 +1580,6 @@
                 });
             }
 
-            // Renderizado Energía Ordenado por Ranking Total %
             const energyBody = document.getElementById('energyList');
             energyBody.innerHTML = '';
             
@@ -1566,7 +1618,6 @@
                 energyBody.appendChild(tr);
             });
 
-            // Renderizado Historial de Alimentos
             const historyBody = document.getElementById('historyList');
             historyBody.innerHTML = '';
             appData.history.slice().reverse().forEach(h => {
@@ -1582,7 +1633,6 @@
                 historyBody.appendChild(tr);
             });
 
-            // Tabla y Gráfica Semanal Normalizada por Porcentaje de Escala
             const weeklyTableBody = document.getElementById('weeklyTableBody');
             weeklyTableBody.innerHTML = '';
 
@@ -1614,10 +1664,10 @@
                             const foodScore = calculateSubScore(baseData.wastedPerDay, d.wastedPerDay);
                             const totalWScore = foodScore + energyScore;
                             scoreText = totalWScore + " pts";
-                            barHeightPct = totalWScore; // Escala sobre 100
+                            barHeightPct = totalWScore; 
                         } else {
                             scoreText = `${energyScore}/50 pts (sin comida)`;
-                            barHeightPct = Math.round((energyScore / 50) * 100); // Normalizado a % de su máximo (50)
+                            barHeightPct = Math.round((energyScore / 50) * 100); 
                             isPartial = true;
                         }
                     }
@@ -1661,7 +1711,6 @@
             }
         }
 
-        // ASISTENTE AUTOMÁTICO
         function generateAssistantRecommendations() {
             const textEl = document.getElementById('assistantText');
             let msgs = [];
@@ -1736,7 +1785,6 @@
             textEl.innerHTML = msgs.join('<br>');
         }
 
-        // EXPORTACIÓN CSV COMPLETA
         function exportToCSV() {
             const summary = calculateGlobalSummary();
             let csvContent = "\ufeff"; 
@@ -1752,11 +1800,11 @@
                 csvContent += `"${f.dateClosed}","${f.name.replace(/"/g, '""')}","${f.displayQtyText.replace(/"/g, '""')}","${f.finalState}","${f.categoryResult}",${f.remainingDaysAtClose}\n`;
             });
 
-            csvContent += "\nAparatos Registrados\nNombre,Potencia (W),Horas Uso,Cantidad,Standby Watts,kWh/Mes Uso,kWh/Mes Standby,kWh/Mes Total,Tipo Valor\n";
+            csvContent += "\nAparatos Registrados\nNombre,Marca,Potencia (W),Horas Uso,Cantidad,Standby Watts,kWh/Mes Uso,kWh/Mes Standby,kWh/Mes Total,Tipo Valor\n";
             appData.appliances.forEach(a => {
                 let kwhUse = a.kwhAnnualInput ? (a.kwhAnnualInput / 12 * a.count) : ((a.watts * a.hours * 30 * a.count) / 1000);
                 let kwhStandby = (a.standbyWatts > 0 && a.hours < 24) ? ((a.standbyWatts * (24 - a.hours) * 30 * a.count) / 1000) : 0;
-                csvContent += `"${a.name.replace(/"/g, '""')}",${a.watts},${a.hours},${a.count},${a.standbyWatts},${kwhUse.toFixed(2)},${kwhStandby.toFixed(2)},${(kwhUse + kwhStandby).toFixed(2)},"${a.valType}"\n`;
+                csvContent += `"${a.name.replace(/"/g, '""')}","${(a.brand || '').replace(/"/g, '""')}",${a.watts},${a.hours},${a.count},${a.standbyWatts},${kwhUse.toFixed(2)},${kwhStandby.toFixed(2)},${(kwhUse + kwhStandby).toFixed(2)},"${a.valType}"\n`;
             });
 
             csvContent += "\nRegistros Semanales y Calculos de Auditoria\nRegistro,Fecha,Medidor (kWh),kWh por Dia,Desperdicio por Dia (incluye compost kg),Puntaje,Desconecto Habitos\n";
@@ -1794,7 +1842,7 @@
 
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
-            const link = document.append ? document.createElement("a") : document.createElement("a");
+            const link = document.createElement("a");
             link.setAttribute("href", url);
             link.setAttribute("download", `Reporte_CasaCiclo_${appData.config.placeType}.csv`);
             document.body.appendChild(link);
