@@ -4,65 +4,130 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Casa Ciclo - Sistema de gestión del consumo responsable</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #2e7d32;
-            --secondary-color: #81c784;
-            --bg-color: #f4f6f4;
+            --primary-light: #43a047;
+            --primary-pastel: #e8f5e9;
+            --accent-green: #66bb6a;
+            --mint-vibrant: #26a69a;
+            --bg-color: #f4f8f4;
             --card-bg: #ffffff;
-            --text-color: #333333;
+            --text-color: #263238;
+            --text-muted: #607d8b;
             --danger-color: #e53935;
-            --warning-color: #fdd835;
+            --warning-color: #fbc02d;
             --success-color: #43a047;
-            --info-color: #1976d2;
-            --neutral-gray: #757575;
+            --info-color: #0288d1;
+            --border-radius: 16px;
+            --box-shadow: 0 10px 30px rgba(46, 125, 50, 0.08);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
             padding: 0;
+            -webkit-font-smoothing: antialiased;
         }
 
         header {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, #388e3c, #1b5e20);
             color: white;
-            padding: 1.5rem;
+            padding: 2.5rem 1.5rem;
             text-align: center;
+            box-shadow: 0 4px 20px rgba(27, 94, 32, 0.15);
         }
 
-        header h1 { margin: 0; font-size: 1.8rem; }
-        header p { margin: 5px 0 0 0; font-size: 0.9rem; opacity: 0.9; }
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .logo-icon {
+            width: 52px;
+            height: 52px;
+            fill: #a5d6a7;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+            animation: pulse-soft 3s infinite ease-in-out;
+        }
+
+        @keyframes pulse-soft {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+        }
+
+        header h1 { 
+            margin: 0; 
+            font-size: 2.6rem; 
+            font-weight: 800; 
+            letter-spacing: -0.8px;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header p { 
+            margin: 8px 0 0 0; 
+            font-size: 1.1rem; 
+            opacity: 0.95; 
+            font-weight: 300; 
+            letter-spacing: 0.2px;
+        }
 
         .container {
             max-width: 1100px;
-            margin: 20px auto;
-            padding: 0 15px;
+            margin: 35px auto;
+            padding: 0 20px;
         }
 
         .card {
             background-color: var(--card-bg);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-radius: var(--border-radius);
+            padding: 28px;
+            margin-bottom: 28px;
+            box-shadow: var(--box-shadow);
+            border: 1px solid rgba(102, 187, 106, 0.18);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 14px 36px rgba(46, 125, 50, 0.12);
         }
 
         h2 {
             color: var(--primary-color);
-            border-bottom: 2px solid var(--secondary-color);
-            padding-bottom: 8px;
+            border-bottom: 2px solid #c8e6c9;
+            padding-bottom: 10px;
             margin-top: 0;
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
         }
 
-        form { display: flex; flex-direction: column; gap: 10px; }
+        form { display: flex; flex-direction: column; gap: 14px; }
+        label { font-weight: 600; font-size: 0.9rem; color: #37474f; }
         input, select, button {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 12px 16px;
+            border: 1.5px solid #cfd8dc;
+            border-radius: 10px;
             font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            background-color: #fafafa;
+            transition: all 0.2s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(102, 187, 106, 0.15);
         }
 
         button {
@@ -70,130 +135,145 @@
             color: white;
             border: none;
             cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);
         }
 
         button:hover { background-color: #1b5e20; }
-        .btn-danger { background-color: var(--danger-color); }
+        button:active { transform: scale(0.98); }
+        .btn-danger { background-color: var(--danger-color); box-shadow: 0 4px 12px rgba(229, 57, 53, 0.2); }
         .btn-danger:hover { background-color: #c62828; }
-        .btn-secondary { background-color: #555; }
-        .btn-secondary:hover { background-color: #333; }
+        .btn-secondary { background-color: #607d8b; box-shadow: 0 4px 12px rgba(96, 125, 139, 0.2); }
+        .btn-secondary:hover { background-color: #455a64; }
 
         .grid-2 {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
         }
 
         .grid-inner {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 14px;
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
         }
 
         .stat-box {
-            background-color: #e8f5e9;
-            padding: 15px;
-            border-radius: 6px;
+            background: linear-gradient(135deg, #f1f8e9, #e8f5e9);
+            padding: 20px;
+            border-radius: var(--border-radius);
             text-align: center;
-            border-left: 5px solid var(--primary-color);
+            border-left: 6px solid var(--accent-green);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
 
-        .stat-box h3 { margin: 0; font-size: 0.85rem; color: #1b5e20; }
-        .stat-box p { font-size: 1.3rem; font-weight: bold; margin: 5px 0 0 0; }
+        .stat-box h3 { margin: 0; font-size: 0.75rem; color: #2e7d32; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
+        .stat-box p { font-size: 1.5rem; font-weight: 800; margin: 8px 0 0 0; color: #1b5e20; }
 
         .ods-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 18px;
+            margin-top: 24px;
         }
 
         .ods-card {
-            background: #f1f8e9;
-            border: 1px solid #c8e6c9;
-            border-radius: 6px;
-            padding: 15px;
+            background: #f9fbf9;
+            border: 1.5px solid #dcedc8;
+            border-radius: var(--border-radius);
+            padding: 18px;
             text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
-        .ods-card h4 { margin: 0 0 5px 0; color: #2e7d32; }
+        .ods-card h4 { margin: 0 0 8px 0; color: var(--primary-color); font-weight: 700; font-size: 1rem; }
 
         .traffic-light-item {
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 10px;
+            padding: 16px 18px;
+            border-radius: 12px;
+            margin-bottom: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.04);
         }
 
-        .status-red { background-color: #ffebee; border-left: 5px solid var(--danger-color); }
-        .status-yellow { background-color: #fffde7; border-left: 5px solid var(--warning-color); }
-        .status-green { background-color: #e8f5e9; border-left: 5px solid var(--success-color); }
-        .status-expired { background-color: #efebe9; border-left: 5px solid var(--neutral-gray); }
+        .status-red { background-color: #fde8e8; border-left: 6px solid var(--danger-color); }
+        .status-yellow { background-color: #fffde7; border-left: 6px solid #fbc02d; }
+        .status-green { background-color: #e8f5e9; border-left: 6px solid var(--success-color); }
+        .status-expired { background-color: #eceff1; border-left: 6px solid var(--text-muted); }
 
         .tag {
-            font-size: 0.8rem;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-weight: bold;
+            font-size: 0.75rem;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 6px;
+            letter-spacing: 0.3px;
         }
         .tag-red { background: var(--danger-color); color: white; }
-        .tag-yellow { background: var(--warning-color); color: #333; }
+        .tag-yellow { background: #fbc02d; color: #333333; }
         .tag-green { background: var(--success-color); color: white; }
-        .tag-expired { background: var(--neutral-gray); color: white; }
+        .tag-expired { background: var(--text-muted); color: white; }
 
         .action-buttons {
             display: flex;
-            gap: 5px;
+            gap: 8px;
             flex-wrap: wrap;
             align-items: center;
         }
 
         .action-btn {
-            padding: 6px 10px;
-            font-size: 0.75rem;
-            border-radius: 4px;
+            padding: 8px 14px;
+            font-size: 0.82rem;
+            border-radius: 8px;
+            font-weight: 600;
         }
 
         .btn-consume { background-color: var(--success-color); }
         .btn-freeze { background-color: var(--info-color); }
-        .btn-compost { background-color: #795548; }
+        .btn-compost { background-color: #8d6e63; }
         .btn-trash { background-color: var(--danger-color); }
 
         .table-responsive {
             width: 100%;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
-            margin-top: 10px;
+            margin-top: 14px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
         }
 
-        table { width: 100%; border-collapse: collapse; min-width: 650px; }
-        th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; font-size: 0.85rem; }
+        table { width: 100%; border-collapse: collapse; min-width: 650px; background: white; }
+        th { background-color: #f1f8e9; color: #2e7d32; font-weight: 700; }
+        th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        tr:hover { background-color: #fafafa; }
 
         .chart-container {
             display: flex;
             align-items: flex-end;
-            gap: 15px;
-            height: 200px;
+            gap: 18px;
+            height: 220px;
             padding-top: 30px;
-            border-bottom: 2px solid #ccc;
-            margin-top: 15px;
+            border-bottom: 2px solid #cfd8dc;
+            margin-top: 20px;
             overflow-x: auto;
         }
         .bar-column {
             flex: 1;
-            min-width: 45px;
+            min-width: 52px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -202,72 +282,90 @@
         }
         .bar {
             width: 100%;
-            max-width: 45px;
-            background-color: var(--primary-color);
-            border-radius: 4px 4px 0 0;
+            max-width: 52px;
+            background-color: var(--accent-green);
+            border-radius: 8px 8px 0 0;
             transition: height 0.4s;
             text-align: center;
             color: white;
-            font-size: 0.7rem;
-            padding-top: 4px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding-top: 8px;
             box-sizing: border-box;
+            box-shadow: 0 -3px 8px rgba(102, 187, 106, 0.25);
         }
         .bar-base {
-            background-color: var(--neutral-gray) !important;
+            background-color: var(--text-muted) !important;
+            box-shadow: none !important;
         }
         .bar-partial {
             background-color: var(--info-color) !important;
         }
         .bar-label {
-            font-size: 0.7rem;
-            margin-top: 5px;
+            font-size: 0.78rem;
+            margin-top: 8px;
             text-align: center;
             white-space: nowrap;
+            color: #546e7a;
+            font-weight: 600;
         }
         .info-note {
-            font-size: 0.8rem;
-            color: #555;
-            background-color: #e3f2fd;
-            border-left: 4px solid var(--info-color);
-            padding: 8px 12px;
-            border-radius: 4px;
-            margin-bottom: 10px;
+            font-size: 0.88rem;
+            color: #0277bd;
+            background-color: #e1f5fe;
+            border-left: 5px solid var(--info-color);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            line-height: 1.5;
         }
         .warning-note {
-            font-size: 0.8rem;
-            color: #856404;
-            background-color: #fff3cd;
-            border-left: 4px solid #ffeba8;
-            padding: 8px 12px;
-            border-radius: 4px;
-            margin-bottom: 10px;
+            font-size: 0.88rem;
+            color: #f57f17;
+            background-color: #fffde7;
+            border-left: 5px solid #fbc02d;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            line-height: 1.5;
         }
         .storage-banner {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 15px;
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 24px;
             display: none;
-            font-size: 0.85rem;
+            font-size: 0.92rem;
+            font-weight: 500;
         }
         .assistant-box {
-            background-color: #fffde7;
-            border: 1px solid #fbc02d;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
+            background: linear-gradient(135deg, #fffde7, #fff9c4);
+            border: 1.5px solid #fff59d;
+            padding: 18px;
+            border-radius: var(--border-radius);
+            margin-bottom: 28px;
+            font-size: 0.94rem;
+            box-shadow: 0 6px 16px rgba(253, 216, 53, 0.15);
         }
-        .assistant-box h4 { margin: 0 0 5px 0; color: #f57f17; }
+        .assistant-box h4 { margin: 0 0 8px 0; color: #f57f17; font-size: 1.05rem; font-weight: 700; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Casa Ciclo</h1>
-        <p>Sistema de gestión del consumo responsable</p>
+        <div class="header-content">
+            <!-- Logotipo SVG: Casita con hoja de ecología integrada -->
+            <svg class="logo-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 3L2 12h3v8h5v-6h4v6h5v-8h3L12 3zm0 2.84l6 5.16V18h-2v-6H8v6H6v-7l6-5.16z"/>
+                <path d="M12 7c-2.21 0-4 1.79-4 4 0 2.21 1.79 4 4 4s4-1.79 4-4c0-2.21-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" fill="#81c784"/>
+            </svg>
+            <div>
+                <h1>Casa Ciclo</h1>
+                <p>Sistema inteligente de gestión del consumo responsable</p>
+            </div>
+        </div>
     </header>
 
     <div class="container">
@@ -290,7 +388,7 @@
                             <option value="colegio">Colegio / Institución Educativa (Comparativa por persona)</option>
                             <option value="comedor">Comedor Popular / Comunitario (Comparativa por persona)</option>
                         </select>
-                        <small style="font-size:0.75rem; color:#666; display:block; margin-top:2px;">El catálogo incluye potencias residenciales referenciales. En instituciones se usa para comparativa per cápita.</small>
+                        <small style="font-size:0.78rem; color:#78909c; display:block; margin-top:6px;">El catálogo incluye potencias residenciales referenciales. En instituciones se usa para comparativa per cápita.</small>
                     </div>
                     <div>
                         <label for="peopleCount">Número de Personas / Integrantes:</label>
@@ -305,7 +403,7 @@
                         <input type="date" id="startDate" required>
                     </div>
                 </div>
-                <button type="submit" style="margin-top: 10px;">Guardar Configuración</button>
+                <button type="submit" style="margin-top: 16px;">Guardar Configuración</button>
             </form>
         </div>
 
@@ -333,22 +431,22 @@
             <div class="ods-grid">
                 <div class="ods-card">
                     <h4>ODS 12: Producción y Consumo</h4>
-                    <p id="ods12Val">0.00 kg de comida salvada</p>
-                    <small id="ods12Deviated" style="font-size:0.75rem; color:#555;">(0.00 kg desviados a compost)</small>
+                    <p id="ods12Val" style="font-weight:700; color:#2e7d32; margin: 6px 0;">0.00 kg de comida salvada</p>
+                    <small id="ods12Deviated" style="font-size:0.78rem; color:#555;">(0.00 kg desviados a compost)</small>
                 </div>
                 <div class="ods-card">
                     <h4>ODS 7: Energía Asequible</h4>
-                    <p id="ods7Val">0.0 kWh ahorrados (neto)</p>
-                    <small id="ods7Soles" style="font-size:0.75rem; color:#2e7d32; font-weight:bold;">Ahorro: S/ 0.00</small>
+                    <p id="ods7Val" style="font-weight:700; color:#2e7d32; margin: 6px 0;">0.0 kWh ahorrados (neto)</p>
+                    <small id="ods7Soles" style="font-size:0.78rem; color:#388e3c; font-weight:bold;">Ahorro: S/ 0.00</small>
                 </div>
                 <div class="ods-card">
                     <h4>ODS 13: Acción por el Clima</h4>
-                    <p id="ods13Val">0.00 kg CO₂ evitados</p>
-                    <small style="font-size:0.7rem; color:#666; display:block; margin-top:3px;">Nota: El CO₂ de energía solo se computa cuando el ahorro neto de kWh es positivo.</small>
+                    <p id="ods13Val" style="font-weight:700; color:#2e7d32; margin: 6px 0;">0.00 kg CO₂ evitados</p>
+                    <small style="font-size:0.78rem; color:#78909c; display:block; margin-top:4px;">Nota: El CO₂ de energía solo se computa cuando el ahorro neto de kWh es positivo.</small>
                 </div>
             </div>
 
-            <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <div style="margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap;">
                 <button class="btn-secondary" onclick="exportToCSV()">📥 Exportar Reporte Completo CSV (UTF-8)</button>
                 <button class="btn-danger" onclick="resetAllData()">⚠️ Reiniciar Todos los Datos</button>
             </div>
@@ -362,9 +460,9 @@
                     <input list="foodDatabase" id="foodInput" placeholder="Busca o escribe un alimento..." oninput="handleFoodInputCheck()" required>
                     <datalist id="foodDatabase"></datalist>
 
-                    <div id="customDaysContainer" style="display: none; background: #fff8e1; padding: 8px; border-radius: 4px;">
-                        <label for="customDaysInput" style="font-size: 0.85rem; color: #b78103;">Duración estimada (Días):</label>
-                        <input type="number" id="customDaysInput" min="1" step="1" value="5">
+                    <div id="customDaysContainer" style="display: none; background: #fffde7; padding: 12px; border-radius: 8px; border: 1.5px solid #fff59d;">
+                        <label for="customDaysInput" style="font-size: 0.88rem; color: #f57f17; font-weight:700;">Duración estimada (Días):</label>
+                        <input type="number" id="customDaysInput" min="1" step="1" value="5" style="margin-top:6px;">
                     </div>
 
                     <div class="grid-inner">
@@ -381,28 +479,28 @@
                         </div>
                     </div>
 
-                    <button type="submit" style="margin-top: 5px;">Agregar al Inventario</button>
+                    <button type="submit" style="margin-top: 8px;">Agregar al Inventario</button>
                 </form>
 
-                <h3 style="margin-top: 20px; font-size: 1rem;">Inventario Activo (Semáforo Relativo)</h3>
+                <h3 style="margin-top: 28px; font-size: 1.05rem; color: var(--primary-color); font-weight:700;">Inventario Activo (Semáforo Relativo)</h3>
                 <div id="foodList"></div>
             </div>
 
             <div class="card">
                 <h2>⚡ Monitoreo de Energía (Catálogo Referencial)</h2>
-                <div class="info-note" id="comparisonNote" style="margin-bottom:10px;">
+                <div class="info-note" id="comparisonNote" style="margin-bottom:14px;">
                     Comparación: Estimar vs Medir...
                 </div>
                 <form id="energyForm">
                     <label for="applianceTypeSelect">Tipo de Aparato:</label>
                     <select id="applianceTypeSelect" onchange="onApplianceTypeChange()" required></select>
 
-                    <div id="dynamicApplianceOptions" style="display:flex; flex-direction:column; gap:8px; background:#f9f9f9; padding:10px; border-radius:4px;"></div>
+                    <div id="dynamicApplianceOptions" style="display:flex; flex-direction:column; gap:12px; background:#f4f9f4; padding:14px; border-radius:10px; border:1.5px solid #dcedc8;"></div>
 
-                    <div style="display:flex; flex-direction:column; gap:5px;">
+                    <div style="display:flex; flex-direction:column; gap:6px;">
                         <label for="applianceBrandSelect">Marca del Aparato:</label>
                         <select id="applianceBrandSelect" onchange="onApplianceBrandChange()"></select>
-                        <input type="text" id="customBrandInput" placeholder="Escribe la marca personalizada..." style="display:none; margin-top:5px;">
+                        <input type="text" id="customBrandInput" placeholder="Escribe la marca personalizada..." style="display:none; margin-top:6px;">
                     </div>
 
                     <label for="applianceModelInput">Modelo (Opcional):</label>
@@ -423,18 +521,18 @@
                         </div>
                     </div>
 
-                    <div style="margin-top: 5px;">
-                        <label id="realWattsLabel" style="font-size:0.85rem; color:#555;">¿Deseas ingresar el dato real de la etiqueta?</label>
-                        <div style="display:flex; gap:10px; align-items:center; margin-top:3px;">
-                            <input type="checkbox" id="useRealWatts" onchange="toggleRealWattsInput()">
-                            <input type="number" id="realWattsInput" min="1" step="any" placeholder="Watts reales (o kWh/año en refrigeradora)" disabled style="flex:1;">
+                    <div style="margin-top: 8px;">
+                        <label id="realWattsLabel" style="font-size:0.88rem; color:#555;">¿Deseas ingresar el dato real de la etiqueta?</label>
+                        <div style="display:flex; gap:10px; align-items:center; margin-top:6px;">
+                            <input type="checkbox" id="useRealWatts" onchange="toggleRealWattsInput()" style="width:20px; height:20px; accent-color: var(--accent-green);">
+                            <input type="number" id="realWattsInput" min="1" step="any" placeholder="Vatios reales (o kWh/año en refrigeradora)" disabled style="flex:1;">
                         </div>
                     </div>
 
-                    <button type="submit" style="margin-top: 8px;">Registrar Aparato</button>
+                    <button type="submit" style="margin-top: 12px;">Registrar Aparato</button>
                 </form>
 
-                <h3 style="margin-top: 20px; font-size: 1rem;">Ranking de Aparatos Registrados (Estimación)</h3>
+                <h3 style="margin-top: 28px; font-size: 1.05rem; color: var(--primary-color); font-weight:700;">Ranking de Aparatos Registrados (Estimación)</h3>
                 <div class="table-responsive">
                     <table>
                         <thead>
@@ -475,20 +573,20 @@
                         <input type="number" id="weekMeter" min="0" step="any" placeholder="Ej. 1250.5" required style="width:100%; box-sizing:border-box;">
                     </div>
                 </div>
-                <div style="margin-top: 5px;">
-                    <label style="color:#777;">Desperdicio calculado del Historial (automático entre lecturas):</label>
-                    <input type="text" id="weekWastedFoodAuto" value="Se calcula automáticamente" disabled style="background:#eee;">
+                <div style="margin-top: 8px;">
+                    <label style="color:#78909c;">Desperdicio calculado del Historial (automático entre lecturas):</label>
+                    <input type="text" id="weekWastedFoodAuto" value="Se calcula automáticamente" disabled style="background:#f1f8e9; color:#2e7d32; font-weight:600;">
                 </div>
-                <label style="margin-top: 10px;">
-                    <input type="checkbox" id="weekUnplugged"> Desconecté intencionalmente aparatos en desuso este periodo (Informativo).
+                <label style="margin-top: 14px; display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" id="weekUnplugged" style="width:20px; height:20px; accent-color: var(--accent-green);"> Desconecté intencionalmente aparatos en desuso este periodo (Informativo).
                 </label>
-                <button type="submit" style="margin-top: 10px;">Guardar Registro de Lectura</button>
+                <button type="submit" style="margin-top: 14px;">Guardar Registro de Lectura</button>
             </form>
 
-            <h3 style="margin-top: 25px; font-size: 1.1rem;">Historial Semanal y Gráfico de Puntaje Comparativo</h3>
+            <h3 style="margin-top: 32px; font-size: 1.15rem; color: var(--primary-color); font-weight:700;">Historial Semanal y Gráfico de Puntaje Comparativo</h3>
             <div class="chart-container" id="weeklyChart"></div>
 
-            <h4 style="margin-top: 15px; font-size: 0.95rem;">Resumen de Lecturas Registradas</h4>
+            <h4 style="margin-top: 24px; font-size: 1rem; color: #37474f; font-weight:700;">Resumen de Lecturas Registradas</h4>
             <div class="table-responsive">
                 <table>
                     <thead>
@@ -510,7 +608,7 @@
 
         <div class="card">
             <h2>📜 Historial de Alimentos y Auditoría</h2>
-            <p style="font-size:0.85rem; color:#555;">Registros de alimentos borrados sin procesar: <strong id="deletedFoodCountLabel">0</strong></p>
+            <p style="font-size:0.88rem; color:#78909c;">Registros de alimentos borrados sin procesar: <strong id="deletedFoodCountLabel" style="color:#37474f;">0</strong></p>
             <div class="table-responsive">
                 <table>
                     <thead>
@@ -810,8 +908,8 @@
             if (conf.hasSize) {
                 container.innerHTML += `
                     <div>
-                        <label style="font-size:0.85rem;">Tamaño:</label>
-                        <select id="optSize" style="width:100%; padding:6px;">
+                        <label style="font-size:0.88rem;">Tamaño:</label>
+                        <select id="optSize" style="width:100%; padding:8px;">
                             <option value="pequeno">Pequeño</option>
                             <option value="mediano" selected>Mediano</option>
                             <option value="grande">Grande</option>
@@ -823,8 +921,8 @@
             if (conf.hasLed) {
                 container.innerHTML += `
                     <div>
-                        <label style="font-size:0.85rem;">Tecnología:</label>
-                        <select id="optLed" style="width:100%; padding:6px;">
+                        <label style="font-size:0.88rem;">Tecnología:</label>
+                        <select id="optLed" style="width:100%; padding:8px;">
                             <option value="true" selected>Tecnología LED / Eficiente</option>
                             <option value="false">Convencional / Antiguo</option>
                         </select>
@@ -835,8 +933,8 @@
             if (conf.hasDefrost) {
                 container.innerHTML += `
                     <div>
-                        <label style="font-size:0.85rem;">Sistema:</label>
-                        <select id="optDefrost" style="width:100%; padding:6px;">
+                        <label style="font-size:0.88rem;">Sistema:</label>
+                        <select id="optDefrost" style="width:100%; padding:8px;">
                             <option value="no" selected>No frost / Ciclón</option>
                             <option value="escarcha">Con escarcha (Antigua)</option>
                         </select>
@@ -1514,7 +1612,7 @@
             foodListDiv.innerHTML = '';
             
             if (appData.foods.length === 0) {
-                foodListDiv.innerHTML = '<p style="color:#777; font-size:0.85rem; text-align:center;">No hay alimentos registrados en el inventario activo.</p>';
+                foodListDiv.innerHTML = '<p style="color:#78909c; font-size:0.88rem; text-align:center;">No hay alimentos registrados en el inventario activo.</p>';
             } else {
                 appData.foods.forEach(item => {
                     const todayStr = getLocalIsoDate();
@@ -1550,8 +1648,8 @@
                     datePicker.value = currentDateVal;
                     datePicker.min = item.dateAdded;
                     datePicker.max = todayStr;
-                    datePicker.style.padding = '3px 6px';
-                    datePicker.style.fontSize = '0.75rem';
+                    datePicker.style.padding = '6px 10px';
+                    datePicker.style.fontSize = '0.78rem';
                     datePicker.onchange = (e) => {
                         uiState.foodCloseDates[item.id] = e.target.value;
                     };
@@ -1609,7 +1707,7 @@
                     <td><strong>${item.kwhTotal.toFixed(1)}</strong></td>
                     <td><strong>${pct}%</strong></td>
                     <td>S/ ${costMonth.toFixed(2)}</td>
-                    <td><span style="font-size:0.75rem; background:#eee; padding:2px 6px; border-radius:3px;">${escapeHTML(item.valType)}</span></td>
+                    <td><span style="font-size:0.75rem; background:#eceff1; padding:3px 8px; border-radius:6px; color:#455a64;">${escapeHTML(item.valType)}</span></td>
                     <td><button class="action-btn btn-danger" onclick="deleteAppliance(${item.id})">Eliminar</button></td>
                 `;
                 energyBody.appendChild(tr);
@@ -1637,7 +1735,7 @@
             chartContainer.innerHTML = '';
 
             if (summary.calculatedWeeklyData.length === 0) {
-                chartContainer.innerHTML = '<p style="color: #666; font-size: 0.9rem; width:100%; text-align:center;">Registra la lectura inicial para comenzar la medición.</p>';
+                chartContainer.innerHTML = '<p style="color: #78909c; font-size: 0.92rem; width:100%; text-align:center;">Registra la lectura inicial para comenzar la medición.</p>';
             } else {
                 const baseData = summary.calculatedWeeklyData.length >= 2 ? summary.calculatedWeeklyData[1] : null;
 
