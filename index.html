@@ -388,7 +388,6 @@
 
     <header>
         <div class="header-content">
-            <!-- Logotipo 3D Mejorado: Casita con hoja ecológica en relieve -->
             <svg class="logo-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 3L2 12h3v8h5v-6h4v6h5v-8h3L12 3zm0 2.84l6 5.16V18h-2v-6H8v6H6v-7l6-5.16z" filter="drop-shadow(0 2px 3px rgba(0,0,0,0.3))"/>
                 <path d="M12 7c-2.21 0-4 1.79-4 4 0 2.21 1.79 4 4 4s4-1.79 4-4c0-2.21-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" fill="#a5d6a7" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.2))"/>
@@ -455,7 +454,7 @@
                     <p id="wastedPerCapita">0.00 kg/día</p>
                 </div>
                 <div class="stat-box">
-                    <h3>Pérdida por Standby Estimada</h3>
+                    <h3>Pérdida por Standby (Consumo en espera) Estimada</h3>
                     <p id="totalPhantomCost">S/ 0.00 / mes</p>
                 </div>
             </div>
@@ -535,8 +534,11 @@
                         <input type="text" id="customBrandInput" placeholder="Escribe la marca personalizada..." style="display:none; margin-top:6px;">
                     </div>
 
-                    <label for="applianceModelInput">Modelo (Opcional):</label>
-                    <input type="text" id="applianceModelInput" placeholder="Ej. Smart 55'', No Frost, Inverter (Opcional)">
+                    <div style="display:flex; flex-direction:column; gap:6px;">
+                        <label for="applianceModelSelect">Modelo Disponible:</label>
+                        <select id="applianceModelSelect" onchange="onApplianceModelChange()"></select>
+                        <input type="text" id="customModelInput" placeholder="Escribe el modelo personalizado..." style="display:none; margin-top:6px;">
+                    </div>
 
                     <div class="grid-inner">
                         <div>
@@ -569,9 +571,9 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Equipo / Marca</th>
+                                <th>Equipo / Marca / Modelo</th>
                                 <th>Uso (kWh/m)</th>
-                                <th>Standby (kWh/m)</th>
+                                <th>Standby (Consumo fantasma / en espera) (kWh/m)</th>
                                 <th>Total (kWh/m)</th>
                                 <th>% Total</th>
                                 <th>Costo Est. (S/)</th>
@@ -685,6 +687,46 @@
             "Calefactor": ["Sole", "Imaco", "Thomas", "Miray", "Kambrook", "Wurden", "DeLonghi", "Otra marca..."],
             "Tablet": ["Apple (iPad)", "Samsung", "Lenovo", "Xiaomi", "Amazon Fire", "Huawei", "Microsoft", "Otra marca..."],
             "Air Fryer / Freidora": ["Oster", "Philips", "Ninja", "Imaco", "Thomas", "Midea", "Wurden", "Cosori", "Otra marca..."]
+        };
+
+        const applianceModels = {
+            "Refrigeradora": {
+                "Samsung": ["No Frost Twin Cooling (320L)", "Top Mount RT38 (380L)", "French Door (500L)", "Side by Side Inverter"],
+                "LG": ["Top Freezer DoorCooling+ (312L)", "InstaView Door-in-Door", "Smart Inverter (254L)", "No Frost 400L"],
+                "Whirlpool": ["No Frost Evox (375L)", "Bottom Mount Inverter", "Top Mount Wrw (300L)"],
+                "Mabe": ["No Frost 300L RMA300", "Top Mount 250L", "Inverter 400L"],
+                "Indurama": ["Quito No Frost (280L)", "RI-395 Inverter (320L)", "Side by Side 500L"],
+                "Bosch": ["No Frost Serie 4 (324L)", "VitaFresh Inverter", "Bottom Freezer 435L"]
+            },
+            "Televisor": {
+                "Samsung": ["Crystal UHD 43'' (4K)", "Crystal UHD 55'' (4K)", "QLED 55'' Q60", "Neo QLED 65''", "Smart TV 32'' HD"],
+                "LG": ["NANOCELL 55'' (4K)", "OLED 55'' Serie C", "UHD ThinQ AI 50''", "Smart TV 43'' FHD"],
+                "Sony": ["Bravia XR OLED 55''", "Bravia LED 4K 50''", "Bravia X80K 65''"],
+                "TCL": ["Android TV 43'' FHD", "Google TV 55'' 4K HDR", "Mini LED 65''"],
+                "Hisense": ["Smart TV 43'' FHD", "ULED 4K 55''", "Google TV 50''"],
+                "Xiaomi": ["Mi TV P1 43'' 4K", "TV A2 55'' 4K", "TV Max 86''"]
+            },
+            "Lavadora": {
+                "LG": ["Carga Frontal AI DD (11 kg)", "Carga Superior Smart Inverter (13 kg)", "TurboWash (18 kg)", "WashTower Inverter"],
+                "Samsung": ["EcoBubble Carga Frontal (12 kg)", "Wobble Carga Superior (15 kg)", "Digital Inverter 19 kg"],
+                "Whirlpool": ["Carga Superior Xpert System (17 kg)", "Impeller 19 kg", "Frontal FreshCare 10 kg"],
+                "Mabe": ["Aqua Saver Green (16 kg)", "Carga Superior 19 kg", "Automatica 13 kg"],
+                "Bosch": ["Serie 6 Carga Frontal (9 kg)", "Serie 4 EcoSilence 8 kg"]
+            },
+            "Microondas": {
+                "Samsung": ["Espejo Grill (1.1 cu.ft)", "Ceramic Inside (40L)", "Simple Solo (23L)"],
+                "LG": ["NeoChef Inverter Smart (42L)", "Grill EasyClean (25L)", "SolarDOM Inverter"],
+                "Daewoo": ["Chefrino (20L)", "Digital Convección (31L)"],
+                "Imaco": ["Digital Grill (20L)", "Manual Acero (25L)"],
+                "Miray": ["Manual 20L", "Digital Con Grill 30L"]
+            },
+            "Computadora / Laptop": {
+                "HP": ["Pavilion 15'' Core i5", "HP Laptop 14'' Ryzen 5", "Victus Gaming 15.6''", "Envy x360 Convertible"],
+                "Lenovo": ["IdeaPad Slim 3 15''", "ThinkPad E14 Intel", "Legion 5 Gaming", "Yoga 7 2-in-1"],
+                "Dell": ["Inspiron 15 3000", "Vostro 3400", "XPS 13 OLED", "G15 Gaming"],
+                "Asus": ["VivoBook 15 Core i3", "TUF Gaming F15", "ZenBook 14 OLED", "ROG Strix G15"],
+                "Apple": ["MacBook Air M1 (13'')", "MacBook Air M2 (13'')", "MacBook Pro M3 (14'')"]
+            }
         };
 
         const applianceCatalog = {
@@ -910,16 +952,63 @@
             onApplianceBrandChange();
         }
 
+        function populateModelSelect(applianceType, brand) {
+            const modelSel = document.getElementById('applianceModelSelect');
+            modelSel.innerHTML = '';
+
+            let models = [];
+            if (applianceModels[applianceType] && applianceModels[applianceType][brand]) {
+                models = applianceModels[applianceType][brand];
+            }
+
+            const defaultOpt = document.createElement('option');
+            defaultOpt.value = "";
+            defaultOpt.textContent = models.length > 0 ? "Selecciona un modelo..." : "Sin modelos predefinidos";
+            modelSel.appendChild(defaultOpt);
+
+            models.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m;
+                opt.textContent = m;
+                modelSel.appendChild(opt);
+            });
+
+            const customOpt = document.createElement('option');
+            customOpt.value = "Otro modelo...";
+            customOpt.textContent = "Otro modelo / Personalizado...";
+            modelSel.appendChild(customOpt);
+
+            onApplianceModelChange();
+        }
+
         function onApplianceBrandChange() {
-            const brandVal = document.getElementById('applianceBrandSelect').value;
+            const applianceType = document.getElementById('applianceTypeSelect').value;
+            let brandVal = document.getElementById('applianceBrandSelect').value;
             const customInput = document.getElementById('customBrandInput');
+
             if (brandVal === "Otra marca...") {
                 customInput.style.display = 'block';
                 customInput.required = true;
+                brandVal = customInput.value.trim() || "Genérico";
             } else {
                 customInput.style.display = 'none';
                 customInput.required = false;
                 customInput.value = '';
+            }
+
+            populateModelSelect(applianceType, brandVal);
+        }
+
+        function onApplianceModelChange() {
+            const modelVal = document.getElementById('applianceModelSelect').value;
+            const customModelInput = document.getElementById('customModelInput');
+            if (modelVal === "Otro modelo..." || modelVal === "") {
+                customModelInput.style.display = 'block';
+                if (modelVal === "Otro modelo...") customModelInput.required = true;
+            } else {
+                customModelInput.style.display = 'none';
+                customModelInput.required = false;
+                customModelInput.value = '';
             }
         }
 
@@ -1309,7 +1398,11 @@
                 selectedBrand = document.getElementById('customBrandInput').value.trim() || "Genérico";
             }
 
-            const modelCustom = document.getElementById('applianceModelInput').value.trim();
+            let selectedModel = document.getElementById('applianceModelSelect').value;
+            if (selectedModel === "Otro modelo..." || selectedModel === "") {
+                selectedModel = document.getElementById('customModelInput').value.trim();
+            }
+
             const count = parseInt(document.getElementById('applianceCount').value, 10) || 1;
             const usage = document.getElementById('usageLevel').value;
             const useReal = document.getElementById('useRealWatts').checked;
@@ -1335,14 +1428,14 @@
             }
 
             let hours = conf.continuous ? 24 : conf.getHours(usage);
-            let displayName = modelCustom ? `${type} - ${selectedBrand} (${modelCustom})` : `${type} - ${selectedBrand}`;
+            let displayName = selectedModel ? `${type} - ${selectedBrand} (${selectedModel})` : `${type} - ${selectedBrand}`;
             let standbyW = conf.defaultStandby;
 
             appData.appliances.push({
                 id: Date.now(),
                 type: type,
                 brand: selectedBrand,
-                model: modelCustom,
+                model: selectedModel,
                 name: displayName,
                 watts: finalWatts,
                 hours: hours,
@@ -1630,12 +1723,12 @@
                 }
 
                 if (pctReal > 100) {
-                    compNote.innerHTML = `<strong>Comparación Técnica:</strong> La suma estimada por aparatos (uso + standby) da <strong>${totalMonthlyKwhEst.toFixed(1)} kWh/mes</strong> (representa el <strong>${pctReal}%</strong> del medidor real, que proyecta <strong>${measuredMonthlyEst.toFixed(1)} kWh/mes</strong>). El catálogo sobreestima el consumo frente a la medición real.`;
+                    compNote.innerHTML = `<strong>Comparación Técnica:</strong> La suma estimada por aparatos (uso + standby / consumo en espera) da <strong>${totalMonthlyKwhEst.toFixed(1)} kWh/mes</strong> (representa el <strong>${pctReal}%</strong> del medidor real, que proyecta <strong>${measuredMonthlyEst.toFixed(1)} kWh/mes</strong>). El catálogo sobreestima el consumo frente a la medición real.`;
                 } else {
-                    compNote.innerHTML = `<strong>Comparación Técnica:</strong> La suma estimada por aparatos (uso + standby) da <strong>${totalMonthlyKwhEst.toFixed(1)} kWh/mes</strong> (representa el <strong>${pctReal}%</strong> del medidor real, que proyecta <strong>${measuredMonthlyEst.toFixed(1)} kWh/mes</strong>). El resto corresponde a aparatos no registrados o variaciones de uso.`;
+                    compNote.innerHTML = `<strong>Comparación Técnica:</strong> La suma estimada por aparatos (uso + standby / consumo en espera) da <strong>${totalMonthlyKwhEst.toFixed(1)} kWh/mes</strong> (representa el <strong>${pctReal}%</strong> del medidor real, que proyecta <strong>${measuredMonthlyEst.toFixed(1)} kWh/mes</strong>). El resto corresponde a aparatos no registrados o variaciones de uso.`;
                 }
             } else {
-                compNote.innerHTML = `<strong>Comparación Técnica:</strong> La suma estimada por aparatos (uso + standby) da <strong>${totalMonthlyKwhEst.toFixed(1)} kWh/mes</strong>. Registra tus lecturas para comparar con el medidor real.`;
+                compNote.innerHTML = `<strong>Comparación Técnica:</strong> La suma estimada por aparatos (uso + standby / consumo en espera) da <strong>${totalMonthlyKwhEst.toFixed(1)} kWh/mes</strong>. Registra tus lecturas para comparar con el medidor real.`;
             }
 
             generateAssistantRecommendations();
@@ -1906,7 +1999,7 @@
             }
 
             if (totalPhantomSolesMonthly > 0) {
-                msgs.push(`🔌 Desconectar los aparatos en espera puede ahorrarte aprox. <strong>S/ ${totalPhantomSolesMonthly.toFixed(2)} al mes</strong>.`);
+                msgs.push(`🔌 Desconectar los aparatos en espera (standby) puede ahorrarte aprox. <strong>S/ ${totalPhantomSolesMonthly.toFixed(2)} al mes</strong>.`);
             }
 
             textEl.innerHTML = msgs.join('<br>');
