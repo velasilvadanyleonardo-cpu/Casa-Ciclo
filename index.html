@@ -399,15 +399,14 @@
 
                     <div id="dynamicApplianceOptions" style="display:flex; flex-direction:column; gap:8px; background:#f9f9f9; padding:10px; border-radius:4px;"></div>
 
-                    <!-- Selección Dinámica de Marcas Específicas por Tipo de Aparato -->
                     <div style="display:flex; flex-direction:column; gap:5px;">
                         <label for="applianceBrandSelect">Marca del Aparato:</label>
                         <select id="applianceBrandSelect" onchange="onApplianceBrandChange()"></select>
                         <input type="text" id="customBrandInput" placeholder="Escribe la marca personalizada..." style="display:none; margin-top:5px;">
                     </div>
 
-                    <label for="applianceModelInput">Modelo / Descripción corta (Opcional):</label>
-                    <input type="text" id="applianceModelInput" placeholder="Ej. Smart 55'', No Frost, Inverter...">
+                    <label for="applianceModelInput">Modelo (Opcional):</label>
+                    <input type="text" id="applianceModelInput" placeholder="Ej. Smart 55'', No Frost, Inverter (Opcional)">
 
                     <div class="grid-inner">
                         <div>
@@ -535,28 +534,27 @@
         const FACTOR_CO2_ELECTRICITY = 0.30; 
         const FACTOR_CO2_FOOD = 2.5;
 
-        // Marcas dinámicas relacionadas a cada tipo de aparato
         const applianceBrands = {
-            "Refrigeradora": ["Samsung", "LG", "Whirlpool", "Mabe", "Indurama", "Electrolux", "Bosch", "Daewoo", "Miray", "General Electric", "Otra marca..."],
-            "Televisor": ["Samsung", "LG", "Sony", "TCL", "Hisense", "Panasonic", "Philips", "Xiaomi", "Miray", "AOC", "Otra marca..."],
-            "Foco / Iluminación": ["Philips", "Osram", "General Electric", "Sylvania", "Opel", "iLugnat", "Doremi", "Otra marca..."],
-            "Ventilador": ["Imaco", "Kambrook", "Sole", "Taurus", "Miray", "Recco", "National", "Wurden", "Otra marca..."],
-            "Microondas": ["Samsung", "LG", "Daewoo", "Panasonic", "Whirlpool", "Imaco", "Miray", "Oster", "Otra marca..."],
-            "Computadora / Laptop": ["HP", "Lenovo", "Dell", "Asus", "Acer", "Apple", "MSI", "Huawei", "Samsung", "Otra marca..."],
-            "Lavadora": ["LG", "Samsung", "Whirlpool", "Mabe", "Electrolux", "Bosch", "Daewoo", "Indurama", "Otra marca..."],
-            "Cargador de celular": ["Apple", "Samsung", "Xiaomi", "Motorola", "Huawei", "Anker", "Baseus", "Genérico", "Otra marca..."],
-            "Hervidor eléctrico": ["Oster", "Imaco", "Thomas", "Miray", "Philips", "Wurden", "Recco", "Otra marca..."],
-            "Plancha": ["Oster", "Philips", "Imaco", "Thomas", "Black+Decker", "Miray", "Otra marca..."],
-            "Ducha / Terma eléctrica": ["Sole", "Rotoplas", "Rheem", "Junkers", "Bosch", "Aquamax", "Bryant", "Otra marca..."],
-            "Olla arrocera": ["Oster", "Imaco", "Thomas", "Miray", "Wurden", "Panasonic", "Otra marca..."],
-            "Licuadora": ["Oster", "Imaco", "Thomas", "Philips", "Ninja", "Miray", "Otra marca..."],
-            "Router / Módem": ["TP-Link", "Huawei", "ZTE", "Asus", "D-Link", "Mercusys", "Cisco", "Otra marca..."],
-            "Decodificador TV": ["Movistar", "Claro", "DirecTV", "Kaon", "Technicolor", "ZTE", "Otra marca..."],
-            "Equipo de sonido": ["Sony", "LG", "Panasonic", "JBL", "Pioneer", "Bose", "Samsung", "Otra marca..."],
-            "Secadora de cabello": ["Babyliss", "Gamma", "Philips", "Conair", "Remington", "Imaco", "Otra marca..."],
-            "Calefactor": ["Sole", "Imaco", "Thomas", "Miray", "Kambrook", "Wurden", "Otra marca..."],
-            "Tablet": ["Apple (iPad)", "Samsung", "Lenovo", "Xiaomi", "Amazon Fire", "Huawei", "Otra marca..."],
-            "Air Fryer / Freidora": ["Oster", "Philips", "Ninja", "Imaco", "Thomas", "Midea", "Wurden", "Otra marca..."]
+            "Refrigeradora": ["Samsung", "LG", "Whirlpool", "Mabe", "Indurama", "Electrolux", "Bosch", "Daewoo", "Miray", "General Electric", "Frigidaire", "Haverland", "Otra marca..."],
+            "Televisor": ["Samsung", "LG", "Sony", "TCL", "Hisense", "Panasonic", "Philips", "Xiaomi", "Miray", "AOC", "JVC", "RCA", "Otra marca..."],
+            "Foco / Iluminación": ["Philips", "Osram", "General Electric", "Sylvania", "Opel", "iLugnat", "Doremi", "Prilux", "Otra marca..."],
+            "Ventilador": ["Imaco", "Kambrook", "Sole", "Taurus", "Miray", "Recco", "National", "Wurden", "Oster", "Otra marca..."],
+            "Microondas": ["Samsung", "LG", "Daewoo", "Panasonic", "Whirlpool", "Imaco", "Miray", "Oster", "Midea", "Otra marca..."],
+            "Computadora / Laptop": ["HP", "Lenovo", "Dell", "Asus", "Acer", "Apple", "MSI", "Huawei", "Samsung", "Toshiba", "Otra marca..."],
+            "Lavadora": ["LG", "Samsung", "Whirlpool", "Mabe", "Electrolux", "Bosch", "Daewoo", "Indurama", "Frigidaire", "Otra marca..."],
+            "Cargador de celular": ["Apple", "Samsung", "Xiaomi", "Motorola", "Huawei", "Anker", "Baseus", "Ugreen", "Genérico", "Otra marca..."],
+            "Hervidor eléctrico": ["Oster", "Imaco", "Thomas", "Miray", "Philips", "Wurden", "Recco", "Hamilton Beach", "Otra marca..."],
+            "Plancha": ["Oster", "Philips", "Imaco", "Thomas", "Black+Decker", "Miray", "T-fal", "Otra marca..."],
+            "Ducha / Terma eléctrica": ["Sole", "Rotoplas", "Rheem", "Junkers", "Bosch", "Aquamax", "Bryant", "Tigre", "Otra marca..."],
+            "Olla arrocera": ["Oster", "Imaco", "Thomas", "Miray", "Wurden", "Panasonic", "Cuckoo", "Otra marca..."],
+            "Licuadora": ["Oster", "Imaco", "Thomas", "Philips", "Ninja", "Miray", "Hamilton Beach", "Otra marca..."],
+            "Router / Módem": ["TP-Link", "Huawei", "ZTE", "Asus", "D-Link", "Mercusys", "Cisco", "Netgear", "Otra marca..."],
+            "Decodificador TV": ["Movistar", "Claro", "DirecTV", "Kaon", "Technicolor", "ZTE", "Huawei", "Otra marca..."],
+            "Equipo de sonido": ["Sony", "LG", "Panasonic", "JBL", "Pioneer", "Bose", "Samsung", "Harman Kardon", "Otra marca..."],
+            "Secadora de cabello": ["Babyliss", "Gamma", "Philips", "Conair", "Remington", "Imaco", "Revlon", "Otra marca..."],
+            "Calefactor": ["Sole", "Imaco", "Thomas", "Miray", "Kambrook", "Wurden", "DeLonghi", "Otra marca..."],
+            "Tablet": ["Apple (iPad)", "Samsung", "Lenovo", "Xiaomi", "Amazon Fire", "Huawei", "Microsoft", "Otra marca..."],
+            "Air Fryer / Freidora": ["Oster", "Philips", "Ninja", "Imaco", "Thomas", "Midea", "Wurden", "Cosori", "Otra marca..."]
         };
 
         const applianceCatalog = {
@@ -858,8 +856,8 @@
                 realWattsLabel.textContent = "¿Deseas ingresar el consumo anual en kWh de la etiqueta?";
                 realWattsInput.placeholder = "Ej. 280 (kWh/año)";
             } else {
-                realWattsLabel.textContent = "¿Deseas ingresar los Watts reales de la etiqueta?";
-                realWattsInput.placeholder = "Watts reales (W)";
+                realWattsLabel.textContent = "¿Deseas ingresar los vatios reales de la etiqueta?";
+                realWattsInput.placeholder = "Vatios reales (W)";
             }
         }
 
@@ -1013,7 +1011,7 @@
                 shelfLife = configItem.days;
 
                 if (configItem.isKgOnly && unitType === 'unid') {
-                    alert(`El alimento "${matchedKey}" solo se registra por Kilogramos (kg).`);
+                    alert(`El alimento "${matchedKey}" solo se registra por kilogramos (kg).`);
                     return;
                 }
 
@@ -1026,7 +1024,7 @@
                 }
             } else {
                 if (unitType === 'unid') {
-                    alert(`El alimento "${rawName}" no está en el catálogo. Por favor regístralo en Kilogramos (kg).`);
+                    alert(`El alimento "${rawName}" no está en el catálogo. Por favor regístralo en kilogramos (kg).`);
                     return;
                 }
                 const customDays = parseInt(document.getElementById('customDaysInput').value, 10);
@@ -1171,7 +1169,6 @@
             }
         }
 
-        // Registro de Energía con Marcas Dinámicas
         document.getElementById('energyForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const type = document.getElementById('applianceTypeSelect').value;
@@ -1215,6 +1212,7 @@
                 id: Date.now(),
                 type: type,
                 brand: selectedBrand,
+                model: modelCustom,
                 name: displayName,
                 watts: finalWatts,
                 hours: hours,
@@ -1235,7 +1233,6 @@
             saveData();
         }
 
-        // Registro Semanal
         document.getElementById('weeklyForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -1792,22 +1789,22 @@
             csvContent += `Tipo de Lugar,${appData.config.placeType}\n`;
             csvContent += `Integrantes,${appData.config.peopleCount}\n`;
             csvContent += `Tarifa kWh (S/),${appData.config.electricityRate}\n`;
-            csvContent += `Fecha Inicio Medicion,${appData.config.startDate}\n`;
+            csvContent += `Fecha Inicio Medición,${appData.config.startDate}\n`;
             csvContent += `Registros Eliminados Directamente,${appData.deletedFoodCount || 0}\n\n`;
             
-            csvContent += "Historial de Alimentos\nFecha Cierre,Nombre,Cantidad,Accion Final,Resultado Categorizado,Dias Restantes\n";
+            csvContent += "Historial de Alimentos\nFecha Cierre,Nombre,Cantidad,Acción Final,Resultado Categorizado,Días Restantes\n";
             appData.history.forEach(f => {
                 csvContent += `"${f.dateClosed}","${f.name.replace(/"/g, '""')}","${f.displayQtyText.replace(/"/g, '""')}","${f.finalState}","${f.categoryResult}",${f.remainingDaysAtClose}\n`;
             });
 
-            csvContent += "\nAparatos Registrados\nNombre,Marca,Potencia (W),Horas Uso,Cantidad,Standby Watts,kWh/Mes Uso,kWh/Mes Standby,kWh/Mes Total,Tipo Valor\n";
+            csvContent += "\nAparatos Registrados\nNombre,Marca,Modelo,Potencia (W),Horas Uso,Cantidad,Standby Vatios,kWh/Mes Uso,kWh/Mes Standby,kWh/Mes Total,Tipo Valor\n";
             appData.appliances.forEach(a => {
                 let kwhUse = a.kwhAnnualInput ? (a.kwhAnnualInput / 12 * a.count) : ((a.watts * a.hours * 30 * a.count) / 1000);
                 let kwhStandby = (a.standbyWatts > 0 && a.hours < 24) ? ((a.standbyWatts * (24 - a.hours) * 30 * a.count) / 1000) : 0;
-                csvContent += `"${a.name.replace(/"/g, '""')}","${(a.brand || '').replace(/"/g, '""')}",${a.watts},${a.hours},${a.count},${a.standbyWatts},${kwhUse.toFixed(2)},${kwhStandby.toFixed(2)},${(kwhUse + kwhStandby).toFixed(2)},"${a.valType}"\n`;
+                csvContent += `"${a.name.replace(/"/g, '""')}","${(a.brand || '').replace(/"/g, '""')}","${(a.model || '').replace(/"/g, '""')}",${a.watts},${a.hours},${a.count},${a.standbyWatts},${kwhUse.toFixed(2)},${kwhStandby.toFixed(2)},${(kwhUse + kwhStandby).toFixed(2)},"${a.valType}"\n`;
             });
 
-            csvContent += "\nRegistros Semanales y Calculos de Auditoria\nRegistro,Fecha,Medidor (kWh),kWh por Dia,Desperdicio por Dia (incluye compost kg),Puntaje,Desconecto Habitos\n";
+            csvContent += "\nRegistros Semanales y Cálculos de Auditoría\nRegistro,Fecha,Medidor (kWh),kWh por Día,Desperdicio por Día (incluye compost kg),Puntaje,Desconectó Hábitos\n";
             
             const baseData = summary.calculatedWeeklyData.length >= 2 ? summary.calculatedWeeklyData[1] : null;
 
@@ -1835,10 +1832,10 @@
                 }
             });
 
-            csvContent += "\nResumen Global de Impacto\nComida Salvada (kg),Comida Desviada Compost (kg),Desperdicio Total Registrado (kg),kWh Ahorrados Neto Medidor,Ahorro Energia (S/),CO2 Evitado Total (kg)\n";
+            csvContent += "\nResumen Global de Impacto\nComida Salvada (kg),Comida Desviada Compost (kg),Desperdicio Total Registrado (kg),kWh Ahorrados Neto Medidor,Ahorro Energía (S/),CO2 Evitado Total (kg)\n";
             csvContent += `${summary.totalSavedFoodKg.toFixed(2)},${summary.totalDeviatedFoodKg.toFixed(2)},${totalWastedKgAll.toFixed(2)},${summary.totalKwhOptimizedNet.toFixed(2)},${summary.totalSolesSavedEnergy.toFixed(2)},${summary.totalCO2AvoidedCumulative.toFixed(2)}\n`;
 
-            csvContent += "\nParametros Referenciales Utilizados\nFactor CO2 Electricidad (kg CO2/kWh),0.30\nFactor CO2 Comida (kg CO2e/kg),2.50\nTarifa Electricidad Aplicada (S/ kWh),"+appData.config.electricityRate+"\nNota Metodologica,Los factores de emision y consumos por aparatos son valores referenciales simplificados para evaluacion de proyectos.\n";
+            csvContent += "\nParámetros Referenciales Utilizados\nFactor CO2 Electricidad (kg CO2/kWh),0.30\nFactor CO2 Comida (kg CO2e/kg),2.50\nTarifa Electricidad Aplicada (S/ kWh),"+appData.config.electricityRate+"\nNota Metodológica,Los factores de emisión y consumos por aparatos son valores referenciales simplificados para evaluación de proyectos.\n";
 
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
