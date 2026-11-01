@@ -82,8 +82,14 @@
 
         .grid-2 {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+        }
+
+        .grid-inner {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
         }
 
         .stats-grid {
@@ -151,6 +157,7 @@
             display: flex;
             gap: 5px;
             flex-wrap: wrap;
+            align-items: center;
         }
 
         .action-btn {
@@ -164,7 +171,14 @@
         .btn-compost { background-color: #795548; }
         .btn-trash { background-color: var(--danger-color); }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-top: 10px;
+        }
+
+        table { width: 100%; border-collapse: collapse; min-width: 650px; }
         th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; font-size: 0.85rem; }
 
         .chart-container {
@@ -201,6 +215,9 @@
         .bar-base {
             background-color: var(--neutral-gray) !important;
         }
+        .bar-partial {
+            background-color: var(--info-color) !important;
+        }
         .bar-label {
             font-size: 0.7rem;
             margin-top: 5px;
@@ -215,6 +232,25 @@
             padding: 8px 12px;
             border-radius: 4px;
             margin-bottom: 10px;
+        }
+        .warning-note {
+            font-size: 0.8rem;
+            color: #856404;
+            background-color: #fff3cd;
+            border-left: 4px solid #ffeba8;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .storage-banner {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+            font-size: 0.85rem;
         }
         .assistant-box {
             background-color: #fffde7;
@@ -235,14 +271,14 @@
     </header>
 
     <div class="container">
+
+        <div class="storage-banner" id="storageBanner"></div>
         
-        <!-- Asistente de Recomendaciones Automáticas (Punto 8) -->
         <div class="assistant-box" id="assistantBox">
             <h4>💡 Asistente Casa Ciclo (Recomendaciones Automáticas)</h4>
             <p id="assistantText">Analizando el estado actual...</p>
         </div>
 
-        <!-- Configuración del Hogar / Institución -->
         <div class="card">
             <h2>⚙️ Configuración del Hogar o Institución</h2>
             <form id="configForm">
@@ -254,6 +290,7 @@
                             <option value="colegio">Colegio / Institución Educativa (Comparativa por persona)</option>
                             <option value="comedor">Comedor Popular / Comunitario (Comparativa por persona)</option>
                         </select>
+                        <small style="font-size:0.75rem; color:#666; display:block; margin-top:2px;">El catálogo incluye potencias residenciales referenciales. En instituciones se usa para comparativa per cápita.</small>
                     </div>
                     <div>
                         <label for="peopleCount">Número de Personas / Integrantes:</label>
@@ -272,7 +309,6 @@
             </form>
         </div>
 
-        <!-- Panel de Impacto & ODS -->
         <div class="card">
             <h2>📊 Panel de Impacto & ODS</h2>
             <div class="stats-grid">
@@ -302,12 +338,13 @@
                 </div>
                 <div class="ods-card">
                     <h4>ODS 7: Energía Asequible</h4>
-                    <p id="ods7Val">0.0 kWh optimizados</p>
+                    <p id="ods7Val">0.0 kWh ahorrados (neto)</p>
                     <small id="ods7Soles" style="font-size:0.75rem; color:#2e7d32; font-weight:bold;">Ahorro: S/ 0.00</small>
                 </div>
                 <div class="ods-card">
                     <h4>ODS 13: Acción por el Clima</h4>
                     <p id="ods13Val">0.00 kg CO₂ evitados</p>
+                    <small style="font-size:0.7rem; color:#666; display:block; margin-top:3px;">Nota: El CO₂ de energía solo se computa cuando el ahorro neto de kWh es positivo.</small>
                 </div>
             </div>
 
@@ -318,7 +355,6 @@
         </div>
 
         <div class="grid-2">
-            <!-- Inventario de Alimentos -->
             <div class="card">
                 <h2>🍎 Inventario de Alimentos</h2>
                 <form id="foodForm">
@@ -331,14 +367,14 @@
                         <input type="number" id="customDaysInput" min="1" step="1" value="5">
                     </div>
 
-                    <div class="grid-2" style="gap:5px;">
+                    <div class="grid-inner">
                         <div>
                             <label for="foodQty">Cantidad:</label>
-                            <input type="number" id="foodQty" min="0.01" step="any" placeholder="Ej. 1.5" required>
+                            <input type="number" id="foodQty" min="0.01" step="any" placeholder="Ej. 1.5" required style="width:100%; box-sizing:border-box;">
                         </div>
                         <div>
                             <label for="foodUnitType">Unidad:</label>
-                            <select id="foodUnitType" onchange="adjustStepByUnit()">
+                            <select id="foodUnitType" onchange="adjustStepByUnit()" style="width:100%; box-sizing:border-box;">
                                 <option value="kg">Kilogramos (kg)</option>
                                 <option value="unid">Unidades</option>
                             </select>
@@ -352,28 +388,28 @@
                 <div id="foodList"></div>
             </div>
 
-            <!-- Monitoreo de Energía con Catálogo Inteligente (Puntos 1-5) -->
             <div class="card">
-                <h2>⚡ Monitoreo de Energía (Catálogo Oficial)</h2>
+                <h2>⚡ Monitoreo de Energía (Catálogo Referencial)</h2>
+                <div class="info-note" id="comparisonNote" style="margin-bottom:10px;">
+                    Comparación: Estimar vs Medir...
+                </div>
                 <form id="energyForm">
                     <label for="applianceTypeSelect">Tipo de Aparato:</label>
                     <select id="applianceTypeSelect" onchange="onApplianceTypeChange()" required></select>
 
-                    <div id="dynamicApplianceOptions" style="display:flex; flex-direction:column; gap:8px; background:#f9f9f9; padding:10px; border-radius:4px;">
-                        <!-- Opciones dinámicas según tipo -->
-                    </div>
+                    <div id="dynamicApplianceOptions" style="display:flex; flex-direction:column; gap:8px; background:#f9f9f9; padding:10px; border-radius:4px;"></div>
 
                     <label for="applianceNameInput">Marca / Modelo (Opcional - para reconocerlo):</label>
                     <input type="text" id="applianceNameInput" placeholder="Ej. LG Smart 55'', Mabe No Frost...">
 
-                    <div class="grid-2" style="gap:5px;">
+                    <div class="grid-inner">
                         <div>
-                            <label for="applianceCount">Cantidad de equipos:</label>
-                            <input type="number" id="applianceCount" min="1" step="1" value="1" required>
+                            <label for="applianceCount">Cantidad:</label>
+                            <input type="number" id="applianceCount" min="1" step="1" value="1" required style="width:100%; box-sizing:border-box;">
                         </div>
-                        <div>
+                        <div id="usageLevelContainer">
                             <label for="usageLevel">Uso diario:</label>
-                            <select id="usageLevel">
+                            <select id="usageLevel" style="width:100%; box-sizing:border-box;">
                                 <option value="poco">Poco</option>
                                 <option value="normal" selected>Normal</option>
                                 <option value="mucho">Mucho</option>
@@ -382,54 +418,59 @@
                     </div>
 
                     <div style="margin-top: 5px;">
-                        <label style="font-size:0.85rem; color:#555;">¿Deseas usar los Watts reales de la etiqueta en vez del valor típico?</label>
+                        <label id="realWattsLabel" style="font-size:0.85rem; color:#555;">¿Deseas ingresar el dato real de la etiqueta?</label>
                         <div style="display:flex; gap:10px; align-items:center; margin-top:3px;">
                             <input type="checkbox" id="useRealWatts" onchange="toggleRealWattsInput()">
-                            <input type="number" id="realWattsInput" min="1" step="any" placeholder="Watts reales" disabled style="flex:1;">
+                            <input type="number" id="realWattsInput" min="1" step="any" placeholder="Watts reales (o kWh/año en refrigeradora)" disabled style="flex:1;">
                         </div>
                     </div>
 
                     <button type="submit" style="margin-top: 8px;">Registrar Aparato</button>
                 </form>
 
-                <h3 style="margin-top: 20px; font-size: 1rem;">Aparatos Registrados (Ranking Estimado)</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Equipo / Marca</th>
-                            <th>kWh/Mes Est.</th>
-                            <th>Costo Est. (S/)</th>
-                            <th>Tipo Val.</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody id="energyList"></tbody>
-                </table>
+                <h3 style="margin-top: 20px; font-size: 1rem;">Ranking de Aparatos Registrados (Estimación)</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Equipo / Marca</th>
+                                <th>Uso (kWh/m)</th>
+                                <th>Standby (kWh/m)</th>
+                                <th>Total (kWh/m)</th>
+                                <th>% Total</th>
+                                <th>Costo Est. (S/)</th>
+                                <th>Tipo Val.</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="energyList"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <!-- Registro Semanal y Gráfico de Comparación -->
         <div class="card">
             <h2>📅 Registro Semanal & Línea Base</h2>
             <div class="info-note">
                 <strong>Procedimiento Metodológico:</strong><br>
-                1. <strong>Reg. 1 (Inicio):</strong> Registra la lectura inicial del medidor sin cambiar hábitos. Fija el punto de partida temporal.<br>
-                2. <strong>Reg. 2 (Línea Base):</strong> Registra la lectura 7 días después para cerrar la semana base (primer consumo real y desperdicio base).<br>
-                3. <strong>Reg. 3+:</strong> Aplica mejoras. El sistema comparará el consumo por día y desperdicio por día contra la Línea Base.
+                1. <strong>Reg. 1 (Inicio):</strong> Fija el punto de partida inicial en la fecha de inicio. Primera lectura sin modificar hábitos.<br>
+                2. <strong>Reg. 2 (Línea Base):</strong> Registra la lectura días después (se recomiendan 7 días) para cerrar la semana base.<br>
+                3. <strong>Reg. 3+:</strong> Aplica mejoras. El sistema comparará el consumo diario y desperdicio diario contra la Línea Base.
             </div>
+            <div id="baselineWarningContainer"></div>
             <form id="weeklyForm">
-                <div class="grid-2">
+                <div class="grid-inner">
                     <div>
                         <label for="weekDate">Fecha de Lectura:</label>
-                        <input type="date" id="weekDate" required>
+                        <input type="date" id="weekDate" required style="width:100%; box-sizing:border-box;">
                     </div>
                     <div>
                         <label for="weekMeter">Lectura Medidor Luz (kWh):</label>
-                        <input type="number" id="weekMeter" min="0" step="any" placeholder="Ej. 1250.5" required>
+                        <input type="number" id="weekMeter" min="0" step="any" placeholder="Ej. 1250.5" required style="width:100%; box-sizing:border-box;">
                     </div>
                 </div>
                 <div style="margin-top: 5px;">
-                    <label style="color:#777;">Desperdicio calculado del Historial (automático entre fechas):</label>
+                    <label style="color:#777;">Desperdicio calculado del Historial (automático entre lecturas):</label>
                     <input type="text" id="weekWastedFoodAuto" value="Se calcula automáticamente" disabled style="background:#eee;">
                 </div>
                 <label style="margin-top: 10px;">
@@ -442,118 +483,168 @@
             <div class="chart-container" id="weeklyChart"></div>
 
             <h4 style="margin-top: 15px; font-size: 0.95rem;">Resumen de Lecturas Registradas</h4>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Registro</th>
-                        <th>Fecha</th>
-                        <th>Medidor (kWh)</th>
-                        <th>kWh / Día</th>
-                        <th>Desperdicio / Día</th>
-                        <th>Hábitos</th>
-                        <th>Puntaje</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody id="weeklyTableBody"></tbody>
-            </table>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Registro</th>
+                            <th>Fecha</th>
+                            <th>Medidor (kWh)</th>
+                            <th>kWh / Día</th>
+                            <th>Desperdicio / Día (incluye compost)</th>
+                            <th>Hábitos</th>
+                            <th>Puntaje</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="weeklyTableBody"></tbody>
+                </table>
+            </div>
         </div>
 
-        <!-- Historial de Alimentos -->
         <div class="card">
             <h2>📜 Historial de Alimentos y Auditoría</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Fecha Cierre</th>
-                        <th>Alimento</th>
-                        <th>Cantidad</th>
-                        <th>Acción Final</th>
-                        <th>Resultado Categorizado</th>
-                        <th>Días Restantes</th>
-                    </tr>
-                </thead>
-                <tbody id="historyList"></tbody>
-            </table>
+            <p style="font-size:0.85rem; color:#555;">Registros de alimentos borrados sin procesar: <strong id="deletedFoodCountLabel">0</strong></p>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha Cierre</th>
+                            <th>Alimento</th>
+                            <th>Cantidad</th>
+                            <th>Acción Final</th>
+                            <th>Resultado Categorizado</th>
+                            <th>Días Restantes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyList"></tbody>
+                </table>
+            </div>
         </div>
 
     </div>
 
     <script>
         /*
-         * VALORES REFERENCIALES Y LIMITACIONES DE METODOLOGÍA:
-         * 1. FACTOR_CO2_ELECTRICITY (0.30 kg CO2/kWh): Factor de emisión de red eléctrica del Perú (MINAM / Osinergmin).
-         * 2. FACTOR_CO2_FOOD (2.50 kg CO2e/kg): Promedio de huella alimentaria global (FAO / IPCC).
-         * LIMITACIONES: Usar un factor plano simplifica la diferencia entre tipos de comida (carne vs. arroz).
-         * Contar alimentos salvados como CO2 evitado asume que habrían terminado descompuestos generando metano.
+         * VALORES REFERENCIALES:
+         * 1. FACTOR_CO2_ELECTRICITY (0.30 kg CO2/kWh): Valor referencial estimado para matriz eléctrica.
+         * 2. FACTOR_CO2_FOOD (2.50 kg CO2e/kg): Promedio referencial global de huella alimentaria.
          */
         const FACTOR_CO2_ELECTRICITY = 0.30; 
         const FACTOR_CO2_FOOD = 2.5;
 
-        // Catálogo oficial de aparatos con valores típicos y opciones simplificadas
-        // Fuente referencial: Programa de Eficiencia Energética / Osinergmin / MINAM (Valores típicos de referencia)
         const applianceCatalog = {
             "Refrigeradora": {
-                hasSize: true, hasDefrost: true, hasLed: false, continuous: true,
+                hasSize: true, hasDefrost: true, hasLed: false, continuous: true, defaultStandby: 0,
+                isRefrig: true,
                 getWatts: (size, defrost) => {
-                    let w = size === 'pequeno' ? 120 : (size === 'mediano' ? 180 : 250);
-                    if (defrost === 'escarcha') w += 50;
-                    return w;
+                    let baseCompressorW = size === 'pequeno' ? 120 : (size === 'mediano' ? 180 : 250);
+                    if (defrost === 'escarcha') baseCompressorW += 50;
+                    return baseCompressorW * 0.4; 
                 },
                 getHours: () => 24
             },
             "Televisor": {
-                hasSize: true, hasDefrost: false, hasLed: true, continuous: false,
+                hasSize: true, hasDefrost: false, hasLed: true, continuous: false, defaultStandby: 3,
                 getWatts: (size, led) => {
                     let w = size === 'pequeno' ? 60 : (size === 'mediano' ? 100 : 150);
-                    if (!led) w *= 1.4; // Convencional gasta más
+                    if (!led) w *= 1.4;
                     return w;
                 },
                 getHours: (usage) => usage === 'poco' ? 2 : (usage === 'normal' ? 4 : 7)
             },
             "Foco / Iluminación": {
-                hasSize: false, hasDefrost: false, hasLed: true, continuous: false,
+                hasSize: false, hasDefrost: false, hasLed: true, continuous: false, defaultStandby: 0,
                 getWatts: (_, led) => led ? 10 : 60,
                 getHours: (usage) => usage === 'poco' ? 2 : (usage === 'normal' ? 5 : 8)
             },
             "Ventilador": {
-                hasSize: true, hasDefrost: false, hasLed: false, continuous: false,
+                hasSize: true, hasDefrost: false, hasLed: false, continuous: false, defaultStandby: 0,
                 getWatts: (size) => size === 'pequeno' ? 40 : (size === 'mediano' ? 60 : 85),
                 getHours: (usage) => usage === 'poco' ? 2 : (usage === 'normal' ? 5 : 9)
             },
             "Microondas": {
-                hasSize: true, hasDefrost: false, hasLed: false, continuous: false,
+                hasSize: true, hasDefrost: false, hasLed: false, continuous: false, defaultStandby: 4,
                 getWatts: (size) => size === 'pequeno' ? 900 : (size === 'mediano' ? 1200 : 1500),
                 getHours: (usage) => usage === 'poco' ? 0.2 : (usage === 'normal' ? 0.5 : 1.0)
             },
             "Computadora / Laptop": {
-                hasSize: false, hasDefrost: false, hasLed: false, continuous: false,
+                hasSize: false, hasDefrost: false, hasLed: false, continuous: false, defaultStandby: 2,
                 getWatts: () => 65,
                 getHours: (usage) => usage === 'poco' ? 2 : (usage === 'normal' ? 5 : 9)
             },
             "Lavadora": {
-                hasSize: true, hasDefrost: false, hasLed: false, continuous: false,
+                hasSize: true, hasDefrost: false, hasLed: false, continuous: false, defaultStandby: 2,
                 getWatts: (size) => size === 'pequeno' ? 300 : (size === 'mediano' ? 500 : 800),
                 getHours: (usage) => usage === 'poco' ? 0.3 : (usage === 'normal' ? 0.7 : 1.2)
             },
             "Cargador de celular": {
-                hasSize: false, hasDefrost: false, hasLed: false, continuous: false,
+                hasSize: false, hasDefrost: false, hasLed: false, continuous: false, defaultStandby: 1,
                 getWatts: () => 12,
                 getHours: (usage) => usage === 'poco' ? 2 : (usage === 'normal' ? 4 : 8)
             },
             "Hervidor eléctrico": {
-                hasSize: false, hasDefrost: false, hasLed: false, continuous: false,
+                hasSize: false, hasDefrost: false, hasLed: false, continuous: false, defaultStandby: 0,
                 getWatts: () => 1500,
                 getHours: (usage) => usage === 'poco' ? 0.2 : (usage === 'normal' ? 0.4 : 0.8)
             },
             "Plancha": {
-                hasSize: false, hasDefrost: false, hasLed: false, continuous: false,
+                hasSize: false, hasDefrost: false, hasLed: false, continuous: false, defaultStandby: 0,
                 getWatts: () => 1200,
                 getHours: (usage) => usage === 'poco' ? 0.3 : (usage === 'normal' ? 0.8 : 1.5)
+            },
+            "Ducha / Terma eléctrica": {
+                hasSize: true, hasDefrost: false, hasLed: false, continuous: false, defaultStandby: 0,
+                getWatts: (size) => size === 'pequeno' ? 2000 : (size === 'mediano' ? 3500 : 4500),
+                getHours: (usage) => usage === 'poco' ? 0.3 : (usage === 'normal' ? 0.8 : 1.5)
+            },
+            "Olla arrocera": {
+                hasSize: true, hasDefrost: false, hasLed: false, continuous: false, defaultStandby: 1,
+                getWatts: (size) => size === 'pequeno' ? 400 : (size === 'mediano' ? 700 : 1000),
+                getHours: (usage) => usage === 'poco' ? 0.4 : (usage === 'normal' ? 0.8 : 1.2)
+            },
+            "Licuadora": {
+                hasSize: false, hasDefrost: false, hasLed: false, continuous: false, defaultStandby: 0,
+                getWatts: () => 500,
+                getHours: (usage) => usage === 'poco' ? 0.1 : (usage === 'normal' ? 0.2 : 0.4)
+            },
+            "Router / Módem": {
+                hasSize: false, hasDefrost: false, hasLed: false, continuous: true, defaultStandby: 0,
+                getWatts: () => 10,
+                getHours: () => 24
+            },
+            "Decodificador TV": {
+                hasSize: false, hasDefrost: false, hasLed: false, continuous: false, defaultStandby: 12,
+                getWatts: () => 20,
+                getHours: (usage) => usage === 'poco' ? 3 : (usage === 'normal' ? 6 : 10)
+            },
+            "Equipo de sonido": {
+                hasSize: false, hasDefrost: false, hasLed: false, continuous: false, defaultStandby: 5,
+                getWatts: () => 80,
+                getHours: (usage) => usage === 'poco' ? 1 : (usage === 'normal' ? 3 : 6)
+            },
+            "Secadora de cabello": {
+                hasSize: false, hasDefrost: false, hasLed: false, continuous: false, defaultStandby: 0,
+                getWatts: () => 1400,
+                getHours: (usage) => usage === 'poco' ? 0.1 : (usage === 'normal' ? 0.3 : 0.6)
+            },
+            "Calefactor": {
+                hasSize: true, hasDefrost: false, hasLed: false, continuous: false, defaultStandby: 0,
+                getWatts: (size) => size === 'pequeno' ? 800 : (size === 'mediano' ? 1500 : 2000),
+                getHours: (usage) => usage === 'poco' ? 1 : (usage === 'normal' ? 3 : 6)
+            },
+            "Tablet": {
+                hasSize: false, hasDefrost: false, hasLed: false, continuous: false, defaultStandby: 1,
+                getWatts: () => 15,
+                getHours: (usage) => usage === 'poco' ? 1 : (usage === 'normal' ? 3 : 6)
+            },
+            "Air Fryer / Freidora": {
+                hasSize: true, hasDefrost: false, hasLed: false, continuous: false, defaultStandby: 1,
+                getWatts: (size) => size === 'pequeno' ? 1200 : (size === 'mediano' ? 1500 : 1800),
+                getHours: (usage) => usage === 'poco' ? 0.3 : (usage === 'normal' ? 0.6 : 1.0)
             }
         };
 
-        // Catálogo amplio de alimentos con tolerancia y peso unitario (kg)
         const foodCatalog = {
             "Pollo fresco": { days: 2, unitWeight: null, isKgOnly: true },
             "Carne de res": { days: 3, unitWeight: null, isKgOnly: true },
@@ -594,7 +685,12 @@
             foods: [],
             appliances: [],
             history: [],
-            weeklyLogs: []
+            weeklyLogs: [],
+            deletedFoodCount: 0 
+        };
+
+        let uiState = {
+            foodCloseDates: {}
         };
 
         function getLocalIsoDate() {
@@ -606,6 +702,13 @@
 
         function normalizeString(str) {
             return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+        }
+
+        function escapeHTML(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
         }
 
         window.onload = function() {
@@ -645,6 +748,13 @@
             const container = document.getElementById('dynamicApplianceOptions');
             container.innerHTML = '';
 
+            // Limpieza y desmarcado del campo de etiqueta al cambiar de aparato
+            document.getElementById('useRealWatts').checked = false;
+            const realWattsInput = document.getElementById('realWattsInput');
+            realWattsInput.value = '';
+            realWattsInput.disabled = true;
+            realWattsInput.required = false;
+
             if (conf.hasSize) {
                 container.innerHTML += `
                     <div>
@@ -682,11 +792,20 @@
                 `;
             }
 
-            const usageSel = document.getElementById('usageLevel');
+            const usageContainer = document.getElementById('usageLevelContainer');
             if (conf.continuous) {
-                usageSel.parentElement.style.display = 'none';
+                usageContainer.style.display = 'none';
             } else {
-                usageSel.parentElement.style.display = 'block';
+                usageContainer.style.display = 'block';
+            }
+
+            const realWattsLabel = document.getElementById('realWattsLabel');
+            if (conf.isRefrig) {
+                realWattsLabel.textContent = "¿Deseas ingresar el consumo anual en kWh de la etiqueta?";
+                realWattsInput.placeholder = "Ej. 280 (kWh/año)";
+            } else {
+                realWattsLabel.textContent = "¿Deseas ingresar los Watts reales de la etiqueta?";
+                realWattsInput.placeholder = "Watts reales (W)";
             }
         }
 
@@ -703,32 +822,55 @@
 
         function loadLocalStorage() {
             try {
-                const saved = localStorage.getItem('casaCicloProData');
+                const saved = localStorage.getItem('casaCicloProData_v2');
                 if (saved) {
                     const parsed = JSON.parse(saved);
                     appData.config = parsed.config || appData.config;
                     appData.foods = Array.isArray(parsed.foods) ? parsed.foods : [];
-                    appData.appliances = Array.isArray(parsed.appliances) ? parsed.appliances : [];
                     appData.history = Array.isArray(parsed.history) ? parsed.history : [];
                     appData.weeklyLogs = Array.isArray(parsed.weeklyLogs) ? parsed.weeklyLogs : [];
+                    appData.deletedFoodCount = parsed.deletedFoodCount || 0;
+                    
+                    if (Array.isArray(parsed.appliances)) {
+                        appData.appliances = parsed.appliances.map(a => ({
+                            ...a,
+                            valType: a.valType || 'Típico Referencial',
+                            standbyWatts: a.standbyWatts !== undefined ? a.standbyWatts : (applianceCatalog[a.type]?.defaultStandby || 0),
+                            type: a.type || a.name,
+                            kwhAnnualInput: a.kwhAnnualInput || null
+                        }));
+                    }
                 }
             } catch (e) {
-                console.error("Error en localStorage, iniciando estructuración limpia:", e);
+                console.error("Error de corrupción en localStorage v2:", e);
+                // Manejo distintivo de corrupción de datos con respaldo
+                const rawCorrupted = localStorage.getItem('casaCicloProData_v2');
+                if (rawCorrupted) {
+                    localStorage.setItem('casaCicloProData_v2_corrupted_backup', rawCorrupted);
+                }
+                showStorageWarning("⚠️ <strong>Atención:</strong> Se detectaron datos dañados en el almacenamiento local. Se ha guardado una copia de respaldo bajo la clave 'casaCicloProData_v2_corrupted_backup' y se han restablecido los datos limpios para evitar bloqueos.");
                 appData = {
                     config: { placeType: 'hogar', peopleCount: 4, electricityRate: 0.85, startDate: getLocalIsoDate() },
-                    foods: [], appliances: [], history: [], weeklyLogs: []
+                    foods: [], appliances: [], history: [], weeklyLogs: [], deletedFoodCount: 0
                 };
             }
         }
 
         function saveData() {
             try {
-                localStorage.setItem('casaCicloProData', JSON.stringify(appData));
+                localStorage.setItem('casaCicloProData_v2', JSON.stringify(appData));
+                document.getElementById('storageBanner').style.display = 'none';
             } catch (e) {
-                console.error("Error al persistir cambios:", e);
-                alert("Advertencia: No se pudieron guardar los datos en localStorage.");
+                console.error("Error al guardar en localStorage:", e);
+                showStorageWarning("⚠️ <strong>Atención:</strong> Tu navegador no permite la persistencia de datos (modo privado o almacenamiento bloqueado). Los registros ingresados se perderán al recargar.");
             }
             renderAll();
+        }
+
+        function showStorageWarning(msgHtml) {
+            const banner = document.getElementById('storageBanner');
+            banner.innerHTML = msgHtml;
+            banner.style.display = 'block';
         }
 
         function applyConfigToForm() {
@@ -856,33 +998,33 @@
             saveData();
         });
 
-        function getRemainingDays(item) {
+        function getRemainingDaysAtDate(item, targetDateStr) {
             const addedDate = new Date(item.dateAdded + 'T00:00:00');
-            const currentDate = new Date(getLocalIsoDate() + 'T00:00:00');
-            const diffTime = currentDate - addedDate;
+            const targetDate = new Date(targetDateStr + 'T00:00:00');
+            const diffTime = targetDate - addedDate;
             const elapsedDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
             return item.shelfLifeDays - elapsedDays;
         }
 
-        function getElapsedDays(item) {
+        function getElapsedDaysAtDate(item, targetDateStr) {
             const addedDate = new Date(item.dateAdded + 'T00:00:00');
-            const currentDate = new Date(getLocalIsoDate() + 'T00:00:00');
-            const diffTime = currentDate - addedDate;
+            const targetDate = new Date(targetDateStr + 'T00:00:00');
+            const diffTime = targetDate - addedDate;
             return Math.floor(diffTime / (1000 * 60 * 60 * 24));
         }
 
-        function getItemStatus(item) {
-            const remaining = getRemainingDays(item);
+        function getItemStatusAtDate(item, targetDateStr) {
+            const remaining = getRemainingDaysAtDate(item, targetDateStr);
             if (remaining < 0) {
                 return { code: 'expired', label: 'Vencido', classStatus: 'status-expired', classTag: 'tag-expired' };
             }
-            const elapsed = getElapsedDays(item);
+            const elapsed = getElapsedDaysAtDate(item, targetDateStr);
             const consumedRatio = elapsed / item.shelfLifeDays;
 
-            if (remaining <= 1 || consumedRatio >= 0.75) {
+            if (remaining <= 1 || (consumedRatio >= 0.85 && remaining <= 7)) {
                 return { code: 'urgent', label: 'Urgente', classStatus: 'status-red', classTag: 'tag-red' };
             }
-            if (remaining <= 3 || consumedRatio >= 0.5) {
+            if (consumedRatio >= 0.60 && remaining <= 7) {
                 return { code: 'warning', label: 'Consumo Próximo', classStatus: 'status-yellow', classTag: 'tag-yellow' };
             }
             return { code: 'fresh', label: 'Fresco', classStatus: 'status-green', classTag: 'tag-green' };
@@ -893,10 +1035,33 @@
             if (index === -1) return;
 
             const item = appData.foods[index];
-            const remaining = getRemainingDays(item);
-            const elapsed = getElapsedDays(item);
-            const status = getItemStatus(item);
-            const consumedRatio = elapsed / item.shelfLifeDays;
+            const dateClosed = uiState.foodCloseDates[id] || getLocalIsoDate();
+
+            // Bloqueos de fecha de cierre
+            if (dateClosed < appData.config.startDate) {
+                alert(`Error: La fecha de cierre (${dateClosed}) no puede ser anterior a la fecha de inicio de medición (${appData.config.startDate}).`);
+                return;
+            }
+            if (dateClosed < item.dateAdded) {
+                alert(`Error: La fecha de cierre (${dateClosed}) no puede ser anterior a la fecha en que se agregó el alimento (${item.dateAdded}).`);
+                return;
+            }
+            if (dateClosed > getLocalIsoDate()) {
+                alert(`Error: La fecha de cierre (${dateClosed}) no puede ser posterior al día de hoy (${getLocalIsoDate()}).`);
+                return;
+            }
+
+            // Advertencia si la fecha cae antes de la última lectura registrada
+            if (appData.weeklyLogs.length > 0) {
+                const lastLogDate = appData.weeklyLogs[appData.weeklyLogs.length - 1].date;
+                if (dateClosed <= lastLogDate) {
+                    const confirmBackdate = confirm(`⚠️ Advertencia: La fecha de cierre elegida (${dateClosed}) cae antes o en la fecha de la última lectura registrada (${lastLogDate}). Esto alterará retroactivamente el cálculo del desperdicio en periodos ya cerrados. ¿Deseas continuar?`);
+                    if (!confirmBackdate) return;
+                }
+            }
+
+            const remaining = getRemainingDaysAtDate(item, dateClosed);
+            const status = getItemStatusAtDate(item, dateClosed);
 
             let categoryResult = '';
             let isSaved = false;
@@ -911,10 +1076,15 @@
                 }
             } else {
                 if (actionType === 'Consumido' || actionType === 'Congelado') {
-                    // Regla del 60% de vida útil transcurrida para contar como salvado
-                    if (consumedRatio >= 0.6) {
-                        isSaved = true;
-                        categoryResult = 'Salvado';
+                    // Verificación declarada para alimentos en amarillo o rojo
+                    if (status.code === 'urgent' || status.code === 'warning') {
+                        const wasGoingToWaste = confirm(`El alimento "${item.name}" estaba en riesgo (${status.label}). ¿Realmente ibas a botarlo si no intervenías?`);
+                        if (wasGoingToWaste) {
+                            isSaved = true;
+                            categoryResult = 'Salvado';
+                        } else {
+                            categoryResult = 'Consumo Normal';
+                        }
                     } else {
                         categoryResult = 'Consumo Normal';
                     }
@@ -930,25 +1100,28 @@
                 name: item.name,
                 weightKg: item.weightKg,
                 displayQtyText: item.displayQtyText,
-                dateClosed: getLocalIsoDate(),
+                dateClosed: dateClosed,
                 finalState: actionType,
                 categoryResult: categoryResult,
                 remainingDaysAtClose: remaining,
                 isSaved: isSaved
             });
 
+            delete uiState.foodCloseDates[id];
             appData.foods.splice(index, 1);
             saveData();
         }
 
         function deleteFoodActive(id) {
-            if (confirm("¿Eliminar este alimento del inventario?")) {
+            if (confirm("¿Eliminar este alimento del inventario? (No se contará como desperdicio)")) {
                 appData.foods = appData.foods.filter(f => f.id !== id);
+                delete uiState.foodCloseDates[id];
+                appData.deletedFoodCount = (appData.deletedFoodCount || 0) + 1;
                 saveData();
             }
         }
 
-        // Registro de Energía con Catálogo Inteligente
+        // Registro de Energía
         document.getElementById('energyForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const type = document.getElementById('applianceTypeSelect').value;
@@ -957,36 +1130,45 @@
             const count = parseInt(document.getElementById('applianceCount').value, 10) || 1;
             const usage = document.getElementById('usageLevel').value;
             const useReal = document.getElementById('useRealWatts').checked;
-            const realW = parseFloat(document.getElementById('realWattsInput').value);
+            const realVal = parseFloat(document.getElementById('realWattsInput').value);
 
             let size = document.getElementById('optSize') ? document.getElementById('optSize').value : null;
             let led = document.getElementById('optLed') ? (document.getElementById('optLed').value === 'true') : false;
             let defrost = document.getElementById('optDefrost') ? document.getElementById('optDefrost').value : null;
 
             let finalWatts = conf.getWatts(size, led || defrost);
-            let valType = 'Típico';
+            let valType = 'Típico Referencial';
+            let kwhAnnualInput = null;
 
-            if (useReal && !isNaN(realW) && realW > 0) {
-                finalWatts = realW;
-                valType = 'Real (Etiqueta)';
+            if (useReal && !isNaN(realVal) && realVal > 0) {
+                if (conf.isRefrig) {
+                    kwhAnnualInput = realVal;
+                    finalWatts = (realVal / 12 / 30 / 24) * 1000;
+                    valType = 'Etiqueta kWh/año';
+                } else {
+                    finalWatts = realVal;
+                    valType = 'Real (Etiqueta W)';
+                }
             }
 
             let hours = conf.continuous ? 24 : conf.getHours(usage);
             let displayName = brandCustom ? `${type} (${brandCustom})` : type;
+            let standbyW = conf.defaultStandby;
 
             appData.appliances.push({
                 id: Date.now(),
+                type: type,
                 name: displayName,
                 watts: finalWatts,
                 hours: hours,
                 count: count,
-                valType: valType
+                valType: valType,
+                standbyWatts: standbyW,
+                kwhAnnualInput: kwhAnnualInput
             });
 
             document.getElementById('energyForm').reset();
             document.getElementById('applianceCount').value = '1';
-            document.getElementById('useRealWatts').checked = false;
-            toggleRealWattsInput();
             onApplianceTypeChange();
             saveData();
         });
@@ -996,26 +1178,31 @@
             saveData();
         }
 
-        // VALIDACIÓN DE ALIMENTOS VENCIDOS ANTES DE GUARDAR LECTURA (Punto 12)
+        // Registro Semanal
         document.getElementById('weeklyForm').addEventListener('submit', function(e) {
             e.preventDefault();
-
-            // Comprobar alimentos vencidos no cerrados
-            let expiredCount = 0;
-            appData.foods.forEach(f => {
-                if (getRemainingDays(f) < 0) expiredCount++;
-            });
-
-            if (expiredCount > 0) {
-                alert(`⚠️ Tienes ${expiredCount} alimento(s) vencido(s) en tu inventario activo sin cerrar. Por favor, revísalos y ciérralos antes de guardar tu registro semanal.`);
-                return;
-            }
 
             const inputDate = document.getElementById('weekDate').value;
             const meter = parseFloat(document.getElementById('weekMeter').value);
             const unplugged = document.getElementById('weekUnplugged').checked;
+            const today = getLocalIsoDate();
 
             if (isNaN(meter) || !inputDate) return;
+
+            let expiredCount = 0;
+            appData.foods.forEach(f => {
+                if (getRemainingDaysAtDate(f, inputDate) < 0) expiredCount++;
+            });
+
+            if (expiredCount > 0) {
+                alert(`⚠️ Tienes ${expiredCount} alimento(s) vencido(s) a la fecha de la lectura (${inputDate}). Por favor, revísalos y ciérralos con el botón que corresponda (Consumido, Congelado, Compostado o Botado) antes de guardar tu registro semanal.`);
+                return;
+            }
+
+            if (inputDate > today) {
+                alert(`Error: La fecha de lectura no puede ser posterior al día de hoy (${today}).`);
+                return;
+            }
 
             const logs = appData.weeklyLogs;
             if (logs.length > 0) {
@@ -1062,31 +1249,29 @@
 
         function resetAllData() {
             if (confirm("¿Estás seguro de reiniciar todos los datos? Se borrará todo el historial.")) {
-                localStorage.removeItem('casaCicloProData');
+                localStorage.removeItem('casaCicloProData_v2');
                 appData = {
                     config: { placeType: 'hogar', peopleCount: 4, electricityRate: 0.85, startDate: getLocalIsoDate() },
-                    foods: [], appliances: [], history: [], weeklyLogs: []
+                    foods: [], appliances: [], history: [], weeklyLogs: [], deletedFoodCount: 0
                 };
+                uiState.foodCloseDates = {};
                 applyConfigToForm();
                 renderAll();
             }
         }
 
-        // FÓRMULA DE PUNTAJE COMPARATIVO (Punto 11: Base cero y mejora gradual)
         function calculateSubScore(baseVal, currentVal) {
             if (baseVal === 0) {
-                return currentVal === 0 ? 25 : 0; // 25 puntos si se mantiene en cero, 0 si aparece desperdicio
+                return currentVal === 0 ? 25 : 0;
             }
             const ratio = (baseVal - currentVal) / baseVal;
             const score = (ratio * 25) + 25;
             return Math.max(0, Math.min(50, Math.round(score)));
         }
 
-        // CÁLCULO DE DESPERDICIO ENTRE PERIODOS CORREGIDO (Punto 10)
-        // Cada periodo cuenta desde el día siguiente al registro anterior hasta el día del actual.
-        // Solo el primer registro, que parte de la fecha de inicio, incluye esa fecha.
         function getWastedFoodBetweenDates(startDateStr, endDateStr, isFirstPeriod) {
             let total = 0;
+            let activityCount = 0;
             appData.history.forEach(h => {
                 let match = false;
                 if (isFirstPeriod) {
@@ -1095,15 +1280,52 @@
                     match = (h.dateClosed > startDateStr && h.dateClosed <= endDateStr);
                 }
                 if (match) {
-                    if (h.categoryResult === 'Desperdiciado (Botado)' || h.categoryResult === 'Desperdiciado (Vencido)') {
+                    activityCount++;
+                    if (h.categoryResult === 'Desperdiciado (Botado)' || h.categoryResult === 'Desperdiciado (Vencido)' || h.categoryResult === 'Desviado (Compostado)') {
                         total += h.weightKg;
                     }
                 }
             });
-            return total;
+            return { totalWastedKg: total, activityCount: activityCount };
         }
 
-        function renderAll() {
+        function calculateWeeklyData() {
+            const logs = appData.weeklyLogs;
+            let calculated = [];
+            if (logs.length === 0) return calculated;
+
+            for (let i = 0; i < logs.length; i++) {
+                const curr = logs[i];
+                let prevDateStr = (i === 0) ? appData.config.startDate : logs[i - 1].date;
+                let isFirstPeriod = (i === 0);
+                
+                const d1 = new Date(prevDateStr + 'T00:00:00');
+                const d2 = new Date(curr.date + 'T00:00:00');
+                const diffTime = d2 - d1;
+                const daysElapsed = Math.max(1, Math.round(diffTime / (1000 * 60 * 60 * 24)));
+
+                const foodCalc = getWastedFoodBetweenDates(prevDateStr, curr.date, isFirstPeriod);
+                const wastedPerDay = foodCalc.totalWastedKg / daysElapsed;
+
+                let kwhPerDay = 0;
+                if (i > 0) {
+                    const kwhDiff = curr.meterReading - logs[i - 1].meterReading;
+                    kwhPerDay = kwhDiff / daysElapsed;
+                }
+
+                calculated.push({
+                    log: curr,
+                    daysElapsed,
+                    kwhPerDay,
+                    wastedKgPeriod: foodCalc.totalWastedKg,
+                    foodActivityCount: foodCalc.activityCount,
+                    wastedPerDay
+                });
+            }
+            return calculated;
+        }
+
+        function calculateGlobalSummary() {
             let totalSavedFoodKg = 0;
             let totalDeviatedFoodKg = 0;
             appData.history.forEach(h => {
@@ -1111,64 +1333,12 @@
                 if (h.categoryResult === 'Desviado (Compostado)') totalDeviatedFoodKg += h.weightKg;
             });
 
-            let totalMonthlyKwhEst = 0;
-            let totalMonthlyPhantomCost = 0;
-            appData.appliances.forEach(a => {
-                const kwh = (a.watts * a.hours * 30 * a.count) / 1000;
-                totalMonthlyKwhEst += kwh;
-                // Estimación de standby básico si aplica
-                if (a.watts > 100 && a.hours < 24) {
-                    const unusedHours = 24 - a.hours;
-                    const phantomKwh = (5 * unusedHours * 30 * a.count) / 1000;
-                    totalMonthlyPhantomCost += phantomKwh * appData.config.electricityRate;
-                }
-            });
-
-            const logs = appData.weeklyLogs;
-            let calculatedWeeklyData = [];
-            let totalKwhOptimizedCumulative = 0;
-            let currentScore = null;
+            const calculatedWeeklyData = calculateWeeklyData();
+            let totalKwhOptimizedNet = 0;
+            let currentScoreText = "-- pts";
             let lastWastedPerCapitaDay = 0;
 
-            if (logs.length > 0) {
-                for (let i = 0; i < logs.length; i++) {
-                    const curr = logs[i];
-                    let prevDateStr = '';
-                    let isFirstPeriod = false;
-
-                    if (i === 0) {
-                        prevDateStr = appData.config.startDate;
-                        isFirstPeriod = true;
-                    } else {
-                        prevDateStr = logs[i - 1].date;
-                    }
-                    
-                    const d1 = new Date(prevDateStr + 'T00:00:00');
-                    const d2 = new Date(curr.date + 'T00:00:00');
-                    const diffTime = d2 - d1;
-                    const daysElapsed = Math.max(1, Math.round(diffTime / (1000 * 60 * 60 * 24)));
-
-                    const wastedKgPeriod = getWastedFoodBetweenDates(prevDateStr, curr.date, isFirstPeriod);
-                    const wastedPerDay = wastedKgPeriod / daysElapsed;
-
-                    let kwhPerDay = 0;
-                    if (i > 0) {
-                        const kwhDiff = curr.meterReading - logs[i - 1].meterReading;
-                        kwhPerDay = kwhDiff / daysElapsed;
-                    }
-
-                    calculatedWeeklyData.push({
-                        log: curr,
-                        daysElapsed,
-                        kwhPerDay,
-                        wastedKgPeriod,
-                        wastedPerDay
-                    });
-                }
-            }
-
             if (calculatedWeeklyData.length >= 3) {
-                // Registro 2 es la Línea Base, Registro 3+ compara contra ella
                 const baseData = calculatedWeeklyData[1]; 
                 const latestData = calculatedWeeklyData[calculatedWeeklyData.length - 1];
 
@@ -1180,104 +1350,217 @@
                 const currFoodDay = latestData.wastedPerDay;
                 const currKwhDay = latestData.kwhPerDay;
 
-                const foodScore = calculateSubScore(baseFoodDay, currFoodDay);
+                // CONJUNCIÓN LÓGICA (Y): Exige actividad registrada en la base Y en el periodo actual
+                const hasFoodDataBoth = (latestData.foodActivityCount > 0 && baseData.foodActivityCount > 0);
                 const energyScore = calculateSubScore(baseKwhDay, currKwhDay);
-                currentScore = foodScore + energyScore;
+
+                if (hasFoodDataBoth) {
+                    const foodScore = calculateSubScore(baseFoodDay, currFoodDay);
+                    currentScoreText = (foodScore + energyScore) + " pts";
+                } else {
+                    currentScoreText = `${energyScore} / 50 pts (sin datos de comida)`;
+                }
 
                 for (let i = 2; i < calculatedWeeklyData.length; i++) {
                     const d = calculatedWeeklyData[i];
-                    const savedKwhDay = Math.max(0, baseKwhDay - d.kwhPerDay);
-                    totalKwhOptimizedCumulative += (savedKwhDay * d.daysElapsed);
+                    const savedKwhDay = baseKwhDay - d.kwhPerDay;
+                    totalKwhOptimizedNet += (savedKwhDay * d.daysElapsed);
                 }
             } else if (calculatedWeeklyData.length === 2) {
                 lastWastedPerCapitaDay = calculatedWeeklyData[1].wastedPerDay / (appData.config.peopleCount || 1);
+                currentScoreText = "Línea Base";
             } else if (calculatedWeeklyData.length === 1) {
                 lastWastedPerCapitaDay = calculatedWeeklyData[0].wastedPerDay / (appData.config.peopleCount || 1);
             }
 
-            // CO2 Evitado: Comida salvada + Energía optimizada por medidor
             const totalCO2Food = totalSavedFoodKg * FACTOR_CO2_FOOD;
-            const totalCO2Energy = totalKwhOptimizedCumulative * FACTOR_CO2_ELECTRICITY;
+            const totalCO2Energy = Math.max(0, totalKwhOptimizedNet) * FACTOR_CO2_ELECTRICITY;
             const totalCO2AvoidedCumulative = totalCO2Food + totalCO2Energy;
-            const totalSolesSavedEnergy = totalKwhOptimizedCumulative * appData.config.electricityRate;
+            const totalSolesSavedEnergy = totalKwhOptimizedNet * appData.config.electricityRate;
 
-            // Paneles visuales
-            document.getElementById('totalScore').innerText = currentScore !== null ? (currentScore + ' pts') : (logs.length >= 2 ? 'Línea Base' : '-- pts');
-            document.getElementById('totalCO2').innerText = totalCO2AvoidedCumulative.toFixed(2) + ' kg';
-            document.getElementById('wastedPerCapita').innerText = lastWastedPerCapitaDay.toFixed(3) + ' kg/día';
+            return {
+                totalSavedFoodKg,
+                totalDeviatedFoodKg,
+                calculatedWeeklyData,
+                totalKwhOptimizedNet,
+                currentScoreText,
+                lastWastedPerCapitaDay,
+                totalCO2AvoidedCumulative,
+                totalSolesSavedEnergy
+            };
+        }
+
+        function renderAll() {
+            const summary = calculateGlobalSummary();
+
+            let totalMonthlyKwhEst = 0;
+            let totalMonthlyPhantomCost = 0;
+            
+            appData.appliances.forEach(a => {
+                let kwhUse = 0;
+                if (a.kwhAnnualInput) {
+                    kwhUse = a.kwhAnnualInput / 12 * a.count;
+                } else {
+                    kwhUse = (a.watts * a.hours * 30 * a.count) / 1000;
+                }
+
+                let kwhStandby = 0;
+                if (a.standbyWatts > 0 && a.hours < 24) {
+                    const unusedHours = 24 - a.hours;
+                    kwhStandby = (a.standbyWatts * unusedHours * 30 * a.count) / 1000;
+                    totalMonthlyPhantomCost += kwhStandby * appData.config.electricityRate;
+                }
+
+                totalMonthlyKwhEst += (kwhUse + kwhStandby);
+            });
+
+            // Paneles
+            document.getElementById('totalScore').innerText = summary.currentScoreText;
+            document.getElementById('totalCO2').innerText = summary.totalCO2AvoidedCumulative.toFixed(2) + ' kg';
+            document.getElementById('wastedPerCapita').innerText = summary.lastWastedPerCapitaDay.toFixed(3) + ' kg/día';
             document.getElementById('totalPhantomCost').innerText = 'S/ ' + totalMonthlyPhantomCost.toFixed(2) + ' / mes';
 
-            document.getElementById('ods12Val').innerText = totalSavedFoodKg.toFixed(2) + ' kg de comida salvada';
-            document.getElementById('ods12Deviated').innerText = `(${totalDeviatedFoodKg.toFixed(2)} kg desviados)`;
-            document.getElementById('ods7Val').innerText = totalKwhOptimizedCumulative.toFixed(1) + ' kWh optimizados';
-            document.getElementById('ods7Soles').innerText = `Ahorro: S/ ${totalSolesSavedEnergy.toFixed(2)}`;
-            document.getElementById('ods13Val').innerText = totalCO2AvoidedCumulative.toFixed(2) + ' kg CO₂ evitados';
+            document.getElementById('ods12Val').innerText = summary.totalSavedFoodKg.toFixed(2) + ' kg de comida salvada';
+            document.getElementById('ods12Deviated').innerText = `(${summary.totalDeviatedFoodKg.toFixed(2)} kg desviados a compost)`;
+            
+            document.getElementById('ods7Val').innerText = summary.totalKwhOptimizedNet.toFixed(1) + ' kWh ahorrados (neto)';
+            document.getElementById('ods7Soles').innerText = `Ahorro: S/ ${summary.totalSolesSavedEnergy.toFixed(2)}`;
+            document.getElementById('ods13Val').innerText = summary.totalCO2AvoidedCumulative.toFixed(2) + ' kg CO₂ evitados';
 
-            // ASISTENTE AUTOMÁTICO DE RECOMENDACIONES (Punto 8)
+            document.getElementById('deletedFoodCountLabel').innerText = appData.deletedFoodCount || 0;
+
+            const warnContainer = document.getElementById('baselineWarningContainer');
+            warnContainer.innerHTML = '';
+            if (summary.calculatedWeeklyData.length >= 2) {
+                const basePeriodDays = summary.calculatedWeeklyData[1].daysElapsed;
+                if (basePeriodDays < 5) {
+                    warnContainer.innerHTML = `<div class="warning-note">⚠️ Tu periodo base duró solo <strong>${basePeriodDays} día(s)</strong>. Se recomiendan 7 días para asegurar una línea base precisa.</div>`;
+                }
+            }
+
+            // Comparación Estimado vs Medido SIN TOPE DE 100%
+            const compNote = document.getElementById('comparisonNote');
+            if (summary.calculatedWeeklyData.length >= 2) {
+                const lastKwhDay = summary.calculatedWeeklyData[summary.calculatedWeeklyData.length - 1].kwhPerDay;
+                const measuredMonthlyEst = lastKwhDay * 30;
+                let pctReal = 0;
+                if (measuredMonthlyEst > 0) {
+                    pctReal = Math.round((totalMonthlyKwhEst / measuredMonthlyEst) * 100);
+                }
+
+                if (pctReal > 100) {
+                    compNote.innerHTML = `<strong>Comparación Técnica:</strong> La suma estimada por aparatos (uso + standby) da <strong>${totalMonthlyKwhEst.toFixed(1)} kWh/mes</strong> (representa el <strong>${pctReal}%</strong> del medidor real, que proyecta <strong>${measuredMonthlyEst.toFixed(1)} kWh/mes</strong>). El catálogo sobreestima el consumo frente a la medición real.`;
+                } else {
+                    compNote.innerHTML = `<strong>Comparación Técnica:</strong> La suma estimada por aparatos (uso + standby) da <strong>${totalMonthlyKwhEst.toFixed(1)} kWh/mes</strong> (representa el <strong>${pctReal}%</strong> del medidor real, que proyecta <strong>${measuredMonthlyEst.toFixed(1)} kWh/mes</strong>). El resto corresponde a aparatos no registrados o variaciones de uso.`;
+                }
+            } else {
+                compNote.innerHTML = `<strong>Comparación Técnica:</strong> La suma estimada por aparatos (uso + standby) da <strong>${totalMonthlyKwhEst.toFixed(1)} kWh/mes</strong>. Registra tus lecturas para comparar con el medidor real.`;
+            }
+
             generateAssistantRecommendations();
 
             // Renderizado Alimentos Activos
             const foodListDiv = document.getElementById('foodList');
             foodListDiv.innerHTML = '';
             
-            appData.foods.forEach(item => {
-                const remaining = getRemainingDays(item);
-                const status = getItemStatus(item);
+            if (appData.foods.length === 0) {
+                foodListDiv.innerHTML = '<p style="color:#777; font-size:0.85rem; text-align:center;">No hay alimentos registrados en el inventario activo.</p>';
+            } else {
+                appData.foods.forEach(item => {
+                    const todayStr = getLocalIsoDate();
+                    const currentDateVal = uiState.foodCloseDates[item.id] || todayStr;
+                    const remaining = getRemainingDaysAtDate(item, todayStr);
+                    const status = getItemStatusAtDate(item, todayStr);
 
-                const itemDiv = document.createElement('div');
-                itemDiv.className = `traffic-light-item ${status.classStatus}`;
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = `traffic-light-item ${status.classStatus}`;
 
-                const infoDiv = document.createElement('div');
-                const strong = document.createElement('strong');
-                strong.textContent = item.name;
-                infoDiv.appendChild(strong);
-                infoDiv.appendChild(document.createTextNode(` — ${item.displayQtyText}`));
-                infoDiv.appendChild(document.createElement('br'));
+                    const infoDiv = document.createElement('div');
+                    const strong = document.createElement('strong');
+                    strong.textContent = item.name;
+                    infoDiv.appendChild(strong);
+                    infoDiv.appendChild(document.createTextNode(` — ${item.displayQtyText}`));
+                    infoDiv.appendChild(document.createElement('br'));
 
-                const tagSpan = document.createElement('span');
-                tagSpan.className = `tag ${status.classTag}`;
-                if (status.code === 'expired') {
-                    tagSpan.textContent = `Vencido hace ${Math.abs(remaining)} días`;
-                } else {
-                    tagSpan.textContent = `${status.label}: ${remaining} días restantes`;
-                }
-                infoDiv.appendChild(tagSpan);
+                    const tagSpan = document.createElement('span');
+                    tagSpan.className = `tag ${status.classTag}`;
+                    if (status.code === 'expired') {
+                        tagSpan.textContent = `Vencido hace ${Math.abs(remaining)} días`;
+                    } else {
+                        tagSpan.textContent = `${status.label}: ${remaining} días restantes`;
+                    }
+                    infoDiv.appendChild(tagSpan);
 
-                const btnDiv = document.createElement('div');
-                btnDiv.className = 'action-buttons';
+                    const btnDiv = document.createElement('div');
+                    btnDiv.className = 'action-buttons';
 
-                ['Consumido', 'Congelado', 'Compostado', 'Botado'].forEach(action => {
-                    const btn = document.createElement('button');
-                    btn.className = `action-btn btn-${action === 'Consumido' ? 'consume' : action === 'Congelado' ? 'freeze' : action === 'Compostado' ? 'compost' : 'trash'}`;
-                    btn.textContent = action;
-                    btn.onclick = () => closeFood(item.id, action);
-                    btnDiv.appendChild(btn);
+                    const datePicker = document.createElement('input');
+                    datePicker.type = 'date';
+                    datePicker.id = `closeDate_${item.id}`;
+                    datePicker.value = currentDateVal;
+                    datePicker.min = item.dateAdded;
+                    datePicker.max = todayStr;
+                    datePicker.style.padding = '3px 6px';
+                    datePicker.style.fontSize = '0.75rem';
+                    datePicker.onchange = (e) => {
+                        uiState.foodCloseDates[item.id] = e.target.value;
+                    };
+                    btnDiv.appendChild(datePicker);
+
+                    ['Consumido', 'Congelado', 'Compostado', 'Botado'].forEach(action => {
+                        const btn = document.createElement('button');
+                        btn.className = `action-btn btn-${action === 'Consumido' ? 'consume' : action === 'Congelado' ? 'freeze' : action === 'Compostado' ? 'compost' : 'trash'}`;
+                        btn.textContent = action;
+                        btn.onclick = () => closeFood(item.id, action);
+                        btnDiv.appendChild(btn);
+                    });
+
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'action-btn btn-danger';
+                    deleteBtn.textContent = 'Borrar';
+                    deleteBtn.onclick = () => deleteFoodActive(item.id);
+                    btnDiv.appendChild(deleteBtn);
+
+                    itemDiv.appendChild(infoDiv);
+                    itemDiv.appendChild(btnDiv);
+                    foodListDiv.appendChild(itemDiv);
                 });
+            }
 
-                const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'action-btn btn-danger';
-                deleteBtn.textContent = 'Borrar';
-                deleteBtn.onclick = () => deleteFoodActive(item.id);
-                btnDiv.appendChild(deleteBtn);
-
-                itemDiv.appendChild(infoDiv);
-                itemDiv.appendChild(btnDiv);
-                foodListDiv.appendChild(itemDiv);
-            });
-
-            // Renderizado Energía con Ranking Estimado (Punto 19)
+            // Renderizado Energía Ordenado por Ranking Total %
             const energyBody = document.getElementById('energyList');
             energyBody.innerHTML = '';
-            appData.appliances.forEach(item => {
-                const kwhMonth = (item.watts * item.hours * 30 * item.count) / 1000;
-                const costMonth = kwhMonth * appData.config.electricityRate;
+            
+            let sortedAppliances = appData.appliances.map(item => {
+                let kwhUse = 0;
+                if (item.kwhAnnualInput) {
+                    kwhUse = item.kwhAnnualInput / 12 * item.count;
+                } else {
+                    kwhUse = (item.watts * item.hours * 30 * item.count) / 1000;
+                }
+
+                let kwhStandby = 0;
+                if (item.standbyWatts > 0 && item.hours < 24) {
+                    kwhStandby = (item.standbyWatts * (24 - item.hours) * 30 * item.count) / 1000;
+                }
+
+                const kwhTotal = kwhUse + kwhStandby;
+                return { ...item, kwhUse, kwhStandby, kwhTotal };
+            }).sort((a, b) => b.kwhTotal - a.kwhTotal);
+
+            sortedAppliances.forEach(item => {
+                const costMonth = item.kwhTotal * appData.config.electricityRate;
+                const pct = totalMonthlyKwhEst > 0 ? ((item.kwhTotal / totalMonthlyKwhEst) * 100).toFixed(1) : '0.0';
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${escapeHTML(item.name)} (x${item.count})</td>
-                    <td>${kwhMonth.toFixed(1)}</td>
+                    <td>${item.kwhUse.toFixed(1)}</td>
+                    <td>${item.kwhStandby.toFixed(1)}</td>
+                    <td><strong>${item.kwhTotal.toFixed(1)}</strong></td>
+                    <td><strong>${pct}%</strong></td>
                     <td>S/ ${costMonth.toFixed(2)}</td>
-                    <td><span style="font-size:0.75rem; background:#eee; padding:2px 6px; border-radius:3px;">${item.valType}</span></td>
+                    <td><span style="font-size:0.75rem; background:#eee; padding:2px 6px; border-radius:3px;">${escapeHTML(item.valType)}</span></td>
                     <td><button class="action-btn btn-danger" onclick="deleteAppliance(${item.id})">Eliminar</button></td>
                 `;
                 energyBody.appendChild(tr);
@@ -1299,39 +1582,46 @@
                 historyBody.appendChild(tr);
             });
 
-            // Tabla y Gráfica Semanal
+            // Tabla y Gráfica Semanal Normalizada por Porcentaje de Escala
             const weeklyTableBody = document.getElementById('weeklyTableBody');
             weeklyTableBody.innerHTML = '';
 
             const chartContainer = document.getElementById('weeklyChart');
             chartContainer.innerHTML = '';
 
-            if (calculatedWeeklyData.length === 0) {
+            if (summary.calculatedWeeklyData.length === 0) {
                 chartContainer.innerHTML = '<p style="color: #666; font-size: 0.9rem; width:100%; text-align:center;">Registra la lectura inicial para comenzar la medición.</p>';
             } else {
-                const baseData = calculatedWeeklyData.length >= 2 ? calculatedWeeklyData[1] : null;
+                const baseData = summary.calculatedWeeklyData.length >= 2 ? summary.calculatedWeeklyData[1] : null;
 
-                calculatedWeeklyData.forEach((d, idx) => {
+                summary.calculatedWeeklyData.forEach((d, idx) => {
                     let scoreText = "--";
-                    let barHeight = 10;
+                    let barHeightPct = 10;
                     let isBase = false;
+                    let isPartial = false;
 
                     if (idx === 0) {
                         scoreText = "Punto de Inicio";
                         isBase = true;
                     } else if (idx === 1) {
                         scoreText = "Línea Base (50 pts)";
-                        barHeight = 50;
+                        barHeightPct = 50;
                         isBase = true;
                     } else {
-                        const foodScore = calculateSubScore(baseData.wastedPerDay, d.wastedPerDay);
+                        const hasFoodDataBoth = (d.foodActivityCount > 0 && baseData.foodActivityCount > 0);
                         const energyScore = calculateSubScore(baseData.kwhPerDay, d.kwhPerDay);
-                        const totalWScore = foodScore + energyScore;
-                        scoreText = totalWScore + " pts";
-                        barHeight = Math.max(10, totalWScore);
+                        if (hasFoodDataBoth) {
+                            const foodScore = calculateSubScore(baseData.wastedPerDay, d.wastedPerDay);
+                            const totalWScore = foodScore + energyScore;
+                            scoreText = totalWScore + " pts";
+                            barHeightPct = totalWScore; // Escala sobre 100
+                        } else {
+                            scoreText = `${energyScore}/50 pts (sin comida)`;
+                            barHeightPct = Math.round((energyScore / 50) * 100); // Normalizado a % de su máximo (50)
+                            isPartial = true;
+                        }
                     }
 
-                    // Render Fila Tabla
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td>${idx === 0 ? 'Reg. 1 (Inicio)' : (idx === 1 ? 'Reg. 2 (Línea Base)' : 'Reg. ' + (idx + 1))}</td>
@@ -1345,18 +1635,24 @@
                     `;
                     weeklyTableBody.appendChild(tr);
 
-                    // Render Barra Gráfico (Punto 16: Etiqueta de barra corregida)
                     const col = document.createElement('div');
                     col.className = 'bar-column';
 
                     const bar = document.createElement('div');
-                    bar.className = `bar ${isBase ? 'bar-base' : ''}`;
-                    bar.style.height = barHeight + '%';
-                    bar.textContent = idx === 0 ? 'Inicio' : (idx === 1 ? 'Base' : `${barHeight}pts`);
+                    bar.className = `bar ${isBase ? 'bar-base' : (isPartial ? 'bar-partial' : '')}`;
+                    bar.style.height = Math.max(10, barHeightPct) + '%';
+                    
+                    if (idx === 0) {
+                        bar.textContent = '';
+                    } else if (idx === 1) {
+                        bar.textContent = 'Base';
+                    } else {
+                        bar.textContent = isPartial ? `${barHeightPct}%` : `${barHeightPct}pts`;
+                    }
 
                     const label = document.createElement('div');
                     label.className = 'bar-label';
-                    label.textContent = `R${idx + 1}`;
+                    label.textContent = idx === 0 ? 'R1 (Inicio)' : `R${idx + 1}`;
 
                     col.appendChild(bar);
                     col.appendChild(label);
@@ -1365,95 +1661,140 @@
             }
         }
 
-        // Asistente Automático de Recomendaciones
+        // ASISTENTE AUTOMÁTICO
         function generateAssistantRecommendations() {
             const textEl = document.getElementById('assistantText');
-            let urgentFoods = 0;
-            appData.foods.forEach(f => {
-                const s = getItemStatus(f);
-                if (s.code === 'urgent' || s.code === 'expired') urgentFoods++;
-            });
+            let msgs = [];
+            const todayStr = getLocalIsoDate();
+
+            if (appData.foods.length === 0) {
+                msgs.push(`🍎 No hay alimentos registrados en el inventario activo. Agrega los productos de tu cocina para iniciar la gestión.`);
+            } else {
+                let urgentFoods = 0;
+                let expiredFoods = 0;
+                appData.foods.forEach(f => {
+                    const s = getItemStatusAtDate(f, todayStr);
+                    if (s.code === 'expired') expiredFoods++;
+                    else if (s.code === 'urgent') urgentFoods++;
+                });
+
+                if (expiredFoods > 0) {
+                    msgs.push(`⚠️ Tienes <strong>${expiredFoods} alimento(s) vencido(s)</strong> en tu inventario. Protégete cerrándolos con el botón que corresponda (Consumido, Congelado, Compostado o Botado).`);
+                } else if (urgentFoods > 0) {
+                    msgs.push(`⚠️ Tienes <strong>${urgentFoods} alimento(s) en estado urgente</strong>. Consúmelos o congélalos para salvar la huella de CO₂.`);
+                } else {
+                    msgs.push(`✅ Tu inventario de alimentos está al día sin productos en riesgo alto.`);
+                }
+            }
 
             let topAppliance = null;
             let maxKwh = 0;
+            let totalPhantomSolesMonthly = 0;
+
             appData.appliances.forEach(a => {
-                const kwh = (a.watts * a.hours * 30 * a.count) / 1000;
-                if (kwh > maxKwh) {
-                    maxKwh = kwh;
+                let kwhUse = a.kwhAnnualInput ? (a.kwhAnnualInput / 12 * a.count) : ((a.watts * a.hours * 30 * a.count) / 1000);
+                let kwhStandby = (a.standbyWatts > 0 && a.hours < 24) ? ((a.standbyWatts * (24 - a.hours) * 30 * a.count) / 1000) : 0;
+                const kwhTotal = kwhUse + kwhStandby;
+
+                if (kwhTotal > maxKwh) {
+                    maxKwh = kwhTotal;
                     topAppliance = a;
                 }
+                totalPhantomSolesMonthly += kwhStandby * appData.config.electricityRate;
             });
 
-            let msgs = [];
-            if (urgentFoods > 0) {
-                msgs.push(`⚠️ Tienes <strong>${urgentFoods} alimento(s) en estado urgente o vencido</strong>. Consúmelos o procésalos primero para evitar penalizaciones en tu puntaje.`);
+            if (topAppliance) {
+                const safeName = escapeHTML(topAppliance.name);
+                const monthlyCost = maxKwh * appData.config.electricityRate;
+                
+                let advice = "Optimiza su uso diario.";
+                const type = topAppliance.type;
+
+                if (type === "Refrigeradora") {
+                    advice = "Revisa el empaque hermético de la puerta, evita introducir alimentos calientes y descongela periódicamente si se forma escarcha.";
+                } else if (type === "Ducha / Terma eléctrica") {
+                    advice = "Reduce los minutos de baño y gradúa el termostato a una temperatura moderada (aprox. 45-50 °C).";
+                } else if (type === "Calefactor") {
+                    advice = "Enciéndelo únicamente por periodos fijos y mantén las ventanas y puertas cerradas para conservar el calor.";
+                } else if (type === "Foco / Iluminación" && topAppliance.watts > 15) {
+                    advice = "Considera migrar a tecnología LED para reducir drásticamente el consumo.";
+                } else if (topAppliance.standbyWatts > 5) {
+                    advice = `Tiene un consumo en espera considerable (${topAppliance.standbyWatts}W). Desenchúfalo mientras no esté en uso.`;
+                } else if (type === "Televisor") {
+                    advice = "Apágalo y desenchúfalo por las noches para cortar el consumo pasivo.";
+                }
+                
+                msgs.push(`⚡ El mayor consumo estimado proviene de <strong>${safeName}</strong> (~${maxKwh.toFixed(1)} kWh/mes, S/ ${monthlyCost.toFixed(2)}). ${advice}`);
             } else {
-                msgs.push(`✅ Tu inventario de alimentos está estable.`);
+                msgs.push(`⚡ Registra tus aparatos para obtener consejos específicos de consumo.`);
             }
 
-            if (topAppliance) {
-                const monthlyCost = maxKwh * appData.config.electricityRate;
-                msgs.push(`⚡ Tu mayor consumo estimado proviene de <strong>${topAppliance.name}</strong> (~${maxKwh.toFixed(1)} kWh/mes, S/ ${monthlyCost.toFixed(2)}). Optimiza su tiempo de uso.`);
-            } else {
-                msgs.push(`⚡ Registra tus aparatos en el módulo de energía para ver recomendaciones de consumo.`);
+            if (totalPhantomSolesMonthly > 0) {
+                msgs.push(`🔌 Desconectar los aparatos en espera puede ahorrarte aprox. <strong>S/ ${totalPhantomSolesMonthly.toFixed(2)} al mes</strong>.`);
             }
 
             textEl.innerHTML = msgs.join('<br>');
         }
 
-        function escapeHTML(str) {
-            return str.replace(/[&<>'"]/g, 
-                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-            );
-        }
-
+        // EXPORTACIÓN CSV COMPLETA
         function exportToCSV() {
+            const summary = calculateGlobalSummary();
             let csvContent = "\ufeff"; 
             csvContent += "Casa Ciclo - Reporte Oficial de Impacto\n";
             csvContent += `Tipo de Lugar,${appData.config.placeType}\n`;
             csvContent += `Integrantes,${appData.config.peopleCount}\n`;
             csvContent += `Tarifa kWh (S/),${appData.config.electricityRate}\n`;
-            csvContent += `Fecha Inicio Medición,${appData.config.startDate}\n\n`;
+            csvContent += `Fecha Inicio Medicion,${appData.config.startDate}\n`;
+            csvContent += `Registros Eliminados Directamente,${appData.deletedFoodCount || 0}\n\n`;
             
             csvContent += "Historial de Alimentos\nFecha Cierre,Nombre,Cantidad,Accion Final,Resultado Categorizado,Dias Restantes\n";
             appData.history.forEach(f => {
                 csvContent += `"${f.dateClosed}","${f.name.replace(/"/g, '""')}","${f.displayQtyText.replace(/"/g, '""')}","${f.finalState}","${f.categoryResult}",${f.remainingDaysAtClose}\n`;
             });
 
-            csvContent += "\nAparatos Registrados\nNombre,Potencia (W),Horas Uso,Cantidad,Tipo Valor\n";
+            csvContent += "\nAparatos Registrados\nNombre,Potencia (W),Horas Uso,Cantidad,Standby Watts,kWh/Mes Uso,kWh/Mes Standby,kWh/Mes Total,Tipo Valor\n";
             appData.appliances.forEach(a => {
-                csvContent += `"${a.name.replace(/"/g, '""')}",${a.watts},${a.hours},${a.count},"${a.valType}"\n`;
+                let kwhUse = a.kwhAnnualInput ? (a.kwhAnnualInput / 12 * a.count) : ((a.watts * a.hours * 30 * a.count) / 1000);
+                let kwhStandby = (a.standbyWatts > 0 && a.hours < 24) ? ((a.standbyWatts * (24 - a.hours) * 30 * a.count) / 1000) : 0;
+                csvContent += `"${a.name.replace(/"/g, '""')}",${a.watts},${a.hours},${a.count},${a.standbyWatts},${kwhUse.toFixed(2)},${kwhStandby.toFixed(2)},${(kwhUse + kwhStandby).toFixed(2)},"${a.valType}"\n`;
             });
 
-            csvContent += "\nRegistros Semanales y Cálculos de Auditoría\nRegistro,Fecha,Medidor (kWh),kWh por Día,Desperdicio por Día (kg),Desconectó Hábitos\n";
+            csvContent += "\nRegistros Semanales y Calculos de Auditoria\nRegistro,Fecha,Medidor (kWh),kWh por Dia,Desperdicio por Dia (incluye compost kg),Puntaje,Desconecto Habitos\n";
             
-            let calcPreview = [];
-            let logs = appData.weeklyLogs;
-            if (logs.length > 0) {
-                for (let i = 0; i < logs.length; i++) {
-                    let curr = logs[i];
-                    let prevDateStr = (i === 0) ? appData.config.startDate : logs[i - 1].date;
-                    let isFirst = (i === 0);
-                    let d1 = new Date(prevDateStr + 'T00:00:00');
-                    let d2 = new Date(curr.date + 'T00:00:00');
-                    let days = Math.max(1, Math.round((d2 - d1) / (1000 * 60 * 60 * 24)));
-                    let wastedKg = getWastedFoodBetweenDates(prevDateStr, curr.date, isFirst);
-                    let wastedPerDay = wastedKg / days;
-                    let kwhPerDay = 0;
-                    if (i > 0) {
-                        kwhPerDay = (curr.meterReading - logs[i - 1].meterReading) / days;
-                    }
-                    calcPreview.push({ date: curr.date, meter: curr.meterReading, kwhDay: kwhPerDay, wasteDay: wastedPerDay, unplug: curr.unplugged });
-                }
-            }
+            const baseData = summary.calculatedWeeklyData.length >= 2 ? summary.calculatedWeeklyData[1] : null;
 
-            calcPreview.forEach((w, idx) => {
-                csvContent += `"Registro ${idx + 1}","${w.date}",${w.meter},${w.kwhDay.toFixed(3)},${w.wasteDay.toFixed(3)},${w.unplug ? 'Sí' : 'No'}\n`;
+            summary.calculatedWeeklyData.forEach((d, idx) => {
+                let pScoreStr = "";
+                if (idx === 0) pScoreStr = "Inicio";
+                else if (idx === 1) pScoreStr = "50 (Línea Base)";
+                else {
+                    const hasFoodDataBoth = (d.foodActivityCount > 0 && baseData.foodActivityCount > 0);
+                    const eS = calculateSubScore(baseData.kwhPerDay, d.kwhPerDay);
+                    if (hasFoodDataBoth) {
+                        const fS = calculateSubScore(baseData.wastedPerDay, d.wastedPerDay);
+                        pScoreStr = String(fS + eS);
+                    } else {
+                        pScoreStr = `${eS}/50 (sin comida)`;
+                    }
+                }
+                csvContent += `"Registro ${idx + 1}","${d.log.date}",${d.log.meterReading.toFixed(2)},${d.kwhPerDay.toFixed(3)},${d.wastedPerDay.toFixed(3)},"${pScoreStr}",${d.log.unplugged ? 'Sí' : 'No'}\n`;
             });
+
+            let totalWastedKgAll = 0;
+            appData.history.forEach(h => {
+                if (h.categoryResult === 'Desperdiciado (Botado)' || h.categoryResult === 'Desperdiciado (Vencido)' || h.categoryResult === 'Desviado (Compostado)') {
+                    totalWastedKgAll += h.weightKg;
+                }
+            });
+
+            csvContent += "\nResumen Global de Impacto\nComida Salvada (kg),Comida Desviada Compost (kg),Desperdicio Total Registrado (kg),kWh Ahorrados Neto Medidor,Ahorro Energia (S/),CO2 Evitado Total (kg)\n";
+            csvContent += `${summary.totalSavedFoodKg.toFixed(2)},${summary.totalDeviatedFoodKg.toFixed(2)},${totalWastedKgAll.toFixed(2)},${summary.totalKwhOptimizedNet.toFixed(2)},${summary.totalSolesSavedEnergy.toFixed(2)},${summary.totalCO2AvoidedCumulative.toFixed(2)}\n`;
+
+            csvContent += "\nParametros Referenciales Utilizados\nFactor CO2 Electricidad (kg CO2/kWh),0.30\nFactor CO2 Comida (kg CO2e/kg),2.50\nTarifa Electricidad Aplicada (S/ kWh),"+appData.config.electricityRate+"\nNota Metodologica,Los factores de emision y consumos por aparatos son valores referenciales simplificados para evaluacion de proyectos.\n";
 
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
+            const link = document.append ? document.createElement("a") : document.createElement("a");
             link.setAttribute("href", url);
             link.setAttribute("download", `Reporte_CasaCiclo_${appData.config.placeType}.csv`);
             document.body.appendChild(link);
