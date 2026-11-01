@@ -7,21 +7,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2e7d32;
-            --primary-light: #43a047;
-            --primary-pastel: #e8f5e9;
-            --accent-green: #66bb6a;
-            --mint-vibrant: #26a69a;
-            --bg-color: #f4f8f4;
+            --primary-color: #2e6930;
+            --primary-light: #52a455;
+            --primary-pastel: #e2f0d9;
+            --accent-green: #68bb68;
+            --mint-vibrant: #31b0a0;
+            --bg-color: #f1f6f0;
             --card-bg: #ffffff;
-            --text-color: #263238;
-            --text-muted: #607d8b;
-            --danger-color: #e53935;
-            --warning-color: #fbc02d;
-            --success-color: #43a047;
-            --info-color: #0288d1;
-            --border-radius: 16px;
-            --box-shadow: 0 10px 30px rgba(46, 125, 50, 0.08);
+            --text-color: #243026;
+            --text-muted: #627564;
+            --danger-color: #d94e48;
+            --warning-color: #e5b324;
+            --success-color: #48a652;
+            --info-color: #1a8cc4;
+            --border-radius: 18px;
+            --box-shadow-3d: 0 12px 35px rgba(46, 105, 48, 0.10), 0 4px 10px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            --box-shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.04);
         }
 
         body {
@@ -34,51 +35,53 @@
         }
 
         header {
-            background: linear-gradient(135deg, #388e3c, #1b5e20);
+            background: linear-gradient(145deg, #428a45, #225424);
             color: white;
-            padding: 2.5rem 1.5rem;
+            padding: 2.8rem 1.5rem;
             text-align: center;
-            box-shadow: 0 4px 20px rgba(27, 94, 32, 0.15);
+            box-shadow: 0 10px 30px rgba(34, 84, 36, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border-bottom: 4px solid #183c19;
         }
 
         .header-content {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 16px;
+            gap: 20px;
             flex-wrap: wrap;
-            max-width: 900px;
+            max-width: 950px;
             margin: 0 auto;
         }
 
         .logo-icon {
-            width: 52px;
-            height: 52px;
-            fill: #a5d6a7;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
-            animation: pulse-soft 3s infinite ease-in-out;
+            width: 60px;
+            height: 60px;
+            fill: #c8e6c9;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
+            animation: pulse-soft 3.5s infinite ease-in-out;
         }
 
         @keyframes pulse-soft {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.06); }
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)); }
+            50% { transform: scale(1.08); filter: drop-shadow(0 6px 12px rgba(0,0,0,0.35)); }
         }
 
         header h1 { 
             margin: 0; 
-            font-size: 2.6rem; 
+            font-size: 2.8rem; 
             font-weight: 800; 
-            letter-spacing: -0.8px;
+            letter-spacing: -0.5px;
             color: #ffffff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-shadow: 0 3px 6px rgba(0,0,0,0.2);
         }
 
         header p { 
             margin: 8px 0 0 0; 
-            font-size: 1.1rem; 
-            opacity: 0.95; 
+            font-size: 1.15rem; 
+            opacity: 0.92; 
             font-weight: 300; 
-            letter-spacing: 0.2px;
+            letter-spacing: 0.3px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.15);
         }
 
         .container {
@@ -88,65 +91,87 @@
         }
 
         .card {
-            background-color: var(--card-bg);
+            background: linear-gradient(145deg, #ffffff, #fcfefe);
             border-radius: var(--border-radius);
-            padding: 28px;
+            padding: 30px;
             margin-bottom: 28px;
-            box-shadow: var(--box-shadow);
-            border: 1px solid rgba(102, 187, 106, 0.18);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: var(--box-shadow-3d);
+            border: 1px solid rgba(104, 187, 104, 0.2);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
         .card:hover {
-            box-shadow: 0 14px 36px rgba(46, 125, 50, 0.12);
+            box-shadow: 0 16px 40px rgba(46, 105, 48, 0.14), 0 6px 12px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
         }
 
         h2 {
             color: var(--primary-color);
-            border-bottom: 2px solid #c8e6c9;
-            padding-bottom: 10px;
+            border-bottom: 2px solid #d5ebd0;
+            padding-bottom: 12px;
             margin-top: 0;
-            font-size: 1.35rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            letter-spacing: -0.3px;
+            letter-spacing: -0.2px;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
         }
 
         form { display: flex; flex-direction: column; gap: 14px; }
-        label { font-weight: 600; font-size: 0.9rem; color: #37474f; }
+        label { font-weight: 600; font-size: 0.92rem; color: #324235; text-shadow: 0 1px 0 rgba(255,255,255,0.6); }
+        
         input, select, button {
-            padding: 12px 16px;
-            border: 1.5px solid #cfd8dc;
-            border-radius: 10px;
+            padding: 13px 16px;
+            border: 1.5px solid #bcd0be;
+            border-radius: 12px;
             font-size: 0.95rem;
             font-family: 'Inter', sans-serif;
-            background-color: #fafafa;
-            transition: all 0.2s ease;
+            background-color: #fafbfc;
+            box-shadow: var(--box-shadow-inset);
+            transition: all 0.25s ease;
         }
 
         input:focus, select:focus {
             outline: none;
             border-color: var(--accent-green);
             background-color: #ffffff;
-            box-shadow: 0 0 0 4px rgba(102, 187, 106, 0.15);
+            box-shadow: 0 0 0 4px rgba(104, 187, 104, 0.2), inset 0 1px 2px rgba(0,0,0,0.02);
         }
 
         button {
-            background-color: var(--primary-color);
+            background: linear-gradient(145deg, #38803b, #265928);
             color: white;
             border: none;
             cursor: pointer;
-            font-weight: 600;
-            border-radius: 10px;
-            transition: background 0.2s, transform 0.1s;
-            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);
+            font-weight: 700;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            box-shadow: 0 6px 16px rgba(40, 92, 42, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
 
-        button:hover { background-color: #1b5e20; }
-        button:active { transform: scale(0.98); }
-        .btn-danger { background-color: var(--danger-color); box-shadow: 0 4px 12px rgba(229, 57, 53, 0.2); }
-        .btn-danger:hover { background-color: #c62828; }
-        .btn-secondary { background-color: #607d8b; box-shadow: 0 4px 12px rgba(96, 125, 139, 0.2); }
-        .btn-secondary:hover { background-color: #455a64; }
+        button:hover { 
+            background: linear-gradient(145deg, #429345, #1d451e);
+            box-shadow: 0 8px 20px rgba(40, 92, 42, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            transform: translateY(-1px);
+        }
+        button:active { transform: translateY(1px); box-shadow: 0 3px 8px rgba(40, 92, 42, 0.2); }
+        
+        .btn-danger { 
+            background: linear-gradient(145deg, #e65c55, #c23b35) !important; 
+            box-shadow: 0 6px 16px rgba(194, 59, 53, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+        }
+        .btn-danger:hover { 
+            background: linear-gradient(145deg, #f06861, #a8302b) !important; 
+            box-shadow: 0 8px 20px rgba(194, 59, 53, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+        }
+        
+        .btn-secondary { 
+            background: linear-gradient(145deg, #718874, #526655) !important; 
+            box-shadow: 0 6px 16px rgba(82, 102, 85, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+        }
+        .btn-secondary:hover { 
+            background: linear-gradient(145deg, #809983, #3f5242) !important; 
+        }
 
         .grid-2 {
             display: grid;
@@ -168,16 +193,17 @@
         }
 
         .stat-box {
-            background: linear-gradient(135deg, #f1f8e9, #e8f5e9);
-            padding: 20px;
+            background: linear-gradient(145deg, #eaf4e6, #d9ecdf);
+            padding: 22px;
             border-radius: var(--border-radius);
             text-align: center;
             border-left: 6px solid var(--accent-green);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            box-shadow: 0 6px 18px rgba(46, 105, 48, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            border-top: 1px solid rgba(255,255,255,0.6);
         }
 
-        .stat-box h3 { margin: 0; font-size: 0.75rem; color: #2e7d32; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
-        .stat-box p { font-size: 1.5rem; font-weight: 800; margin: 8px 0 0 0; color: #1b5e20; }
+        .stat-box h3 { margin: 0; font-size: 0.78rem; color: #2e6930; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; text-shadow: 0 1px 0 rgba(255,255,255,0.7); }
+        .stat-box p { font-size: 1.6rem; font-weight: 800; margin: 8px 0 0 0; color: #1c4a1e; text-shadow: 0 1px 0 rgba(255,255,255,0.8); }
 
         .ods-grid {
             display: grid;
@@ -187,44 +213,45 @@
         }
 
         .ods-card {
-            background: #f9fbf9;
-            border: 1.5px solid #dcedc8;
+            background: linear-gradient(145deg, #f7fcf6, #eef5ed);
+            border: 1.5px solid #d0e4cc;
             border-radius: var(--border-radius);
-            padding: 18px;
+            padding: 20px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.9);
         }
-        .ods-card h4 { margin: 0 0 8px 0; color: var(--primary-color); font-weight: 700; font-size: 1rem; }
+        .ods-card h4 { margin: 0 0 8px 0; color: var(--primary-color); font-weight: 700; font-size: 1.02rem; text-shadow: 0 1px 0 rgba(255,255,255,0.8); }
 
         .traffic-light-item {
-            padding: 16px 18px;
-            border-radius: 12px;
+            padding: 18px;
+            border-radius: 14px;
             margin-bottom: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 14px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8);
             border: 1px solid rgba(0,0,0,0.04);
         }
 
-        .status-red { background-color: #fde8e8; border-left: 6px solid var(--danger-color); }
-        .status-yellow { background-color: #fffde7; border-left: 6px solid #fbc02d; }
-        .status-green { background-color: #e8f5e9; border-left: 6px solid var(--success-color); }
-        .status-expired { background-color: #eceff1; border-left: 6px solid var(--text-muted); }
+        .status-red { background: linear-gradient(145deg, #faefef, #f7dede); border-left: 6px solid var(--danger-color); }
+        .status-yellow { background: linear-gradient(145deg, #fcf9ec, #fcf2ce); border-left: 6px solid #e5b324; }
+        .status-green { background: linear-gradient(145deg, #f0f7ef, #e2f0e0); border-left: 6px solid var(--success-color); }
+        .status-expired { background: linear-gradient(145deg, #f0f3f2, #e5e8e7); border-left: 6px solid var(--text-muted); }
 
         .tag {
-            font-size: 0.75rem;
+            font-size: 0.78rem;
             padding: 5px 12px;
             border-radius: 20px;
             font-weight: 700;
             display: inline-block;
             margin-top: 6px;
             letter-spacing: 0.3px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .tag-red { background: var(--danger-color); color: white; }
-        .tag-yellow { background: #fbc02d; color: #333333; }
+        .tag-yellow { background: #e5b324; color: #2e2608; }
         .tag-green { background: var(--success-color); color: white; }
         .tag-expired { background: var(--text-muted); color: white; }
 
@@ -238,28 +265,29 @@
         .action-btn {
             padding: 8px 14px;
             font-size: 0.82rem;
-            border-radius: 8px;
+            border-radius: 9px;
             font-weight: 600;
         }
 
-        .btn-consume { background-color: var(--success-color); }
-        .btn-freeze { background-color: var(--info-color); }
-        .btn-compost { background-color: #8d6e63; }
-        .btn-trash { background-color: var(--danger-color); }
+        .btn-consume { background: linear-gradient(145deg, #50b55b, #3c8a45) !important; box-shadow: 0 4px 12px rgba(60,138,69,0.25)!important; }
+        .btn-freeze { background: linear-gradient(145deg, #249ee2, #1872a3) !important; box-shadow: 0 4px 12px rgba(24,114,163,0.25)!important; }
+        .btn-compost { background: linear-gradient(145deg, #9e7d72, #7a5f56) !important; box-shadow: 0 4px 12px rgba(122,95,86,0.25)!important; }
+        .btn-trash { background: linear-gradient(145deg, #e65c55, #c23b35) !important; box-shadow: 0 4px 12px rgba(194,59,53,0.25)!important; }
 
         .table-responsive {
             width: 100%;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             margin-top: 14px;
-            border-radius: 10px;
-            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            border: 1px solid #d4e0d4;
+            box-shadow: var(--box-shadow-inset);
         }
 
         table { width: 100%; border-collapse: collapse; min-width: 650px; background: white; }
-        th { background-color: #f1f8e9; color: #2e7d32; font-weight: 700; }
-        th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
-        tr:hover { background-color: #fafafa; }
+        th { background-color: #ebf4e9; color: #2e6930; font-weight: 700; text-shadow: 0 1px 0 rgba(255,255,255,0.8); }
+        th, td { text-align: left; padding: 13px 15px; border-bottom: 1px solid #e8ede8; font-size: 0.9rem; }
+        tr:hover { background-color: #f6faf5; }
 
         .chart-container {
             display: flex;
@@ -267,7 +295,7 @@
             gap: 18px;
             height: 220px;
             padding-top: 30px;
-            border-bottom: 2px solid #cfd8dc;
+            border-bottom: 2px solid #bcd0be;
             margin-top: 20px;
             overflow-x: auto;
         }
@@ -283,8 +311,8 @@
         .bar {
             width: 100%;
             max-width: 52px;
-            background-color: var(--accent-green);
-            border-radius: 8px 8px 0 0;
+            background: linear-gradient(180deg, #74cb76, #429345);
+            border-radius: 10px 10px 0 0;
             transition: height 0.4s;
             text-align: center;
             color: white;
@@ -292,74 +320,78 @@
             font-weight: 700;
             padding-top: 8px;
             box-sizing: border-box;
-            box-shadow: 0 -3px 8px rgba(102, 187, 106, 0.25);
+            box-shadow: 0 -4px 12px rgba(66, 147, 69, 0.3), inset 0 1px 0 rgba(255,255,255,0.4);
         }
         .bar-base {
-            background-color: var(--text-muted) !important;
+            background: linear-gradient(180deg, #899e8c, #5e7060) !important;
             box-shadow: none !important;
         }
         .bar-partial {
-            background-color: var(--info-color) !important;
+            background: linear-gradient(180deg, #3aaee8, #1872a3) !important;
+            box-shadow: none !important;
         }
         .bar-label {
             font-size: 0.78rem;
             margin-top: 8px;
             text-align: center;
             white-space: nowrap;
-            color: #546e7a;
+            color: #526655;
             font-weight: 600;
         }
         .info-note {
             font-size: 0.88rem;
-            color: #0277bd;
-            background-color: #e1f5fe;
-            border-left: 5px solid var(--info-color);
-            padding: 12px 16px;
-            border-radius: 8px;
+            color: #176f9c;
+            background: linear-gradient(145deg, #f0f8fd, #e0f2fe);
+            border-left: 6px solid var(--info-color);
+            padding: 14px 18px;
+            border-radius: 12px;
             margin-bottom: 16px;
             line-height: 1.5;
+            box-shadow: 0 4px 12px rgba(26,140,196,0.08), inset 0 1px 0 rgba(255,255,255,0.9);
         }
         .warning-note {
             font-size: 0.88rem;
-            color: #f57f17;
-            background-color: #fffde7;
-            border-left: 5px solid #fbc02d;
-            padding: 12px 16px;
-            border-radius: 8px;
+            color: #9c6c0b;
+            background: linear-gradient(145deg, #fffbeb, #fef3c7);
+            border-left: 6px solid #e5b324;
+            padding: 14px 18px;
+            border-radius: 12px;
             margin-bottom: 16px;
             line-height: 1.5;
+            box-shadow: 0 4px 12px rgba(229,179,36,0.08), inset 0 1px 0 rgba(255,255,255,0.9);
         }
         .storage-banner {
-            background-color: #ffebee;
-            color: #c62828;
-            border: 1px solid #ffcdd2;
-            padding: 14px;
-            border-radius: 10px;
+            background: linear-gradient(145deg, #fdf2f2, #fce8e8);
+            color: #b8322b;
+            border: 1px solid #f5c6c6;
+            padding: 16px;
+            border-radius: 12px;
             margin-bottom: 24px;
             display: none;
             font-size: 0.92rem;
-            font-weight: 500;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(184,50,43,0.08);
         }
         .assistant-box {
-            background: linear-gradient(135deg, #fffde7, #fff9c4);
-            border: 1.5px solid #fff59d;
-            padding: 18px;
+            background: linear-gradient(145deg, #fffde6, #fff9b8);
+            border: 1.5px solid #fceca3;
+            padding: 20px;
             border-radius: var(--border-radius);
             margin-bottom: 28px;
-            font-size: 0.94rem;
-            box-shadow: 0 6px 16px rgba(253, 216, 53, 0.15);
+            font-size: 0.95rem;
+            box-shadow: 0 8px 24px rgba(230, 180, 20, 0.18), inset 0 1px 0 rgba(255,255,255,0.9);
         }
-        .assistant-box h4 { margin: 0 0 8px 0; color: #f57f17; font-size: 1.05rem; font-weight: 700; }
+        .assistant-box h4 { margin: 0 0 8px 0; color: #b87c0a; font-size: 1.1rem; font-weight: 700; text-shadow: 0 1px 0 rgba(255,255,255,0.6); }
     </style>
 </head>
 <body>
 
     <header>
         <div class="header-content">
-            <!-- Logotipo SVG: Casita con hoja de ecología integrada -->
+            <!-- Logotipo 3D Mejorado: Casita con hoja ecológica en relieve -->
             <svg class="logo-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 3L2 12h3v8h5v-6h4v6h5v-8h3L12 3zm0 2.84l6 5.16V18h-2v-6H8v6H6v-7l6-5.16z"/>
-                <path d="M12 7c-2.21 0-4 1.79-4 4 0 2.21 1.79 4 4 4s4-1.79 4-4c0-2.21-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" fill="#81c784"/>
+                <path d="M12 3L2 12h3v8h5v-6h4v6h5v-8h3L12 3zm0 2.84l6 5.16V18h-2v-6H8v6H6v-7l6-5.16z" filter="drop-shadow(0 2px 3px rgba(0,0,0,0.3))"/>
+                <path d="M12 7c-2.21 0-4 1.79-4 4 0 2.21 1.79 4 4 4s4-1.79 4-4c0-2.21-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" fill="#a5d6a7" filter="drop-shadow(0 1px 2px rgba(0,0,0,0.2))"/>
             </svg>
             <div>
                 <h1>Casa Ciclo</h1>
@@ -388,7 +420,7 @@
                             <option value="colegio">Colegio / Institución Educativa (Comparativa por persona)</option>
                             <option value="comedor">Comedor Popular / Comunitario (Comparativa por persona)</option>
                         </select>
-                        <small style="font-size:0.78rem; color:#78909c; display:block; margin-top:6px;">El catálogo incluye potencias residenciales referenciales. En instituciones se usa para comparativa per cápita.</small>
+                        <small style="font-size:0.78rem; color:#526655; display:block; margin-top:6px;">El catálogo incluye potencias residenciales referenciales. En instituciones se usa para comparativa per cápita.</small>
                     </div>
                     <div>
                         <label for="peopleCount">Número de Personas / Integrantes:</label>
@@ -431,18 +463,18 @@
             <div class="ods-grid">
                 <div class="ods-card">
                     <h4>ODS 12: Producción y Consumo</h4>
-                    <p id="ods12Val" style="font-weight:700; color:#2e7d32; margin: 6px 0;">0.00 kg de comida salvada</p>
-                    <small id="ods12Deviated" style="font-size:0.78rem; color:#555;">(0.00 kg desviados a compost)</small>
+                    <p id="ods12Val" style="font-weight:700; color:#2e6930; margin: 6px 0;">0.00 kg de comida salvada</p>
+                    <small id="ods12Deviated" style="font-size:0.78rem; color:#526655;">(0.00 kg desviados a compost)</small>
                 </div>
                 <div class="ods-card">
                     <h4>ODS 7: Energía Asequible</h4>
-                    <p id="ods7Val" style="font-weight:700; color:#2e7d32; margin: 6px 0;">0.0 kWh ahorrados (neto)</p>
-                    <small id="ods7Soles" style="font-size:0.78rem; color:#388e3c; font-weight:bold;">Ahorro: S/ 0.00</small>
+                    <p id="ods7Val" style="font-weight:700; color:#2e6930; margin: 6px 0;">0.0 kWh ahorrados (neto)</p>
+                    <small id="ods7Soles" style="font-size:0.78rem; color:#38803b; font-weight:bold;">Ahorro: S/ 0.00</small>
                 </div>
                 <div class="ods-card">
                     <h4>ODS 13: Acción por el Clima</h4>
-                    <p id="ods13Val" style="font-weight:700; color:#2e7d32; margin: 6px 0;">0.00 kg CO₂ evitados</p>
-                    <small style="font-size:0.78rem; color:#78909c; display:block; margin-top:4px;">Nota: El CO₂ de energía solo se computa cuando el ahorro neto de kWh es positivo.</small>
+                    <p id="ods13Val" style="font-weight:700; color:#2e6930; margin: 6px 0;">0.00 kg CO₂ evitados</p>
+                    <small style="font-size:0.78rem; color:#526655; display:block; margin-top:4px;">Nota: El CO₂ de energía solo se computa cuando el ahorro neto de kWh es positivo.</small>
                 </div>
             </div>
 
@@ -460,8 +492,8 @@
                     <input list="foodDatabase" id="foodInput" placeholder="Busca o escribe un alimento..." oninput="handleFoodInputCheck()" required>
                     <datalist id="foodDatabase"></datalist>
 
-                    <div id="customDaysContainer" style="display: none; background: #fffde7; padding: 12px; border-radius: 8px; border: 1.5px solid #fff59d;">
-                        <label for="customDaysInput" style="font-size: 0.88rem; color: #f57f17; font-weight:700;">Duración estimada (Días):</label>
+                    <div id="customDaysContainer" style="display: none; background: linear-gradient(145deg, #fffde6, #fff9b8); padding: 12px; border-radius: 10px; border: 1.5px solid #fceca3;">
+                        <label for="customDaysInput" style="font-size: 0.88rem; color: #9c6c0b; font-weight:700;">Duración estimada (Días):</label>
                         <input type="number" id="customDaysInput" min="1" step="1" value="5" style="margin-top:6px;">
                     </div>
 
@@ -495,7 +527,7 @@
                     <label for="applianceTypeSelect">Tipo de Aparato:</label>
                     <select id="applianceTypeSelect" onchange="onApplianceTypeChange()" required></select>
 
-                    <div id="dynamicApplianceOptions" style="display:flex; flex-direction:column; gap:12px; background:#f4f9f4; padding:14px; border-radius:10px; border:1.5px solid #dcedc8;"></div>
+                    <div id="dynamicApplianceOptions" style="display:flex; flex-direction:column; gap:12px; background:linear-gradient(145deg, #f0f7f0, #e2efe1); padding:14px; border-radius:12px; border:1.5px solid #c8e0c6;"></div>
 
                     <div style="display:flex; flex-direction:column; gap:6px;">
                         <label for="applianceBrandSelect">Marca del Aparato:</label>
@@ -522,7 +554,7 @@
                     </div>
 
                     <div style="margin-top: 8px;">
-                        <label id="realWattsLabel" style="font-size:0.88rem; color:#555;">¿Deseas ingresar el dato real de la etiqueta?</label>
+                        <label id="realWattsLabel" style="font-size:0.88rem; color:#526655;">¿Deseas ingresar el dato real de la etiqueta?</label>
                         <div style="display:flex; gap:10px; align-items:center; margin-top:6px;">
                             <input type="checkbox" id="useRealWatts" onchange="toggleRealWattsInput()" style="width:20px; height:20px; accent-color: var(--accent-green);">
                             <input type="number" id="realWattsInput" min="1" step="any" placeholder="Vatios reales (o kWh/año en refrigeradora)" disabled style="flex:1;">
@@ -574,8 +606,8 @@
                     </div>
                 </div>
                 <div style="margin-top: 8px;">
-                    <label style="color:#78909c;">Desperdicio calculado del Historial (automático entre lecturas):</label>
-                    <input type="text" id="weekWastedFoodAuto" value="Se calcula automáticamente" disabled style="background:#f1f8e9; color:#2e7d32; font-weight:600;">
+                    <label style="color:#526655;">Desperdicio calculado del Historial (automático entre lecturas):</label>
+                    <input type="text" id="weekWastedFoodAuto" value="Se calcula automáticamente" disabled style="background:#eaf4e6; color:#2e6930; font-weight:600;">
                 </div>
                 <label style="margin-top: 14px; display: flex; align-items: center; gap: 10px; cursor: pointer;">
                     <input type="checkbox" id="weekUnplugged" style="width:20px; height:20px; accent-color: var(--accent-green);"> Desconecté intencionalmente aparatos en desuso este periodo (Informativo).
@@ -586,7 +618,7 @@
             <h3 style="margin-top: 32px; font-size: 1.15rem; color: var(--primary-color); font-weight:700;">Historial Semanal y Gráfico de Puntaje Comparativo</h3>
             <div class="chart-container" id="weeklyChart"></div>
 
-            <h4 style="margin-top: 24px; font-size: 1rem; color: #37474f; font-weight:700;">Resumen de Lecturas Registradas</h4>
+            <h4 style="margin-top: 24px; font-size: 1rem; color: #324235; font-weight:700;">Resumen de Lecturas Registradas</h4>
             <div class="table-responsive">
                 <table>
                     <thead>
@@ -608,7 +640,7 @@
 
         <div class="card">
             <h2>📜 Historial de Alimentos y Auditoría</h2>
-            <p style="font-size:0.88rem; color:#78909c;">Registros de alimentos borrados sin procesar: <strong id="deletedFoodCountLabel" style="color:#37474f;">0</strong></p>
+            <p style="font-size:0.88rem; color:#526655;">Registros de alimentos borrados sin procesar: <strong id="deletedFoodCountLabel" style="color:#324235;">0</strong></p>
             <div class="table-responsive">
                 <table>
                     <thead>
@@ -1612,7 +1644,7 @@
             foodListDiv.innerHTML = '';
             
             if (appData.foods.length === 0) {
-                foodListDiv.innerHTML = '<p style="color:#78909c; font-size:0.88rem; text-align:center;">No hay alimentos registrados en el inventario activo.</p>';
+                foodListDiv.innerHTML = '<p style="color:#526655; font-size:0.88rem; text-align:center;">No hay alimentos registrados en el inventario activo.</p>';
             } else {
                 appData.foods.forEach(item => {
                     const todayStr = getLocalIsoDate();
@@ -1707,7 +1739,7 @@
                     <td><strong>${item.kwhTotal.toFixed(1)}</strong></td>
                     <td><strong>${pct}%</strong></td>
                     <td>S/ ${costMonth.toFixed(2)}</td>
-                    <td><span style="font-size:0.75rem; background:#eceff1; padding:3px 8px; border-radius:6px; color:#455a64;">${escapeHTML(item.valType)}</span></td>
+                    <td><span style="font-size:0.75rem; background:#e8ede8; padding:3px 8px; border-radius:6px; color:#526655;">${escapeHTML(item.valType)}</span></td>
                     <td><button class="action-btn btn-danger" onclick="deleteAppliance(${item.id})">Eliminar</button></td>
                 `;
                 energyBody.appendChild(tr);
@@ -1735,7 +1767,7 @@
             chartContainer.innerHTML = '';
 
             if (summary.calculatedWeeklyData.length === 0) {
-                chartContainer.innerHTML = '<p style="color: #78909c; font-size: 0.92rem; width:100%; text-align:center;">Registra la lectura inicial para comenzar la medición.</p>';
+                chartContainer.innerHTML = '<p style="color: #526655; font-size: 0.92rem; width:100%; text-align:center;">Registra la lectura inicial para comenzar la medición.</p>';
             } else {
                 const baseData = summary.calculatedWeeklyData.length >= 2 ? summary.calculatedWeeklyData[1] : null;
 
