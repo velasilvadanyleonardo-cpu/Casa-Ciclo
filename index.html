@@ -409,20 +409,11 @@
         </div>
 
         <div class="card">
-            <h2>⚙️ Configuración del Hogar o Institución</h2>
+            <h2>⚙️ Configuración del Hogar</h2>
             <form id="configForm">
                 <div class="grid-2">
                     <div>
-                        <label for="placeType">Tipo de Lugar:</label>
-                        <select id="placeType" onchange="applyPresetConfig()">
-                            <option value="hogar">Hogar (Estándar)</option>
-                            <option value="colegio">Colegio / Institución Educativa (Comparativa por persona)</option>
-                            <option value="comedor">Comedor Popular / Comunitario (Comparativa por persona)</option>
-                        </select>
-                        <small style="font-size:0.78rem; color:#526655; display:block; margin-top:6px;">El catálogo incluye potencias residenciales referenciales. En instituciones se usa para comparativa per cápita.</small>
-                    </div>
-                    <div>
-                        <label for="peopleCount">Número de Personas / Integrantes:</label>
+                        <label for="peopleCount">Número de Integrantes del Hogar:</label>
                         <input type="number" id="peopleCount" min="1" step="1" value="4" required>
                     </div>
                     <div>
@@ -485,7 +476,7 @@
 
         <div class="grid-2">
             <div class="card">
-                <h2>🍎 Inventario de Alimentos</h2>
+                <h2>🍎 Inventario de Alimentos del Hogar</h2>
                 <form id="foodForm">
                     <label for="foodInput">Alimento:</label>
                     <input list="foodDatabase" id="foodInput" placeholder="Busca o escribe un alimento..." oninput="handleFoodInputCheck()" required>
@@ -518,7 +509,7 @@
             </div>
 
             <div class="card">
-                <h2>⚡ Monitoreo de Energía (Catálogo Referencial)</h2>
+                <h2>⚡ Monitoreo de Energía del Hogar</h2>
                 <div class="info-note" id="comparisonNote" style="margin-bottom:14px;">
                     Comparación: Estimar vs Medir...
                 </div>
@@ -876,7 +867,6 @@
 
         let appData = {
             config: {
-                placeType: 'hogar',
                 peopleCount: 4,
                 electricityRate: 0.85,
                 startDate: getLocalIsoDate()
@@ -1131,7 +1121,7 @@
                 }
                 showStorageWarning("⚠️ <strong>Atención:</strong> Se detectaron datos dañados o el almacenamiento del navegador está bloqueado. Se han restablecido los datos predeterminados para evitar fallos de carga.");
                 appData = {
-                    config: { placeType: 'hogar', peopleCount: 4, electricityRate: 0.85, startDate: getLocalIsoDate() },
+                    config: { peopleCount: 4, electricityRate: 0.85, startDate: getLocalIsoDate() },
                     foods: [], appliances: [], history: [], weeklyLogs: [], deletedFoodCount: 0
                 };
             }
@@ -1155,31 +1145,18 @@
         }
 
         function applyConfigToForm() {
-            document.getElementById('placeType').value = appData.config.placeType;
             document.getElementById('peopleCount').value = appData.config.peopleCount;
             document.getElementById('electricityRate').value = appData.config.electricityRate;
             document.getElementById('startDate').value = appData.config.startDate;
         }
 
-        function applyPresetConfig() {
-            const type = document.getElementById('placeType').value;
-            if (type === 'colegio') {
-                document.getElementById('peopleCount').value = 120;
-            } else if (type === 'comedor') {
-                document.getElementById('peopleCount').value = 60;
-            } else {
-                document.getElementById('peopleCount').value = 4;
-            }
-        }
-
         document.getElementById('configForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            appData.config.placeType = document.getElementById('placeType').value;
             appData.config.peopleCount = parseInt(document.getElementById('peopleCount').value, 10);
             appData.config.electricityRate = parseFloat(document.getElementById('electricityRate').value);
             appData.config.startDate = document.getElementById('startDate').value;
             saveData();
-            alert("Configuración actualizada.");
+            alert("Configuración del hogar actualizada.");
         });
 
         function adjustStepByUnit() {
@@ -1221,7 +1198,6 @@
 
             if (!rawName || isNaN(qtyInput) || qtyInput <= 0) return;
 
-            // Validación de fecha de inicio si se agrega antes del inicio predeterminado (opcional aviso)
             const addedDateStr = todayStr;
             if (addedDateStr < appData.config.startDate) {
                 alert(`⚠️ Nota: Estás agregando un alimento con fecha anterior al inicio de medición (${appData.config.startDate}).`);
@@ -1355,7 +1331,6 @@
                 }
             } else {
                 if (actionType === 'Consumido' || actionType === 'Congelado') {
-                    // REGLA: Solo preguntar si ya transcurrió al menos 1 día desde que se agregó
                     if ((status.code === 'urgent' || status.code === 'warning') && elapsedSinceAdded >= 1) {
                         const wasGoingToWaste = confirm(`El alimento "${item.name}" estaba en riesgo (${status.label}). ¿Realmente ibas a botarlo si no intervenías?`);
                         if (wasGoingToWaste) {
@@ -1540,7 +1515,7 @@
             if (confirm("¿Estás seguro de reiniciar todos los datos? Se borrará todo el historial.")) {
                 localStorage.removeItem('casaCicloProData_v2');
                 appData = {
-                    config: { placeType: 'hogar', peopleCount: 4, electricityRate: 0.85, startDate: getLocalIsoDate() },
+                    config: { peopleCount: 4, electricityRate: 0.85, startDate: getLocalIsoDate() },
                     foods: [], appliances: [], history: [], weeklyLogs: [], deletedFoodCount: 0
                 };
                 uiState.foodCloseDates = {};
@@ -2016,9 +1991,8 @@
         function exportToCSV() {
             const summary = calculateGlobalSummary();
             let csvContent = "\ufeff"; 
-            csvContent += "Casa Ciclo - Reporte Oficial de Impacto\n";
-            csvContent += `Tipo de Lugar,${appData.config.placeType}\n`;
-            csvContent += `Integrantes,${appData.config.peopleCount}\n`;
+            csvContent += "Casa Ciclo - Reporte Oficial de Impacto del Hogar\n";
+            csvContent += `Integrantes del Hogar,${appData.config.peopleCount}\n`;
             csvContent += `Tarifa kWh (S/),${appData.config.electricityRate}\n`;
             csvContent += `Fecha Inicio Medición,${appData.config.startDate}\n`;
             csvContent += `Registros Eliminados Directamente,${appData.deletedFoodCount || 0}\n\n`;
@@ -2066,13 +2040,13 @@
             csvContent += "\nResumen Global de Impacto\nComida Salvada (kg),Comida Desviada Compost (kg),Desperdicio Total Registrado (kg),kWh Ahorrados Neto Medidor,Ahorro Energía (S/),CO2 Evitado Total (kg)\n";
             csvContent += `${summary.totalSavedFoodKg.toFixed(2)},${summary.totalDeviatedFoodKg.toFixed(2)},${totalWastedKgAll.toFixed(2)},${summary.totalKwhOptimizedNet.toFixed(2)},${summary.totalSolesSavedEnergy.toFixed(2)},${summary.totalCO2AvoidedCumulative.toFixed(2)}\n`;
 
-            csvContent += "\nParámetros Referenciales Utilizados\nFactor CO2 Electricidad (kg CO2/kWh),0.30\nFactor CO2 Comida (kg CO2e/kg),2.50\nTarifa Electricidad Aplicada (S/ kWh),"+appData.config.electricityRate+"\nNota Metodológica,Los factores de emisión y consumos por aparatos son valores referenciales simplificados para evaluación de proyectos.\n";
+            csvContent += "\nParámetros Referenciales Utilizados\nFactor CO2 Electricidad (kg CO2/kWh),0.30\nFactor CO2 Comida (kg CO2e/kg),2.50\nTarifa Electricidad Aplicada (S/ kWh),"+appData.config.electricityRate+"\nNota Metodológica,Los factores de emisión y consumos por aparatos son valores referenciales simplificados para evaluación del hogar.\n";
 
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.setAttribute("href", url);
-            link.setAttribute("download", `Reporte_CasaCiclo_${appData.config.placeType}.csv`);
+            link.setAttribute("download", `Reporte_CasaCiclo_Hogar.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
