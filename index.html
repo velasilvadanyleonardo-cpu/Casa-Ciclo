@@ -658,7 +658,7 @@
 
                     <div id="customDaysContainer" style="display: none; background: var(--beige-bg); padding: 12px; border-radius: 10px; border: 1.5px solid var(--beige-border);">
                         <label for="customDaysInputFood" style="font-size: 0.86rem; color: #7a6325; font-weight:700;">Duración estimada (Días de vida útil):</label>
-                        <input type="number" id="customDaysInputFood" min="1" step="1" value="5" oninput="handleFoodInputCheck()" style="margin-top:6px; width:100%; box-sizing:border-box;">
+                        <input type="number" id="customDaysInputFood" min="1" step="1" value="5" style="margin-top:6px; width:100%; box-sizing:border-box;">
                     </div>
 
                     <div class="grid-inner">
@@ -1412,25 +1412,18 @@
             const normalized = normalizeString(inputVal);
             const matchedKey = Object.keys(foodCatalog).find(k => normalizeString(k) === normalized);
             
-            const customContainer = document.getElementById('customDaysContainer');
-            customContainer.style.display = (!matchedKey && inputVal.trim() !== "") ? 'block' : 'none';
+            document.getElementById('customDaysContainer').style.display = (!matchedKey && inputVal.trim() !== "") ? 'block' : 'none';
 
             const addedDateStr = document.getElementById('foodDateAdded').value || getLocalIsoDate();
             const [y, m, d] = addedDateStr.split('-').map(Number);
             const dateObj = new Date(y, m - 1, d);
 
-            let daysToAdd = 5;
             if (matchedKey) {
                 document.getElementById('foodCategorySelect').value = foodCatalog[matchedKey].category;
-                daysToAdd = foodCatalog[matchedKey].days;
-            } else if (customContainer.style.display === 'block') {
-                const customVal = parseInt(document.getElementById('customDaysInputFood').value, 10);
-                if (!isNaN(customVal) && customVal > 0) {
-                    daysToAdd = customVal;
-                }
+                dateObj.setDate(dateObj.getDate() + foodCatalog[matchedKey].days);
+            } else {
+                dateObj.setDate(dateObj.getDate() + 5);
             }
-
-            dateObj.setDate(dateObj.getDate() + daysToAdd);
 
             const yr = dateObj.getFullYear();
             const mo = String(dateObj.getMonth() + 1).padStart(2, '0');
@@ -1489,6 +1482,10 @@
             const diffDays = Math.max(1, Math.round((dateExpObj - dateAddObj) / (1000 * 60 * 60 * 24)));
 
             let finalShelfDays = diffDays;
+            if (!matchedKey && document.getElementById('customDaysContainer').style.display === 'block') {
+                const customVal = parseInt(document.getElementById('customDaysInputFood').value, 10);
+                if (!isNaN(customVal) && customVal > 0) finalShelfDays = customVal;
+            }
 
             if (editingId) {
                 const idx = appData.foods.findIndex(f => f.id == editingId);
