@@ -68,7 +68,7 @@
 
         header h1 { 
             margin: 0; 
-            font-size: 2.8rem; 
+            font-size: 2.5rem; 
             font-weight: 800; 
             letter-spacing: -0.5px;
             color: #ffffff;
@@ -77,7 +77,7 @@
 
         header p { 
             margin: 8px 0 0 0; 
-            font-size: 1.15rem; 
+            font-size: 1.1rem; 
             opacity: 0.92; 
             font-weight: 300; 
             letter-spacing: 0.3px;
@@ -181,7 +181,7 @@
 
         .grid-inner {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 14px;
         }
 
@@ -394,7 +394,7 @@
             </svg>
             <div>
                 <h1>Casa Ciclo</h1>
-                <p>Sistema inteligente de gestión del consumo responsable</p>
+                <p>Sistema de gestión del consumo responsable</p>
             </div>
         </div>
     </header>
@@ -473,7 +473,7 @@
                 <div class="ods-card">
                     <h4>ODS 13: Acción por el Clima</h4>
                     <p id="ods13Val" style="font-weight:700; color:#2e6930; margin: 6px 0;">0.00 kg CO₂ evitados</p>
-                    <small style="font-size:0.78rem; color:#526655; display:block; margin-top:4px;">Nota: El CO₂ de energía solo se computa cuando el ahorro neto de kWh es positivo.</small>
+                    <small style="font-size:0.78rem; color:#526655; display:block; margin-top:4px;">*Nota metodológica: El CO₂ de energía y los factores de emisión se calculan en base a valores referenciales simplificados.</small>
                 </div>
             </div>
 
@@ -535,9 +535,10 @@
                     </div>
 
                     <div style="display:flex; flex-direction:column; gap:6px;">
-                        <label for="applianceModelSelect">Modelo Disponible:</label>
+                        <label for="applianceModelSelect">Modelo:</label>
                         <select id="applianceModelSelect" onchange="onApplianceModelChange()"></select>
                         <input type="text" id="customModelInput" placeholder="Escribe el modelo personalizado..." style="display:none; margin-top:6px;">
+                        <small style="font-size:0.78rem; color:#526655; margin-top:2px;">*Nota: La marca y el modelo sirven solo para identificar el equipo; el consumo se estima por tipo, tamaño y tecnología (salvo que ingreses el dato real de la etiqueta).</small>
                     </div>
 
                     <div class="grid-inner">
@@ -573,7 +574,7 @@
                             <tr>
                                 <th>Equipo / Marca / Modelo</th>
                                 <th>Uso (kWh/m)</th>
-                                <th>Standby (Consumo fantasma / en espera) (kWh/m)</th>
+                                <th>Standby (Consumo en espera) (kWh/m)</th>
                                 <th>Total (kWh/m)</th>
                                 <th>% Total</th>
                                 <th>Costo Est. (S/)</th>
@@ -667,65 +668,67 @@
         const FACTOR_CO2_FOOD = 2.5;
 
         const applianceBrands = {
-            "Refrigeradora": ["Samsung", "LG", "Whirlpool", "Mabe", "Indurama", "Electrolux", "Bosch", "Daewoo", "Miray", "General Electric", "Frigidaire", "Haverland", "Otra marca..."],
-            "Televisor": ["Samsung", "LG", "Sony", "TCL", "Hisense", "Panasonic", "Philips", "Xiaomi", "Miray", "AOC", "JVC", "RCA", "Otra marca..."],
-            "Foco / Iluminación": ["Philips", "Osram", "General Electric", "Sylvania", "Opel", "iLugnat", "Doremi", "Prilux", "Otra marca..."],
-            "Ventilador": ["Imaco", "Kambrook", "Sole", "Taurus", "Miray", "Recco", "National", "Wurden", "Oster", "Otra marca..."],
-            "Microondas": ["Samsung", "LG", "Daewoo", "Panasonic", "Whirlpool", "Imaco", "Miray", "Oster", "Midea", "Otra marca..."],
-            "Computadora / Laptop": ["HP", "Lenovo", "Dell", "Asus", "Acer", "Apple", "MSI", "Huawei", "Samsung", "Toshiba", "Otra marca..."],
-            "Lavadora": ["LG", "Samsung", "Whirlpool", "Mabe", "Electrolux", "Bosch", "Daewoo", "Indurama", "Frigidaire", "Otra marca..."],
-            "Cargador de celular": ["Apple", "Samsung", "Xiaomi", "Motorola", "Huawei", "Anker", "Baseus", "Ugreen", "Genérico", "Otra marca..."],
-            "Hervidor eléctrico": ["Oster", "Imaco", "Thomas", "Miray", "Philips", "Wurden", "Recco", "Hamilton Beach", "Otra marca..."],
-            "Plancha": ["Oster", "Philips", "Imaco", "Thomas", "Black+Decker", "Miray", "T-fal", "Otra marca..."],
-            "Ducha / Terma eléctrica": ["Sole", "Rotoplas", "Rheem", "Junkers", "Bosch", "Aquamax", "Bryant", "Tigre", "Otra marca..."],
-            "Olla arrocera": ["Oster", "Imaco", "Thomas", "Miray", "Wurden", "Panasonic", "Cuckoo", "Otra marca..."],
-            "Licuadora": ["Oster", "Imaco", "Thomas", "Philips", "Ninja", "Miray", "Hamilton Beach", "Otra marca..."],
-            "Router / Módem": ["TP-Link", "Huawei", "ZTE", "Asus", "D-Link", "Mercusys", "Cisco", "Netgear", "Otra marca..."],
-            "Decodificador TV": ["Movistar", "Claro", "DirecTV", "Kaon", "Technicolor", "ZTE", "Huawei", "Otra marca..."],
-            "Equipo de sonido": ["Sony", "LG", "Panasonic", "JBL", "Pioneer", "Bose", "Samsung", "Harman Kardon", "Otra marca..."],
-            "Secadora de cabello": ["Babyliss", "Gamma", "Philips", "Conair", "Remington", "Imaco", "Revlon", "Otra marca..."],
-            "Calefactor": ["Sole", "Imaco", "Thomas", "Miray", "Kambrook", "Wurden", "DeLonghi", "Otra marca..."],
-            "Tablet": ["Apple (iPad)", "Samsung", "Lenovo", "Xiaomi", "Amazon Fire", "Huawei", "Microsoft", "Otra marca..."],
-            "Air Fryer / Freidora": ["Oster", "Philips", "Ninja", "Imaco", "Thomas", "Midea", "Wurden", "Cosori", "Otra marca..."]
+            "Refrigeradora": ["Samsung", "LG", "Whirlpool", "Mabe", "Indurama", "Electrolux", "Bosch", "Otra marca..."],
+            "Televisor": ["Samsung", "LG", "Sony", "TCL", "Hisense", "Panasonic", "Xiaomi", "AOC", "Otra marca..."],
+            "Foco / Iluminación": ["Philips", "Osram", "General Electric", "Sylvania", "Otra marca..."],
+            "Ventilador": ["Imaco", "Oster", "Taurus", "Miray", "Otra marca..."],
+            "Microondas": ["Samsung", "LG", "Panasonic", "Whirlpool", "Oster", "Otra marca..."],
+            "Computadora / Laptop": ["HP", "Lenovo", "Dell", "Asus", "Apple", "Otra marca..."],
+            "Lavadora": ["LG", "Samsung", "Whirlpool", "Mabe", "Bosch", "Otra marca..."],
+            "Cargador de celular": ["Apple", "Samsung", "Xiaomi", "Motorola", "Anker", "Genérico", "Otra marca..."],
+            "Hervidor eléctrico": ["Oster", "Imaco", "Philips", "Otra marca..."],
+            "Plancha": ["Oster", "Philips", "Black+Decker", "Otra marca..."],
+            "Ducha / Terma eléctrica": ["Sole", "Rheem", "Bosch", "Otra marca..."],
+            "Olla arrocera": ["Oster", "Imaco", "Panasonic", "Otra marca..."],
+            "Licuadora": ["Oster", "Philips", "Ninja", "Otra marca..."],
+            "Router / Módem": ["TP-Link", "Huawei", "ZTE", "Asus", "Otra marca..."],
+            "Decodificador TV": ["Movistar", "Claro", "DirecTV", "Otra marca..."],
+            "Equipo de sonido": ["Sony", "LG", "Panasonic", "JBL", "Otra marca..."],
+            "Secadora de cabello": ["Philips", "Remington", "Revlon", "Otra marca..."],
+            "Calefactor": ["Sole", "Imaco", "DeLonghi", "Otra marca..."],
+            "Tablet": ["Apple (iPad)", "Samsung", "Lenovo", "Xiaomi", "Otra marca..."],
+            "Air Fryer / Freidora": ["Oster", "Philips", "Ninja", "Midea", "Otra marca..."]
         };
 
         const applianceModels = {
             "Refrigeradora": {
-                "Samsung": ["No Frost Twin Cooling (320L)", "Top Mount RT38 (380L)", "French Door (500L)", "Side by Side Inverter"],
-                "LG": ["Top Freezer DoorCooling+ (312L)", "InstaView Door-in-Door", "Smart Inverter (254L)", "No Frost 400L"],
-                "Whirlpool": ["No Frost Evox (375L)", "Bottom Mount Inverter", "Top Mount Wrw (300L)"],
-                "Mabe": ["No Frost 300L RMA300", "Top Mount 250L", "Inverter 400L"],
-                "Indurama": ["Quito No Frost (280L)", "RI-395 Inverter (320L)", "Side by Side 500L"],
-                "Bosch": ["No Frost Serie 4 (324L)", "VitaFresh Inverter", "Bottom Freezer 435L"]
+                "Samsung": ["Twin Cooling Inverter", "Top Mount RT38", "French Door", "Side by Side"],
+                "LG": ["DoorCooling+", "InstaView", "Smart Inverter", "No Frost Standard"],
+                "Whirlpool": ["Evox No Frost", "Bottom Mount Inverter", "Top Mount"],
+                "Mabe": ["Aqua Saver Green", "Top Mount Basic"],
+                "Indurama": ["No Frost Inverter", "Side by Side"],
+                "Electrolux": ["Bottom Freezer", "Frost Free"],
+                "Bosch": ["VitaFresh Inverter", "Serie 4"]
             },
             "Televisor": {
-                "Samsung": ["Crystal UHD 43'' (4K)", "Crystal UHD 55'' (4K)", "QLED 55'' Q60", "Neo QLED 65''", "Smart TV 32'' HD"],
-                "LG": ["NANOCELL 55'' (4K)", "OLED 55'' Serie C", "UHD ThinQ AI 50''", "Smart TV 43'' FHD"],
-                "Sony": ["Bravia XR OLED 55''", "Bravia LED 4K 50''", "Bravia X80K 65''"],
-                "TCL": ["Android TV 43'' FHD", "Google TV 55'' 4K HDR", "Mini LED 65''"],
-                "Hisense": ["Smart TV 43'' FHD", "ULED 4K 55''", "Google TV 50''"],
-                "Xiaomi": ["Mi TV P1 43'' 4K", "TV A2 55'' 4K", "TV Max 86''"]
+                "Samsung": ["Crystal UHD 4K", "QLED Q60", "Neo QLED", "Smart TV FHD"],
+                "LG": ["NanoCell 4K", "OLED Serie C", "UHD ThinQ AI"],
+                "Sony": ["Bravia XR OLED", "Bravia LED 4K"],
+                "TCL": ["Google TV 4K", "Android TV FHD"],
+                "Hisense": ["ULED 4K", "Google TV FHD"],
+                "Xiaomi": ["TV A2 4K", "Mi TV P1"],
+                "AOC": ["Roku TV HD", "Smart TV FHD"]
             },
             "Lavadora": {
-                "LG": ["Carga Frontal AI DD (11 kg)", "Carga Superior Smart Inverter (13 kg)", "TurboWash (18 kg)", "WashTower Inverter"],
-                "Samsung": ["EcoBubble Carga Frontal (12 kg)", "Wobble Carga Superior (15 kg)", "Digital Inverter 19 kg"],
-                "Whirlpool": ["Carga Superior Xpert System (17 kg)", "Impeller 19 kg", "Frontal FreshCare 10 kg"],
-                "Mabe": ["Aqua Saver Green (16 kg)", "Carga Superior 19 kg", "Automatica 13 kg"],
-                "Bosch": ["Serie 6 Carga Frontal (9 kg)", "Serie 4 EcoSilence 8 kg"]
+                "LG": ["Frontal AI DD", "Carga Superior Inverter", "TurboWash"],
+                "Samsung": ["EcoBubble Frontal", "Wobble Superior", "Digital Inverter"],
+                "Whirlpool": ["Xpert System", "Frontal FreshCare"],
+                "Mabe": ["Aqua Saver Green", "Automática Standard"],
+                "Bosch": ["Serie 6 Frontal", "EcoSilence"]
             },
             "Microondas": {
-                "Samsung": ["Espejo Grill (1.1 cu.ft)", "Ceramic Inside (40L)", "Simple Solo (23L)"],
-                "LG": ["NeoChef Inverter Smart (42L)", "Grill EasyClean (25L)", "SolarDOM Inverter"],
-                "Daewoo": ["Chefrino (20L)", "Digital Convección (31L)"],
-                "Imaco": ["Digital Grill (20L)", "Manual Acero (25L)"],
-                "Miray": ["Manual 20L", "Digital Con Grill 30L"]
+                "Samsung": ["Grill Espejo", "Ceramic Inside", "Solo Standard"],
+                "LG": ["NeoChef Inverter", "Grill EasyClean"],
+                "Panasonic": ["Inverter Grill", "Compact Standard"],
+                "Whirlpool": ["Digital Grill", "Manual Basic"],
+                "Oster": ["Digital Convección", "Manual Standard"]
             },
             "Computadora / Laptop": {
-                "HP": ["Pavilion 15'' Core i5", "HP Laptop 14'' Ryzen 5", "Victus Gaming 15.6''", "Envy x360 Convertible"],
-                "Lenovo": ["IdeaPad Slim 3 15''", "ThinkPad E14 Intel", "Legion 5 Gaming", "Yoga 7 2-in-1"],
-                "Dell": ["Inspiron 15 3000", "Vostro 3400", "XPS 13 OLED", "G15 Gaming"],
-                "Asus": ["VivoBook 15 Core i3", "TUF Gaming F15", "ZenBook 14 OLED", "ROG Strix G15"],
-                "Apple": ["MacBook Air M1 (13'')", "MacBook Air M2 (13'')", "MacBook Pro M3 (14'')"]
+                "HP": ["Pavilion 15", "Victus Gaming", "Envy x360", "Laptop 14"],
+                "Lenovo": ["IdeaPad Slim 3", "ThinkPad E14", "Legion 5", "Yoga 7"],
+                "Dell": ["Inspiron 15", "Vostro 3400", "XPS 13", "G15 Gaming"],
+                "Asus": ["VivoBook 15", "TUF Gaming", "ZenBook 14", "ROG Strix"],
+                "Apple": ["MacBook Air M1", "MacBook Air M2", "MacBook Pro M3"]
             }
         };
 
@@ -1004,7 +1007,11 @@
             const customModelInput = document.getElementById('customModelInput');
             if (modelVal === "Otro modelo..." || modelVal === "") {
                 customModelInput.style.display = 'block';
-                if (modelVal === "Otro modelo...") customModelInput.required = true;
+                if (modelVal === "Otro modelo...") {
+                    customModelInput.required = true;
+                } else {
+                    customModelInput.required = false;
+                }
             } else {
                 customModelInput.style.display = 'none';
                 customModelInput.required = false;
@@ -1114,11 +1121,15 @@
                 }
             } catch (e) {
                 console.error("Error de corrupción en localStorage v2:", e);
-                const rawCorrupted = localStorage.getItem('casaCicloProData_v2');
-                if (rawCorrupted) {
-                    localStorage.setItem('casaCicloProData_v2_corrupted_backup', rawCorrupted);
+                try {
+                    const rawCorrupted = localStorage.getItem('casaCicloProData_v2');
+                    if (rawCorrupted) {
+                        localStorage.setItem('casaCicloProData_v2_corrupted_backup', rawCorrupted);
+                    }
+                } catch (backupErr) {
+                    console.error("Fallo al guardar respaldo de datos corruptos debido a bloqueo de almacenamiento:", backupErr);
                 }
-                showStorageWarning("⚠️ <strong>Atención:</strong> Se detectaron datos dañados en el almacenamiento local. Se ha guardado una copia de respaldo bajo la clave 'casaCicloProData_v2_corrupted_backup' y se han restablecido los datos limpios para evitar bloqueos.");
+                showStorageWarning("⚠️ <strong>Atención:</strong> Se detectaron datos dañados o el almacenamiento del navegador está bloqueado. Se han restablecido los datos predeterminados para evitar fallos de carga.");
                 appData = {
                     config: { placeType: 'hogar', peopleCount: 4, electricityRate: 0.85, startDate: getLocalIsoDate() },
                     foods: [], appliances: [], history: [], weeklyLogs: [], deletedFoodCount: 0
@@ -1206,8 +1217,15 @@
             const rawName = document.getElementById('foodInput').value;
             let qtyInput = parseFloat(document.getElementById('foodQty').value);
             const unitType = document.getElementById('foodUnitType').value;
+            const todayStr = getLocalIsoDate();
 
             if (!rawName || isNaN(qtyInput) || qtyInput <= 0) return;
+
+            // Validación de fecha de inicio si se agrega antes del inicio predeterminado (opcional aviso)
+            const addedDateStr = todayStr;
+            if (addedDateStr < appData.config.startDate) {
+                alert(`⚠️ Nota: Estás agregando un alimento con fecha anterior al inicio de medición (${appData.config.startDate}).`);
+            }
 
             if (unitType === 'unid') {
                 if (!Number.isInteger(qtyInput)) {
@@ -1258,7 +1276,7 @@
                 weightKg: weightKg,
                 displayQtyText: displayQuantityText,
                 shelfLifeDays: shelfLife,
-                dateAdded: getLocalIsoDate()
+                dateAdded: addedDateStr
             });
 
             document.getElementById('foodForm').reset();
@@ -1320,14 +1338,7 @@
                 return;
             }
 
-            if (appData.weeklyLogs.length > 0) {
-                const lastLogDate = appData.weeklyLogs[appData.weeklyLogs.length - 1].date;
-                if (dateClosed <= lastLogDate) {
-                    const confirmBackdate = confirm(`⚠️ Advertencia: La fecha de cierre elegida (${dateClosed}) cae antes o en la fecha de la última lectura registrada (${lastLogDate}). Esto alterará retroactivamente el cálculo del desperdicio en periodos ya cerrados. ¿Deseas continuar?`);
-                    if (!confirmBackdate) return;
-                }
-            }
-
+            const elapsedSinceAdded = getElapsedDaysAtDate(item, dateClosed);
             const remaining = getRemainingDaysAtDate(item, dateClosed);
             const status = getItemStatusAtDate(item, dateClosed);
 
@@ -1344,7 +1355,8 @@
                 }
             } else {
                 if (actionType === 'Consumido' || actionType === 'Congelado') {
-                    if (status.code === 'urgent' || status.code === 'warning') {
+                    // REGLA: Solo preguntar si ya transcurrió al menos 1 día desde que se agregó
+                    if ((status.code === 'urgent' || status.code === 'warning') && elapsedSinceAdded >= 1) {
                         const wasGoingToWaste = confirm(`El alimento "${item.name}" estaba en riesgo (${status.label}). ¿Realmente ibas a botarlo si no intervenías?`);
                         if (wasGoingToWaste) {
                             isSaved = true;
@@ -1472,7 +1484,7 @@
             });
 
             if (expiredCount > 0) {
-                alert(`⚠️ Tienes ${expiredCount} alimento(s) vencido(s) a la fecha de la lectura (${inputDate}). Por favor, revísalos y ciérralos con el botón que corresponda (Consumido, Congelado, Compostado o Botado) antes de guardar tu registro semanal.`);
+                alert(`⚠️ Tienes ${expiredCount} alimento(s) vencido(s) a la fecha de la lectura (${inputDate}). Por favor, revísalos y ciérralos con el botón que corresponda antes de guardar tu registro semanal.`);
                 return;
             }
 
@@ -1948,7 +1960,7 @@
                 });
 
                 if (expiredFoods > 0) {
-                    msgs.push(`⚠️ Tienes <strong>${expiredFoods} alimento(s) vencido(s)</strong> en tu inventario. Protégete cerrándolos con el botón que corresponda (Consumido, Congelado, Compostado o Botado).`);
+                    msgs.push(`⚠️ Tienes <strong>${expiredFoods} alimento(s) vencido(s)</strong> en tu inventario. Protégete cerrándolos con el botón que corresponda.`);
                 } else if (urgentFoods > 0) {
                     msgs.push(`⚠️ Tienes <strong>${urgentFoods} alimento(s) en estado urgente</strong>. Consúmelos o congélalos para salvar la huella de CO₂.`);
                 } else {
@@ -1985,12 +1997,8 @@
                     advice = "Reduce los minutos de baño y gradúa el termostato a una temperatura moderada (aprox. 45-50 °C).";
                 } else if (type === "Calefactor") {
                     advice = "Enciéndelo únicamente por periodos fijos y mantén las ventanas y puertas cerradas para conservar el calor.";
-                } else if (type === "Foco / Iluminación" && topAppliance.watts > 15) {
-                    advice = "Considera migrar a tecnología LED para reducir drásticamente el consumo.";
                 } else if (topAppliance.standbyWatts > 5) {
                     advice = `Tiene un consumo en espera considerable (${topAppliance.standbyWatts}W). Desenchúfalo mientras no esté en uso.`;
-                } else if (type === "Televisor") {
-                    advice = "Apágalo y desenchúfalo por las noches para cortar el consumo pasivo.";
                 }
                 
                 msgs.push(`⚡ El mayor consumo estimado proviene de <strong>${safeName}</strong> (~${maxKwh.toFixed(1)} kWh/mes, S/ ${monthlyCost.toFixed(2)}). ${advice}`);
@@ -1999,7 +2007,7 @@
             }
 
             if (totalPhantomSolesMonthly > 0) {
-                msgs.push(`🔌 Desconectar los aparatos en espera (standby) puede ahorrarte aprox. <strong>S/ ${totalPhantomSolesMonthly.toFixed(2)} al mes</strong>.`);
+                msgs.push(`🔌 Desconectar los aparatos en standby (consumo en espera) puede ahorrarte aprox. <strong>S/ ${totalPhantomSolesMonthly.toFixed(2)} al mes</strong>.`);
             }
 
             textEl.innerHTML = msgs.join('<br>');
