@@ -641,7 +641,7 @@
                 <form id="foodForm">
                     <input type="hidden" id="editingFoodId" value="">
                     <label for="foodInput">Alimento:</label>
-                    <input list="foodDatabase" id="foodInput" placeholder="Busca o escribe un alimento..." oninput="handleFoodInputCheck()" required>
+                    <input list="foodDatabase" id="foodInput" placeholder="Busca o escribe un alimento..." oninput="handleFoodInputCheck()" onchange="handleFoodInputCheck()" required>
                     <datalist id="foodDatabase"></datalist>
 
                     <div id="customCategoryContainer">
@@ -678,7 +678,7 @@
                     <div class="grid-inner">
                         <div>
                             <label for="foodDateAdded">Fecha de Ingreso:</label>
-                            <input type="date" id="foodDateAdded" required style="width:100%; box-sizing:border-box;">
+                            <input type="date" id="foodDateAdded" required style="width:100%; box-sizing:border-box;" onchange="handleFoodInputCheck()">
                         </div>
                         <div>
                             <label for="foodExpiryDate">Fecha de Vencimiento / Consumo:</label>
@@ -894,7 +894,7 @@
             <h2>❓ Guía Rápida Casa Ciclo</h2>
             <p style="font-size: 0.9rem; line-height: 1.5;">
                 <strong>1. Configuración:</strong> Define tus parámetros y metas.<br><br>
-                <strong>2. Alimentos:</strong> Controla caducidades y clasifica compostaje frente a desperdicio.<br><br>
+                <strong>2. Alimentos:</strong> Controla caducidades (cálculo automático a 1 día antes del límite) y clasifica compostaje frente a desperdicio.<br><br>
                 <strong>3. Energía:</strong> Registra consumos estimados vs medidos y standby.<br><br>
                 <strong>4. Reportes:</strong> Exporta a CSV con datos reales o imprime en PDF.
             </p>
@@ -1083,33 +1083,33 @@
         };
 
         const foodCatalog = {
-            "Pollo fresco": { days: 2, unitWeight: null, category: "Carnes y Proteínas", icon: "🍗" },
-            "Carne de res": { days: 3, unitWeight: null, category: "Carnes y Proteínas", icon: "🥩" },
-            "Pescado fresco": { days: 1, unitWeight: null, category: "Carnes y Proteínas", icon: "🐟" },
-            "Carne de cerdo": { days: 3, unitWeight: null, category: "Carnes y Proteínas", icon: "🍖" },
-            "Arroz": { days: 180, unitWeight: null, category: "Granos y Despensa", icon: "🌾" },
-            "Uva": { days: 5, unitWeight: null, category: "Frutas y Verduras", icon: "🍇" },
-            "Fresa": { days: 2, unitWeight: null, category: "Frutas y Verduras", icon: "🍓" },
-            "Manzana": { days: 10, unitWeight: 0.18, category: "Frutas y Verduras", icon: "🍎" },
-            "Plátano / Banano": { days: 4, unitWeight: 0.15, category: "Frutas y Verduras", icon: "🍌" },
-            "Naranja": { days: 12, unitWeight: 0.20, category: "Frutas y Verduras", icon: "🍊" },
-            "Mandarina": { days: 8, unitWeight: 0.10, category: "Frutas y Verduras", icon: "🍊" },
-            "Mango": { days: 5, unitWeight: 0.25, category: "Frutas y Verduras", icon: "🥭" },
-            "Papaya": { days: 4, unitWeight: 1.20, category: "Frutas y Verduras", icon: "🍈" },
-            "Tomate": { days: 4, unitWeight: 0.12, category: "Frutas y Verduras", icon: "🍅" },
-            "Lechuga": { days: 3, unitWeight: 0.30, category: "Frutas y Verduras", icon: "🥬" },
-            "Zanahoria": { days: 12, unitWeight: 0.10, category: "Frutas y Verduras", icon: "🥕" },
-            "Papa / Patata": { days: 20, unitWeight: 0.15, category: "Frutas y Verduras", icon: "🥔" },
-            "Cebolla": { days: 20, unitWeight: 0.12, category: "Frutas y Verduras", icon: "🧅" },
-            "Pan": { days: 3, unitWeight: 0.05, category: "Granos y Despensa", icon: "🍞" },
-            "Huevo": { days: 21, unitWeight: 0.06, category: "Lácteos y Huevos", icon: "🥚" },
-            "Leche fresca": { days: 3, unitWeight: 1.00, category: "Lácteos y Huevos", icon: "🥛" },
-            "Queso fresco": { days: 5, unitWeight: 0.25, category: "Lácteos y Huevos", icon: "🧀" },
-            "Limón": { days: 14, unitWeight: 0.08, category: "Frutas y Verduras", icon: "🍋" },
-            "Palta / Aguacate": { days: 4, unitWeight: 0.20, category: "Frutas y Verduras", icon: "🥑" },
-            "Yogurt": { days: 10, unitWeight: 1.00, category: "Lácteos y Huevos", icon: "🧃" },
-            "Espinaca": { days: 3, unitWeight: 0.25, category: "Frutas y Verduras", icon: "🍃" },
-            "Brócoli": { days: 4, unitWeight: 0.35, category: "Frutas y Verduras", icon: "🥦" }
+            "Uva": { days: 4, unitWeight: null, category: "Frutas y Verduras", icon: "🍇" },
+            "Fresa": { days: 1, unitWeight: null, category: "Frutas y Verduras", icon: "🍓" },
+            "Manzana": { days: 9, unitWeight: 0.18, category: "Frutas y Verduras", icon: "🍎" },
+            "Plátano / Banano": { days: 3, unitWeight: 0.15, category: "Frutas y Verduras", icon: "🍌" },
+            "Naranja": { days: 11, unitWeight: 0.20, category: "Frutas y Verduras", icon: "🍊" },
+            "Mandarina": { days: 7, unitWeight: 0.10, category: "Frutas y Verduras", icon: "🍊" },
+            "Mango": { days: 4, unitWeight: 0.25, category: "Frutas y Verduras", icon: "🥭" },
+            "Papaya": { days: 3, unitWeight: 1.20, category: "Frutas y Verduras", icon: "🍈" },
+            "Tomate": { days: 3, unitWeight: 0.12, category: "Frutas y Verduras", icon: "🍅" },
+            "Lechuga": { days: 2, unitWeight: 0.30, category: "Frutas y Verduras", icon: "🥬" },
+            "Zanahoria": { days: 11, unitWeight: 0.10, category: "Frutas y Verduras", icon: "🥕" },
+            "Papa / Patata": { days: 19, unitWeight: 0.15, category: "Frutas y Verduras", icon: "🥔" },
+            "Cebolla": { days: 19, unitWeight: 0.12, category: "Frutas y Verduras", icon: "🧅" },
+            "Limón": { days: 13, unitWeight: 0.08, category: "Frutas y Verduras", icon: "🍋" },
+            "Palta / Aguacate": { days: 3, unitWeight: 0.20, category: "Frutas y Verduras", icon: "🥑" },
+            "Espinaca": { days: 2, unitWeight: 0.25, category: "Frutas y Verduras", icon: "🍃" },
+            "Brócoli": { days: 3, unitWeight: 0.35, category: "Frutas y Verduras", icon: "🥦" },
+            "Pollo fresco": { days: 1, unitWeight: null, category: "Carnes y Proteínas", icon: "🍗" },
+            "Carne de res": { days: 2, unitWeight: null, category: "Carnes y Proteínas", icon: "🥩" },
+            "Pescado fresco": { days: 0, unitWeight: null, category: "Carnes y Proteínas", icon: "🐟" },
+            "Carne de cerdo": { days: 2, unitWeight: null, category: "Carnes y Proteínas", icon: "🍖" },
+            "Huevo": { days: 20, unitWeight: 0.06, category: "Lácteos y Huevos", icon: "🥚" },
+            "Leche fresca": { days: 2, unitWeight: 1.00, category: "Lácteos y Huevos", icon: "🥛" },
+            "Queso fresco": { days: 4, unitWeight: 0.25, category: "Lácteos y Huevos", icon: "🧀" },
+            "Yogurt": { days: 9, unitWeight: 1.00, category: "Lácteos y Huevos", icon: "🧃" },
+            "Arroz": { days: 179, unitWeight: null, category: "Granos y Despensa", icon: "🌾" },
+            "Pan": { days: 2, unitWeight: 0.05, category: "Granos y Despensa", icon: "🍞" }
         };
 
         let appData = {
@@ -1156,7 +1156,7 @@
             applyConfigToForm();
             document.getElementById('weekDate').value = getLocalIsoDate();
             document.getElementById('foodDateAdded').value = getLocalIsoDate();
-            document.getElementById('foodExpiryDate').value = getLocalIsoDate();
+            handleFoodInputCheck();
             renderAll();
         };
 
@@ -1411,19 +1411,24 @@
             const inputVal = document.getElementById('foodInput').value;
             const normalized = normalizeString(inputVal);
             const matchedKey = Object.keys(foodCatalog).find(k => normalizeString(k) === normalized);
+            
             document.getElementById('customDaysContainer').style.display = (!matchedKey && inputVal.trim() !== "") ? 'block' : 'none';
+
+            const addedDateStr = document.getElementById('foodDateAdded').value || getLocalIsoDate();
+            const [y, m, d] = addedDateStr.split('-').map(Number);
+            const dateObj = new Date(y, m - 1, d);
 
             if (matchedKey) {
                 document.getElementById('foodCategorySelect').value = foodCatalog[matchedKey].category;
-                const addedDateStr = document.getElementById('foodDateAdded').value || getLocalIsoDate();
-                const [y, m, d] = addedDateStr.split('-').map(Number);
-                const dateObj = new Date(y, m - 1, d);
                 dateObj.setDate(dateObj.getDate() + foodCatalog[matchedKey].days);
-                const yr = dateObj.getFullYear();
-                const mo = String(dateObj.getMonth() + 1).padStart(2, '0');
-                const da = String(dateObj.getDate()).padStart(2, '0');
-                document.getElementById('foodExpiryDate').value = `${yr}-${mo}-${da}`;
+            } else {
+                dateObj.setDate(dateObj.getDate() + 5); // Valor por defecto 5 días si es personalizado
             }
+
+            const yr = dateObj.getFullYear();
+            const mo = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const da = String(dateObj.getDate()).padStart(2, '0');
+            document.getElementById('foodExpiryDate').value = `${yr}-${mo}-${da}`;
         }
 
         document.getElementById('foodForm').addEventListener('submit', function(e) {
@@ -1462,7 +1467,6 @@
                 }
             } else {
                 if (unitType === 'unid') {
-                    // Corrección bug 6: Inventario personalizado por unidades se calcula con peso estimado de 0.15kg si no existe en catálogo
                     weightKg = qtyInput * 0.15;
                     displayQuantityText = `${qtyInput} unid (≈${weightKg.toFixed(2)} kg est.)`;
                 } else {
@@ -1471,7 +1475,6 @@
                 }
             }
 
-            // Corrección bug 7: Corrección de zona horaria usando objetos Date con hora local explícita (Año, Mes-1, Día)
             const [yAdd, mAdd, dAdd] = dateAdded.split('-').map(Number);
             const [yExp, mExp, dExp] = expiryDate.split('-').map(Number);
             const dateAddObj = new Date(yAdd, mAdd - 1, dAdd);
@@ -1517,7 +1520,7 @@
             document.getElementById('foodForm').reset();
             document.getElementById('foodUnitType').value = 'kg';
             document.getElementById('foodDateAdded').value = getLocalIsoDate();
-            document.getElementById('foodExpiryDate').value = getLocalIsoDate();
+            handleFoodInputCheck();
             adjustStepByUnit();
             document.getElementById('customDaysContainer').style.display = 'none';
             saveData();
@@ -1546,7 +1549,7 @@
             document.getElementById('foodForm').reset();
             document.getElementById('foodUnitType').value = 'kg';
             document.getElementById('foodDateAdded').value = getLocalIsoDate();
-            document.getElementById('foodExpiryDate').value = getLocalIsoDate();
+            handleFoodInputCheck();
             document.getElementById('foodSubmitBtn').textContent = "Agregar al Inventario";
             document.getElementById('cancelEditFoodBtn').style.display = 'none';
             document.getElementById('customDaysContainer').style.display = 'none';
@@ -1759,7 +1762,6 @@
             }
         }
 
-        // Corrección bug 2: Validaciones de Registro Semanal (fechas duplicadas, orden cronológico y lecturas inferiores)
         document.getElementById('weeklyForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const inputDate = document.getElementById('weekDate').value;
@@ -1771,13 +1773,11 @@
             const [yI, mI, dI] = inputDate.split('-').map(Number);
             const inputDateObj = new Date(yI, mI - 1, dI);
 
-            // Validar fecha repetida
             if (appData.weeklyLogs.some(w => w.date === inputDate)) {
                 alert("⚠️ Ya existe un registro para esta misma fecha. Elige otra fecha.");
                 return;
             }
 
-            // Validar orden cronológico y lecturas de medidor
             if (appData.weeklyLogs.length > 0) {
                 const lastLog = appData.weeklyLogs[appData.weeklyLogs.length - 1];
                 const [yL, mL, dL] = lastLog.date.split('-').map(Number);
@@ -1848,7 +1848,6 @@
             return Math.max(0, Math.min(50, Math.round(score)));
         }
 
-        // Corrección bug 3: Exclusión estricta de compostaje del desperdicio en cálculo semanal
         function getWastedFoodBetweenDates(startDateStr, endDateStr, isFirstPeriod) {
             let totalWasted = 0;
             let activityCount = 0;
@@ -1856,7 +1855,6 @@
                 let match = isFirstPeriod ? (h.dateClosed >= startDateStr && h.dateClosed <= endDateStr) : (h.dateClosed > startDateStr && h.dateClosed <= endDateStr);
                 if (match) {
                     activityCount++;
-                    // Solo se contabilizan como desperdicio los botados o vencidos directos, excluyendo el compostado
                     if (['Desperdiciado (Botado)', 'Desperdiciado (Vencido)'].includes(h.categoryResult)) {
                         totalWasted += h.weightKg;
                     }
@@ -1922,7 +1920,6 @@
                 const totalScoreNum = foodScore + energyScore;
                 currentScore = String(totalScoreNum);
 
-                // Corrección bug 4: Mostrar diferencia en puntos netos de puntaje en lugar de porcentaje
                 const diffScore = totalScoreNum - 50; 
                 if (diffScore >= 0) {
                     scoreComparisonText = `+${diffScore} pts vs base`;
@@ -1945,8 +1942,6 @@
             }
 
             const totalCO2Avoided = (totalSavedFoodKg * FACTOR_CO2_FOOD) + (totalCompostedFoodKg * 1.2) + (Math.max(0, totalKwhOptimizedNet) * FACTOR_CO2_ELECTRICITY);
-            
-            // Corrección bug 5: Ahorro económico con explicación clara ante incremento de gasto
             const totalSolesSavedEnergy = totalKwhOptimizedNet * appData.config.electricityRate;
 
             return {
@@ -2232,7 +2227,6 @@
             });
         }
 
-        // Mejora: Filtros al historial
         function renderHistoryAuditList() {
             const historyBody = document.getElementById('historyList');
             if (!historyBody) return;
@@ -2317,7 +2311,6 @@
             });
         }
 
-        // Corrección bug 8 & Mejora: Asistente con análisis completo de todos los indicadores reales
         function generateAssistantRecommendations(totalPhantomCost, summary) {
             const textEl = document.getElementById('assistantText');
             let msgs = [];
@@ -2343,7 +2336,6 @@
             textEl.innerHTML = msgs.join('<br>');
         }
 
-        // Corrección bug 1: Exportación CSV con registros reales y completos del sistema
         function exportToCSV() {
             let csvContent = "\ufeff=== CASA CICLO - REPORTE GENERAL DE SOSTENIBILIDAD ===\n\n";
             
